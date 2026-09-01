@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Matricial</title>
+  <meta name="description" content="Calculadora de sistemas de ecuaciones lineales por los métodos de Gauss y Gauss-Jordan. Muestra cada operación elemental en LaTeX. MTM0120 Álgebra Lineal, Universidad Americana (UAM)." />
+  <meta name="author" content="MTM0120 — UAM" />
+  <meta property="og:title" content="Calculadora Gauss / Gauss-Jordan · MTM0120" />
+  <meta property="og:description" content="Resuelve sistemas lineales paso a paso con operaciones elementales en LaTeX." />
+  <meta property="og:type" content="website" />
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════
+       Pantalla de carga de Pyodide
+  ══════════════════════════════════════════════════ -->
+  <div id="contenedor-carga" role="status" aria-live="polite" aria-label="Cargando la calculadora">
+    <div class="carga-logo">
+      <div class="carga-escudo" aria-hidden="true">∑</div>
+      <div>
+        <div class="carga-titulo">MTM0120 · Álgebra Lineal</div>
+        <div class="carga-subtitulo">Universidad Americana — UAM</div>
+      </div>
+    </div>
+    <div class="carga-barra-bg" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+      <div id="barra-carga"></div>
+    </div>
+    <p id="texto-carga">Inicializando…</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       Encabezado
+  ══════════════════════════════════════════════════ -->
+  <header id="encabezado">
+    <div class="header-inner">
+      <div class="header-escudo" aria-hidden="true">∑</div>
+      <div class="header-texto">
+        <div class="header-materia">MTM0120 · Álgebra Lineal · UAM</div>
+        <h1 class="header-titulo">Calculadora de Sistemas Lineales</h1>
+        <div class="header-subtitulo"></div>
+      </div>
+      <div class="header-badge" aria-label="Funciona en el navegador">📐 Python 3.14</div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════
+       Contenido principal
+  ══════════════════════════════════════════════════ -->
+  <main id="main">
+
+    <!-- ── Panel izquierdo: entrada ──────────────────── -->
+    <aside id="seccion-entrada" aria-label="Entrada del sistema">
+      <div class="panel">
+        <h2 class="panel-titulo">
+          <span class="panel-titulo-icono" aria-hidden="true">⊞</span>
+          Ingresar sistema
+        </h2>
+
+        <!-- Selectores de dimensión -->
+        <div class="selectores">
+          <div class="selector-grupo">
+            <label for="sel-ecuaciones">Ecuaciones</label>
+            <select id="sel-ecuaciones" aria-label="Número de ecuaciones"></select>
+          </div>
+          <div class="selector-grupo">
+            <label for="sel-variables">Variables</label>
+            <select id="sel-variables" aria-label="Número de variables"></select>
+          </div>
+        </div>
+
+        <!-- Matriz aumentada -->
+        <div class="matriz-label">Matriz aumentada [A | b]</div>
+        <div id="wrapper-matriz" role="group" aria-label="Cuadrícula de la matriz aumentada">
+          <div id="contenedor-matriz"></div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="botones">
+          <button id="btn-resolver" class="btn-resolver" type="button" aria-label="Resolver el sistema">
+            <span class="btn-texto">Resolver</span>
+          </button>
+          <button id="btn-limpiar" class="btn-limpiar" type="button" aria-label="Limpiar todos los campos">✕</button>
+        </div>
+
+      </div><!-- /.panel -->
+    </aside>
+
+    <!-- ── Panel derecho: resultado ──────────────────── -->
+    <section id="seccion-resultado" aria-live="polite" aria-label="Resultado del sistema"></section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════
+       Pie de página
+  ══════════════════════════════════════════════════ -->
+  <footer id="pie">
+    MTM0120 Álgebra Lineal · <span>Universidad Americana (UAM)</span> ·
+    Algoritmo ejecutado localmente con
+    <a href="https://pyodide.org" target="_blank" rel="noopener" style="color:var(--uam-accent)">Pyodide</a> ·
+    Fórmulas renderizadas con
+    <a href="https://katex.org" target="_blank" rel="noopener" style="color:var(--uam-accent)">KaTeX</a>
+  </footer>
+
+  <!-- Scripts propios (orden importa) -->
+  <script src="js/ejecutar_python.js"></script>
+  <script src="js/interfaz.js"></script>
+
+</body>
+</html>
