@@ -456,6 +456,11 @@ body {
   margin-top: 4px;
 }
 
+/* Acciones de Vectores: mismo estilo visual que los botones de Matrices. */
+.form-acciones {
+  width: 100%;
+}
+
 .btn-resolver,
 .btn-limpiar {
   flex: 1;

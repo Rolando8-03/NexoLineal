@@ -41,5 +41,7 @@ pip install pywebview
 pip install pyinstaller
 
 Crear ejecutable:
-py -m PyInstaller --noconfirm --clean --onefile --windowed --name "NexoLineal" --icon "assets\icono.ico" --add-data "index.html;." --add-data "css;css" --add-data "js;js" --add-data "python;python" --add-data "assets;assets" main.py
+py -m PyInstaller --noconfirm --clean --onefile --windowed --name "NexoLineal" 
+--icon "assets\icono.ico" --add-data "index.html;." --add-data "css;css" 
+--add-data "js;js" --add-data "python;python" --add-data "assets;assets" main.py
 '''

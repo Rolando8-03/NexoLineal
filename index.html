@@ -20,6 +20,7 @@
 
   <!-- Estilos propios -->
   <link rel="stylesheet" href="css/estilos.css" />
+  <link rel="stylesheet" href="css/temas.css" />
 </head>
 <body>
 
@@ -51,13 +52,22 @@
         <h1 class="header-titulo">Calculadora de Sistemas Lineales</h1>
         <div class="header-subtitulo"></div>
       </div>
-      <div class="header-badge" aria-label="Funciona en el navegador">📐 Python 3.14</div>
+      <div class="header-badge" aria-label="Motor de cálculo">Python estándar</div>
     </div>
   </header>
 
   <!-- ══════════════════════════════════════════════════
        Contenido principal
   ══════════════════════════════════════════════════ -->
+ 
+  <div class="app-layout">
+    <aside class="menu-lateral" aria-label="Menú principal">
+      <div class="menu-titulo">Menú</div>
+      <button type="button" class="menu-opcion activo" data-vista="matrices" aria-pressed="true">Matrices</button>
+      <button type="button" class="menu-opcion" data-vista="vectores" aria-pressed="false">Vectores</button>
+    </aside>
+
+    <div class="app-vistas">
   <main id="main">
 
     <!-- ── Panel izquierdo: entrada ──────────────────── -->
@@ -102,6 +112,10 @@
 
   </main>
 
+      <div id="herramientas"></div>
+    </div>
+  </div>
+
   <!-- ══════════════════════════════════════════════════
        Pie de página
   ══════════════════════════════════════════════════ -->
@@ -116,6 +130,7 @@
   <!-- Scripts propios (orden importa) -->
   <script src="js/ejecutar_python.js"></script>
   <script src="js/interfaz.js"></script>
+  <script src="js/temas.js?v=4"></script>
 
 </body>
 </html>

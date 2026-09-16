@@ -2,6 +2,8 @@
 
 from fractions import Fraction
 
+from formas_matriciales import analizar_forma
+
 from entrada_datos import validar_sistema
 from metodos_eliminacion import (
     aplicar_gauss,
@@ -112,61 +114,170 @@ def comprobar_solucion(A, b, solucion):
 
 
 def resolver_sistema(A, b):
-    """Coordina los métodos y devuelve todos los datos para la interfaz."""
+    """Coordina los métodos y devuelve los datos para la interfaz."""
+
     validar_sistema(A, b)
+
+    # Mantener operaciones exactas también en llamadas directas.
+    A = [
+        [Fraction(str(valor)) for valor in fila]
+        for fila in A
+    ]
+    b = [Fraction(str(valor)) for valor in b]
+
     numero_variables = len(A[0])
     matriz_inicial = construir_matriz_aumentada(A, b)
 
     matriz_escalonada, pasos_gauss = aplicar_gauss(A, b)
+
     rango_A, rango_aumentada = calcular_rangos(
-        matriz_escalonada, numero_variables
+        matriz_escalonada,
+        numero_variables,
     )
-    matriz_rref, pasos_jordan = aplicar_gauss_jordan(matriz_escalonada)
+
+    matriz_rref, pasos_jordan = aplicar_gauss_jordan(
+        matriz_escalonada
+    )
+
+    posiciones = posiciones_pivote(
+        matriz_rref,
+        numero_variables + 1,
+    )
+
+    columnas_pivote = []
+    columnas_pivote_aumentada = []
+
+    for _, columna in posiciones:
+        columnas_pivote_aumentada.append(columna)
+
+        if columna < numero_variables:
+            columnas_pivote.append(columna)
+
+    variables_libres = [
+        columna
+        for columna in range(numero_variables)
+        if columna not in columnas_pivote
+    ]
+
+    columnas_vectores = [
+        [str(A[i][j]) for i in range(len(A))]
+        for j in range(numero_variables)
+    ]
 
     resultado = {
         "A": [[str(v) for v in fila] for fila in A],
         "b": [str(v) for v in b],
         "numero_ecuaciones": len(A),
         "numero_variables": numero_variables,
-        "matriz_inicial": [[str(v) for v in fila] for fila in matriz_inicial],
-        "matriz_escalonada": [[str(v) for v in fila] for fila in matriz_escalonada],
-        "matriz_rref": [[str(v) for v in fila] for fila in matriz_rref],
+        "matriz_inicial": [
+            [str(v) for v in fila]
+            for fila in matriz_inicial
+        ],
+        "matriz_escalonada": [
+            [str(v) for v in fila]
+            for fila in matriz_escalonada
+        ],
+        "matriz_rref": [
+            [str(v) for v in fila]
+            for fila in matriz_rref
+        ],
         "pasos_gauss": _serializar_pasos(pasos_gauss),
         "pasos_jordan": _serializar_pasos(pasos_jordan),
         "rango_A": rango_A,
         "rango_aumentada": rango_aumentada,
+        "columnas_pivote": columnas_pivote,
+        "columnas_pivote_aumentada": columnas_pivote_aumentada,
+        "posiciones_pivote": posiciones,
+        "variables_basicas": columnas_pivote,
+        "variables_libres": variables_libres,
+        "forma_inicial": analizar_forma(matriz_inicial),
+        "forma_escalonada": analizar_forma(matriz_escalonada),
+        "forma_rref": analizar_forma(matriz_rref),
+        "columnas_vectores": columnas_vectores,
+        "es_combinacion_lineal": rango_A == rango_aumentada,
     }
 
     if rango_A < rango_aumentada:
         resultado["tipo"] = "inconsistente"
-        resultado["clasificacion"] = "Sistema inconsistente: no tiene solución"
-        resultado["conclusion"] = (
-            "El rango de A es menor que el rango de la matriz aumentada. "
-            "Aparece una ecuación imposible, por lo tanto el sistema no tiene solución."
+        resultado["clasificacion"] = (
+            "Sistema inconsistente: no tiene solución"
         )
-        fila_c = buscar_contradiccion(matriz_escalonada, numero_variables)
+        resultado["conclusion"] = (
+            "El rango de A es menor que el rango de la matriz "
+            "aumentada. Aparece una ecuación imposible, por lo "
+            "tanto el sistema no tiene solución."
+        )
+
+        fila_c = buscar_contradiccion(
+            matriz_escalonada,
+            numero_variables,
+        )
+
         resultado["fila_contradiccion"] = fila_c
+
         if fila_c is not None:
             resultado["fila_contradiccion_datos"] = [
                 str(v) for v in matriz_escalonada[fila_c]
             ]
+
         return resultado
 
     variables_libres, expresiones_gauss, pasos_sustitucion = (
-        resolver_desde_escalonada(matriz_escalonada, numero_variables)
+        resolver_desde_escalonada(
+            matriz_escalonada,
+            numero_variables,
+        )
     )
+
     expresiones_rref = construir_expresiones_rref(
-        matriz_rref, numero_variables, variables_libres
+        matriz_rref,
+        numero_variables,
+        variables_libres,
     )
-    solucion_particular = obtener_solucion_particular(expresiones_rref)
+
+    solucion_particular = obtener_solucion_particular(
+        expresiones_rref
+    )
 
     resultado["variables_libres"] = variables_libres
-    resultado["expresiones_gauss"] = _serializar_expresiones(expresiones_gauss)
-    resultado["expresiones_rref"] = _serializar_expresiones(expresiones_rref)
-    resultado["pasos_sustitucion"] = _serializar_sustitucion(pasos_sustitucion)
-    resultado["solucion_particular"] = [str(v) for v in solucion_particular]
+
+    resultado["expresiones_gauss"] = _serializar_expresiones(
+        expresiones_gauss
+    )
+
+    resultado["expresiones_rref"] = _serializar_expresiones(
+        expresiones_rref
+    )
+
+    resultado["pasos_sustitucion"] = _serializar_sustitucion(
+        pasos_sustitucion
+    )
+
+    resultado["solucion_particular"] = [
+        str(v) for v in solucion_particular
+    ]
+
+    # Construir x = p + t1*d1 + t2*d2 + ...
+    # Cada dirección se obtiene de los coeficientes de un parámetro.
+    resultado["direcciones"] = [
+        [
+            str(
+                expresion["terminos"].get(
+                    libre,
+                    Fraction(0),
+                )
+            )
+            for expresion in expresiones_rref
+        ]
+        for libre in variables_libres
+    ]
+
     resultado["comprobaciones"] = _serializar_comprobaciones(
-        comprobar_solucion(A, b, solucion_particular)
+        comprobar_solucion(
+            A,
+            b,
+            solucion_particular,
+        )
     )
 
     if rango_A == numero_variables:
@@ -175,18 +286,21 @@ def resolver_sistema(A, b):
             "Sistema consistente determinado: solución única"
         )
         resultado["conclusion"] = (
-            "Los rangos son iguales al número de variables. Cada variable tiene "
-            "pivote y existe una sola solución."
+            "Los rangos son iguales al número de variables. "
+            "Cada variable tiene pivote y existe una sola solución."
         )
-        resultado["solucion"] = [str(v) for v in solucion_particular]
+        resultado["solucion"] = [
+            str(v) for v in solucion_particular
+        ]
     else:
         resultado["tipo"] = "infinitas"
         resultado["clasificacion"] = (
             "Sistema consistente indeterminado: infinitas soluciones"
         )
         resultado["conclusion"] = (
-            "Los rangos son iguales, pero menores que el número de variables. "
-            "Existen variables libres y, por eso, el sistema tiene infinitas soluciones."
+            "Los rangos son iguales, pero menores que el número "
+            "de variables. Existen variables libres y, por eso, "
+            "el sistema tiene infinitas soluciones."
         )
 
     return resultado

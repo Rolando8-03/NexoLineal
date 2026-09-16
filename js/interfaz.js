@@ -316,11 +316,12 @@ function renderizarResultado(r) {
   tabsWrapper.appendChild(tabsContent);
   sec.appendChild(tabsWrapper);
 
-  const tabs = [
+    const tabs = [
     { id: "resumen", label: "Resumen" },
     { id: "gauss-jordan", label: "Gauss-Jordan" },
     { id: "gauss", label: "Gauss" },
     { id: "comprobacion", label: "Comprobación" },
+    { id: "vectores", label: "Ecuación vectorial" },
   ];
 
   tabs.forEach(({ id, label }, idx) => {
@@ -342,14 +343,40 @@ function renderizarResultado(r) {
   poblarGaussJordan(document.getElementById("tab-gauss-jordan"), r);
   poblarGauss(document.getElementById("tab-gauss"), r);
   poblarComprobacion(document.getElementById("tab-comprobacion"), r);
+    poblarEcuacionVectorial(
+    document.getElementById("tab-vectores"),
+    r
+  );
 
   // Renderizar KaTeX en todo el resultado
   renderizarKatex(sec);
 }
 
+
 // ──────────────────────────────────────────────
 // Tab: Resumen
 // ──────────────────────────────────────────────
+const propiedadesForma = [
+  "Las filas nulas están debajo de las no nulas.",
+  "Cada entrada principal está a la derecha de la anterior.",
+  "Hay ceros debajo de cada entrada principal.",
+  "Todas las entradas principales son 1.",
+  "Cada entrada principal es la única no nula en su columna.",
+];
+
+function tablaForma(forma) {
+  const filas = propiedadesForma.map((texto, i) => `
+    <tr><td>${i + 1}. ${texto}</td><td>${forma.propiedades[i] ? "Sí" : "No"}</td></tr>
+  `).join("");
+  return `
+    <p><strong>${forma.clasificacion}</strong></p>
+    <table class="tabla-tema">
+      <thead><tr><th>Propiedad</th><th>¿Se cumple?</th></tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+  `;
+}
+
 function poblarResumen(panel, r) {
   let html = "";
 
@@ -362,7 +389,7 @@ function poblarResumen(panel, r) {
   // Matriz aumentada inicial
   html += `<div class="seccion-resultado">
     <h3 class="sec-titulo">Matriz aumentada inicial</h3>
-    <div class="katex-display">$$${matrizLatex(r.matriz_inicial, r.numero_variables)}$$</div>
+    <div class="katex-display">$$${matrizLatex(r.matriz_inicial, r.numero_variables, r.posiciones_pivote)}$$</div>
   </div>`;
 
   // Criterio de clasificación
@@ -374,11 +401,43 @@ function poblarResumen(panel, r) {
   // Forma escalonada reducida (RREF)
   html += `<div class="seccion-resultado">
     <h3 class="sec-titulo">Forma escalonada reducida (RREF)</h3>
-    <div class="katex-display">$$${matrizLatex(r.matriz_rref, r.numero_variables)}$$</div>
+    <div class="katex-display">$$${matrizLatex(r.matriz_rref, r.numero_variables, r.posiciones_pivote)}$$</div>
   </div>`;
+
+  // Contenido de formas de matrices integrado en la resolución del sistema.
+  html += `<div class="seccion-resultado">
+    <h3 class="sec-titulo">Análisis de la forma de la matriz</h3>
+    ${tablaForma(r.forma_rref)}
+  </div>`;
+
+  // Columnas pivote
+   const columnasPivote = r.columnas_pivote.map(
+    columna => columna + 1
+  );
+
+  const columnasAumentada = r.columnas_pivote_aumentada.map(
+    columna => columna + 1
+  );
+
+  html += `
+    <div class="seccion-resultado">
+      <h3 class="sec-titulo">Columnas pivote</h3>
+
+      <p>
+        <strong>En A:</strong>
+        ${columnasPivote.join(", ") || "Ninguna"}.
+      </p>
+
+      <p>
+        <strong>En [A | b]:</strong>
+        ${columnasAumentada.join(", ") || "Ninguna"}.
+      </p>
+    </div>
+  `;
 
   // Resultado
   if (r.tipo === "inconsistente") {
+
     if (r.fila_contradiccion_datos) {
       html += `<div class="seccion-resultado">
         <h3 class="sec-titulo">Fila contradictoria</h3>
@@ -587,12 +646,28 @@ function fracAbs(valor) {
   return `${Math.abs(parseInt(partes[0]))}/${partes[1]}`;
 }
 
-function matrizLatex(matriz, numVariables) {
-  const cols = "c".repeat(numVariables) + "|c";
-  const filas = matriz
-    .map((fila) => fila.map((v) => formatFrac(v)).join(" & "))
-    .join(" \\\\ ");
-  return `\\left[\\begin{array}{${cols}}${filas}\\end{array}\\right]`;
+function matrizLatex(matriz, numVariables, posiciones = []) {
+  const columnas = numVariables === null
+    ? "c".repeat(matriz[0].length)
+    : "c".repeat(numVariables) + "|c";
+
+  const filas = matriz.map((fila, i) => {
+    return fila.map((valor, j) => {
+      const esPivote = posiciones.some(
+        ([f, c]) => Number(f) === i && Number(c) === j
+      );
+
+      return esPivote
+        ? `\\boxed{${formatFrac(valor)}}`
+        : formatFrac(valor);
+    }).join(" & ");
+  }).join(" \\\\ ");
+
+  return (
+    `\\left[\\begin{array}{${columnas}}` +
+    filas +
+    "\\end{array}\\right]"
+  );
 }
 
 function sistemaLatex(A, b) {
@@ -716,3 +791,4 @@ function parseFrac(s) {
   if (parts.length === 1) return parseFloat(parts[0]);
   return parseFloat(parts[0]) / parseFloat(parts[1]);
 }
+

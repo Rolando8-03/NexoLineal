@@ -1,86 +1,48 @@
-# MTM0120 — Calculadora de Sistemas de Ecuaciones Lineales
+# MTM0120 — Calculadora de Álgebra Lineal
 
-**Universidad Americana (UAM) · Álgebra Lineal**
+Proyecto integrador para Álgebra Lineal (MTM0120), Universidad Americana.
 
-Herramienta educativa para resolver sistemas de ecuaciones lineales usando los métodos de **Gauss** y **Gauss-Jordan**, con cada operación elemental mostrada paso a paso en notación matemática LaTeX.
+La aplicación permite trabajar con sistemas de ecuaciones lineales mediante **Gauss** y **Gauss-Jordan**. La opción **Matrices** concentra la resolución del sistema y el análisis de forma escalonada, forma escalonada reducida, columnas pivote, variables básicas y variables libres. La opción **Vectores** contiene las operaciones vectoriales.
 
----
+## Cómo ejecutar
 
-## 🚀 Cómo usar
+La forma más sencilla es abrir el proyecto con **Live Server** en VS Code y entrar a `index.html`. Esto permite que el navegador cargue correctamente los módulos Python que utiliza Pyodide.
 
-Abre `index.html` directamente en el navegador o publícalo en **GitHub Pages** (rama `main`, carpeta raíz `/`).
+También existe `main.py` para ejecutar la interfaz mediante pywebview.
 
-> **Nota:** La primera carga toma entre 5 y 10 segundos porque Pyodide descarga el entorno Python (~10 MB). Luego todo funciona offline.
+## Funciones principales
 
----
+- Ingreso del número de ecuaciones y variables (1 a 6).
+- Construcción de la matriz aumentada `[A | b]`.
+- Eliminación por filas (Gauss).
+- Forma escalonada reducida por filas (Gauss-Jordan).
+- Identificación de columnas pivote.
+- Identificación de variables básicas y libres.
+- Clasificación: solución única, infinitas soluciones o sistema inconsistente.
+- Solución general cuando existen variables libres.
+- Comprobación de la solución en las ecuaciones originales.
+- Análisis de las cinco propiedades de la forma escalonada/reducida.
+- Operaciones básicas con vectores.
 
-## ✨ Características
+## Restricciones académicas
 
-| Característica | Detalles |
-|---|---|
-| **Sin backend** | Python se ejecuta en el navegador con Pyodide |
-| **Fracciones exactas** | Ningún coeficiente se redondea |
-| **Validación en tiempo real** | Celdas vacías o inválidas se marcan inmediatamente |
-| **Gauss-Jordan** | Todos los pasos con operaciones elementales en LaTeX |
-| **Gauss** | Forma escalonada + sustitución regresiva |
-| **Clasificación** | Único / Infinitas soluciones / Inconsistente |
-| **Comprobación** | Sustitución de la solución en las ecuaciones originales |
-| **Responsivo** | Funciona en computadora, tableta y celular |
+El cálculo matricial se realiza con Python estándar y listas anidadas. No se utiliza NumPy ni SciPy para resolver los sistemas.
 
----
+Las operaciones exactas utilizan `fractions.Fraction` de la biblioteca estándar de Python.
 
-## 📁 Estructura
+## Estructura
 
-```
-MTM0120_Algebra_Lineal/
-├── index.html              ← Página principal
+```text
+NexoLineal-master/
+├── index.html
+├── main.py
+├── requirements.txt
 ├── css/
-│   └── estilos.css         ← Sistema de diseño UAM (tema oscuro)
 ├── js/
-│   ├── interfaz.js         ← Lógica de UI, KaTeX, tabs, acordeón
-│   └── ejecutar_python.js  ← Puente Pyodide ↔ JavaScript
 ├── python/
-│   ├── entrada_datos.py    ← Validación y lectura de entradas
-│   ├── operaciones_fila.py ← Operaciones elementales (intercambio, MCM…)
-│   ├── metodos_eliminacion.py ← Gauss y Gauss-Jordan
-│   ├── analisis_sistema.py ← Clasificación y solución del sistema
-│   └── formato_latex.py    ← Generación de expresiones LaTeX
-└── README.md
+└── assets/
 ```
 
----
+## Entrega académica
 
-## 🔢 Entradas aceptadas
-
-| Tipo | Ejemplo |
-|---|---|
-| Entero | `3`, `-7`, `0` |
-| Decimal | `1.5`, `-0.25` |
-| Fracción | `1/2`, `-3/4` |
-
----
-
-## 🛠️ Tecnologías
-
-- **HTML5** — estructura semántica
-- **CSS3** — diseño responsivo, tema oscuro UAM
-- **JavaScript (ES2020)** — lógica de interfaz
-- **[Pyodide v0.26](https://pyodide.org)** — Python 3.12 en el navegador
-- **[KaTeX v0.16](https://katex.org)** — renderizado matemático
-- **Google Fonts** — Inter + JetBrains Mono
-
----
-
-## 📐 Método numérico
-
-El algoritmo selecciona siempre el **pivote de menor valor absoluto** disponible, registra cada operación elemental en el formato:
-
-$$k = -\frac{b}{p}, \qquad F_i \leftarrow F_i + k \cdot F_j$$
-
-y elimina denominadores multiplicando la fila por el MCM cuando aparecen fracciones intermedias.
-
----
-
-## 📜 Licencia
-
-Uso académico interno — MTM0120 Álgebra Lineal, UAM Nicaragua.
+Para la entrega del Programa 2 deben agregarse el informe PDF, la portada, los tres casos de prueba solicitados y la reflexión sobre el uso de IA, además de respetar el nombre de archivo indicado por la docente. El documento del Programa 2 especifica estos elementos como parte de la entrega.

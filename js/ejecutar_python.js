@@ -1,13 +1,15 @@
 // ============================================================
 // ejecutar_python.js
-// Carga Pyodide y los 5 módulos Python. Expone resolverSistema().
+// Carga Pyodide y los módulos Python de la calculadora.
 // ============================================================
 
 const PYTHON_FILES = [
   "python/operaciones_fila.py",
   "python/entrada_datos.py",
   "python/metodos_eliminacion.py",
+  "python/formas_matriciales.py",
   "python/analisis_sistema.py",
+  "python/vectores.py",
   "python/formato_latex.py",
 ];
 
@@ -118,3 +120,31 @@ _json.dumps(_salida)
 window.addEventListener("DOMContentLoaded", () => {
   inicializarPyodide().catch((e) => console.error(e));
 });
+
+
+
+
+// Enviar las operaciones nuevas a Python.
+async function ejecutarTema(datos) {
+  if (!pyodideReady) {
+    throw new Error(
+      "Espera a que termine de cargar Python."
+    );
+  }
+
+  pyodide.globals.set(
+    "_datos_tema",
+    JSON.stringify(datos)
+  );
+
+  const salida = pyodide.runPython(`
+from vectores import ejecutar_tema
+
+json.dumps(
+    ejecutar_tema(json.loads(_datos_tema)),
+    default=str
+)
+`);
+
+  return JSON.parse(salida);
+}
