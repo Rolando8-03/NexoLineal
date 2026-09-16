@@ -1,150 +1,950 @@
-"""Operaciones exactas con vectores y pertenencia a un generado."""
+"""Operaciones exactas con vectores en NexoLineal."""
 
 from fractions import Fraction
 
-from entrada_datos import convertir_numero
+from entrada_datos import (
+    convertir_numero,
+    leer_vector_celdas,
+)
 
 
-def leer_vector(texto):
-    """Lee componentes separadas por espacios o punto y coma."""
+# ============================================================
+# Validaciones
+# ============================================================
 
-    datos = str(texto).replace(";", " ").split()
+def validar_misma_dimension(
+    *vectores
+):
+    """
+    Comprueba que todos los vectores recibidos
+    tengan la misma dimensión.
+    """
 
-    if not 1 <= len(datos) <= 6:
+    if not vectores:
         raise ValueError(
-            "Ingresa entre 1 y 6 componentes separados por espacios."
+            "Debe existir al menos un vector"
         )
 
-    return [convertir_numero(x) for x in datos]
+    dimension = len(
+        vectores[0]
+    )
+
+    for vector in vectores:
+
+        if len(vector) != dimension:
+
+            raise ValueError(
+                "Todos los vectores deben tener "
+                "la misma dimensión"
+            )
+
+    return dimension
 
 
-def sumar(u, v):
-    """Suma componentes que ocupan la misma posición."""
+# ============================================================
+# Operaciones básicas
+# ============================================================
+
+def sumar(
+    u,
+    v
+):
+    """
+    Suma dos vectores componente a componente.
+
+        u + v
+    """
+
+    validar_misma_dimension(
+        u,
+        v
+    )
+
+    return [
+        u[i] + v[i]
+        for i in range(
+            len(u)
+        )
+    ]
+
+
+def restar(
+    u,
+    v
+):
+    """
+    Resta dos vectores componente a componente.
+
+        u - v
+    """
+
+    validar_misma_dimension(
+        u,
+        v
+    )
+
+    return [
+        u[i] - v[i]
+        for i in range(
+            len(u)
+        )
+    ]
+
+
+def multiplicar_escalar(
+    escalar,
+    vector
+):
+    """
+    Multiplica un vector por un escalar.
+
+        c u
+    """
+
+    escalar = Fraction(
+        escalar
+    )
+
+    return [
+        escalar * componente
+        for componente in vector
+    ]
+
+
+def vector_opuesto(
+    vector
+):
+    """
+    Calcula el vector opuesto.
+
+        -u
+    """
+
+    return multiplicar_escalar(
+        -1,
+        vector
+    )
+
+
+def vector_cero(
+    dimension
+):
+    """
+    Construye el vector cero de R^n.
+    """
+
+    return [
+        Fraction(0)
+        for _ in range(
+            dimension
+        )
+    ]
+
+
+def son_iguales(
+    u,
+    v
+):
+    """
+    Dos vectores son iguales si tienen la misma
+    dimensión y todas sus componentes coinciden.
+    """
 
     if len(u) != len(v):
-        raise ValueError(
-            "Los vectores deben tener la misma dimensión."
+        return False
+
+    return u == v
+
+
+def norma_cuadrada(
+    vector
+):
+    """
+    Calcula:
+
+        ||u||² = u1² + u2² + ... + un²
+
+    No se calcula la raíz utilizando math para mantener
+    el proyecto dentro de las restricciones de la clase.
+
+    La interfaz mostrará:
+
+        ||u|| = sqrt(norma_cuadrada)
+    """
+
+    total = Fraction(0)
+
+    for componente in vector:
+
+        total += (
+            componente
+            * componente
         )
 
-    return [u[i] + v[i] for i in range(len(u))]
+    return total
 
 
-def escalar(c, u):
-    """Multiplica cada componente del vector por el escalar."""
+# ============================================================
+# Combinación con escalares conocidos
+# ============================================================
 
-    return [c * valor for valor in u]
+def combinacion_dos_vectores(
+    c,
+    u,
+    d,
+    v
+):
+    """
+    Calcula una combinación lineal con
+    coeficientes conocidos:
+
+        c u + d v
+
+    Esto es diferente de determinar si b pertenece
+    al generado por varios vectores.
+
+    Ese problema se resolverá en
+    relaciones_vectoriales.py.
+    """
+
+    validar_misma_dimension(
+        u,
+        v
+    )
+
+    cu = multiplicar_escalar(
+        c,
+        u
+    )
+
+    dv = multiplicar_escalar(
+        d,
+        v
+    )
+
+    return sumar(
+        cu,
+        dv
+    )
 
 
-def operaciones(datos):
-    """Calcula operaciones y comprueba las ocho propiedades."""
+# ============================================================
+# Propiedades algebraicas de los vectores
+# ============================================================
 
-    u = leer_vector(datos["u"])
-    v = leer_vector(datos["v"])
-    w = leer_vector(datos["w"])
+def comprobar_propiedades(
+    u,
+    v,
+    w,
+    c,
+    d
+):
+    """
+    Comprueba las ocho propiedades algebraicas
+    trabajadas para vectores.
 
-    if len(u) != len(v) or len(u) != len(w):
-        raise ValueError(
-            "u, v y w deben tener la misma cantidad de componentes."
-        )
+    Para cada propiedad se calculan ambos lados
+    de la igualdad.
+    """
 
-    c = convertir_numero(datos["c"])
-    d = convertir_numero(datos["d"])
+    validar_misma_dimension(
+        u,
+        v,
+        w
+    )
 
-    cero = [Fraction(0)] * len(u)
+    c = Fraction(
+        c
+    )
 
-    # Calculamos ambos lados de cada identidad.
-    pares = [
-        (
-            "u + v = v + u",
-            sumar(u, v),
-            sumar(v, u),
-        ),
-        (
-            "(u + v) + w = u + (v + w)",
-            sumar(sumar(u, v), w),
-            sumar(u, sumar(v, w)),
-        ),
-        (
-            "u + 0 = 0 + u = u",
-            sumar(u, cero),
-            sumar(cero, u),
-        ),
-        (
-            "u + (−u) = (−u) + u = 0",
-            sumar(u, escalar(-1, u)),
-            sumar(escalar(-1, u), u),
-        ),
-        (
-            "c(u + v) = cu + cv",
-            escalar(c, sumar(u, v)),
-            sumar(escalar(c, u), escalar(c, v)),
-        ),
-        (
-            "(c + d)u = cu + du",
-            escalar(c + d, u),
-            sumar(escalar(c, u), escalar(d, u)),
-        ),
-        (
-            "c(du) = (cd)u",
-            escalar(c, escalar(d, u)),
-            escalar(c * d, u),
-        ),
-        (
-            "1u = u",
-            escalar(1, u),
-            u,
-        ),
-    ]
+    d = Fraction(
+        d
+    )
+
+    cero = vector_cero(
+        len(u)
+    )
+
+    menos_u = vector_opuesto(
+        u
+    )
 
     propiedades = []
 
-    for nombre, izquierda, derecha in pares:
-        propiedades.append(
+    # --------------------------------------------------------
+    # 1. Conmutatividad de la suma
+    #
+    # u + v = v + u
+    # --------------------------------------------------------
+
+    izquierda = sumar(
+        u,
+        v
+    )
+
+    derecha = sumar(
+        v,
+        u
+    )
+
+    propiedades.append(
+        {
+            "numero": 1,
+            "nombre": "Conmutatividad de la suma",
+            "formula": "u + v = v + u",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 2. Asociatividad de la suma
+    #
+    # (u + v) + w = u + (v + w)
+    # --------------------------------------------------------
+
+    izquierda = sumar(
+        sumar(
+            u,
+            v
+        ),
+        w
+    )
+
+    derecha = sumar(
+        u,
+        sumar(
+            v,
+            w
+        )
+    )
+
+    propiedades.append(
+        {
+            "numero": 2,
+            "nombre": "Asociatividad de la suma",
+            "formula": "(u + v) + w = u + (v + w)",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 3. Identidad aditiva
+    #
+    # u + 0 = u
+    # --------------------------------------------------------
+
+    izquierda = sumar(
+        u,
+        cero
+    )
+
+    derecha = u[:]
+
+    propiedades.append(
+        {
+            "numero": 3,
+            "nombre": "Identidad aditiva",
+            "formula": "u + 0 = u",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 4. Inverso aditivo
+    #
+    # u + (-u) = 0
+    # --------------------------------------------------------
+
+    izquierda = sumar(
+        u,
+        menos_u
+    )
+
+    derecha = cero
+
+    propiedades.append(
+        {
+            "numero": 4,
+            "nombre": "Inverso aditivo",
+            "formula": "u + (-u) = 0",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 5. Distributividad del escalar respecto
+    #    a la suma de vectores
+    #
+    # c(u + v) = cu + cv
+    # --------------------------------------------------------
+
+    izquierda = multiplicar_escalar(
+        c,
+        sumar(
+            u,
+            v
+        )
+    )
+
+    derecha = sumar(
+        multiplicar_escalar(
+            c,
+            u
+        ),
+        multiplicar_escalar(
+            c,
+            v
+        )
+    )
+
+    propiedades.append(
+        {
+            "numero": 5,
+            "nombre": (
+                "Distributividad del escalar "
+                "respecto a la suma de vectores"
+            ),
+            "formula": "c(u + v) = cu + cv",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 6. Distributividad respecto a la suma
+    #    de escalares
+    #
+    # (c + d)u = cu + du
+    # --------------------------------------------------------
+
+    izquierda = multiplicar_escalar(
+        c + d,
+        u
+    )
+
+    derecha = sumar(
+        multiplicar_escalar(
+            c,
+            u
+        ),
+        multiplicar_escalar(
+            d,
+            u
+        )
+    )
+
+    propiedades.append(
+        {
+            "numero": 6,
+            "nombre": (
+                "Distributividad respecto "
+                "a la suma de escalares"
+            ),
+            "formula": "(c + d)u = cu + du",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 7. Asociatividad de la multiplicación
+    #    por escalares
+    #
+    # c(du) = (cd)u
+    # --------------------------------------------------------
+
+    izquierda = multiplicar_escalar(
+        c,
+        multiplicar_escalar(
+            d,
+            u
+        )
+    )
+
+    derecha = multiplicar_escalar(
+        c * d,
+        u
+    )
+
+    propiedades.append(
+        {
+            "numero": 7,
+            "nombre": (
+                "Asociatividad de la "
+                "multiplicación por escalares"
+            ),
+            "formula": "c(du) = (cd)u",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    # --------------------------------------------------------
+    # 8. Identidad multiplicativa
+    #
+    # 1u = u
+    # --------------------------------------------------------
+
+    izquierda = multiplicar_escalar(
+        1,
+        u
+    )
+
+    derecha = u[:]
+
+    propiedades.append(
+        {
+            "numero": 8,
+            "nombre": "Identidad multiplicativa",
+            "formula": "1u = u",
+            "izquierda": izquierda,
+            "derecha": derecha,
+            "cumple": izquierda == derecha,
+        }
+    )
+
+    return propiedades
+
+
+# ============================================================
+# Serialización
+# ============================================================
+
+def serializar_vector(
+    vector
+):
+    """Convierte un vector con Fraction a cadenas."""
+
+    return [
+        str(valor)
+        for valor in vector
+    ]
+
+
+def serializar_propiedades(
+    propiedades
+):
+    """Convierte los resultados de propiedades a JSON."""
+
+    resultado = []
+
+    for propiedad in propiedades:
+
+        resultado.append(
             {
-                "nombre": nombre,
-                "izquierda": izquierda,
-                "derecha": derecha,
-                "cumple": izquierda == derecha,
+                "numero":
+                    propiedad[
+                        "numero"
+                    ],
+
+                "nombre":
+                    propiedad[
+                        "nombre"
+                    ],
+
+                "formula":
+                    propiedad[
+                        "formula"
+                    ],
+
+                "izquierda":
+                    serializar_vector(
+                        propiedad[
+                            "izquierda"
+                        ]
+                    ),
+
+                "derecha":
+                    serializar_vector(
+                        propiedad[
+                            "derecha"
+                        ]
+                    ),
+
+                "cumple":
+                    propiedad[
+                        "cumple"
+                    ],
             }
         )
 
-    # Guardamos el cuadrado de la norma.
-    # La interfaz lo mostrará dentro de una raíz cuadrada.
-    norma2 = sum(x * x for x in u)
-
-    return {
-        "u": u,
-        "v": v,
-        "w": w,
-        "c": c,
-        "d": d,
-        "iguales": u == v,
-        "suma": sumar(u, v),
-        "resta": sumar(u, escalar(-1, v)),
-        "menos_v": escalar(-1, v),
-        "menos_2v": escalar(-2, v),
-        "u_menos_2v": sumar(u, escalar(-2, v)),
-        "cu": escalar(c, u),
-        "dv": escalar(d, v),
-        "combinacion": sumar(
-            escalar(c, u),
-            escalar(d, v),
-        ),
-        "norma2": norma2,
-        "propiedades": propiedades,
-    }
+    return resultado
 
 
-def ejecutar_tema(datos):
-    """Selecciona la operación solicitada por la interfaz."""
+# ============================================================
+# Operaciones para la interfaz
+# ============================================================
 
-    if datos["accion"] == "vectores":
-        return operaciones(datos)
+def ejecutar_operacion(
+    datos
+):
+    """
+    Ejecuta únicamente la operación seleccionada
+    en el menú interno de Vectores.
 
-    if datos["accion"] == "matriz":
-        return matriz_libre(datos)
+    Operaciones disponibles:
 
-    if datos["accion"] == "parametro":
-        return parametro(datos)
+        igualdad
+        suma
+        resta
+        opuesto
+        escalar
+        combinacion
+        norma
+        propiedades
+    """
 
-    raise ValueError("Operación no reconocida.")
+    operacion = datos.get(
+        "operacion",
+        ""
+    )
+
+    # ========================================================
+    # IGUALDAD
+    # ========================================================
+
+    if operacion == "igualdad":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        v = leer_vector_celdas(
+            datos.get("v", []),
+            "vector v"
+        )
+
+        return {
+            "operacion": "igualdad",
+            "u": serializar_vector(u),
+            "v": serializar_vector(v),
+            "iguales": son_iguales(
+                u,
+                v
+            ),
+        }
+
+    # ========================================================
+    # SUMA
+    # ========================================================
+
+    if operacion == "suma":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        v = leer_vector_celdas(
+            datos.get("v", []),
+            "vector v"
+        )
+
+        resultado = sumar(
+            u,
+            v
+        )
+
+        return {
+            "operacion": "suma",
+            "u": serializar_vector(u),
+            "v": serializar_vector(v),
+            "resultado": serializar_vector(
+                resultado
+            ),
+        }
+
+    # ========================================================
+    # RESTA
+    # ========================================================
+
+    if operacion == "resta":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        v = leer_vector_celdas(
+            datos.get("v", []),
+            "vector v"
+        )
+
+        resultado = restar(
+            u,
+            v
+        )
+
+        return {
+            "operacion": "resta",
+            "u": serializar_vector(u),
+            "v": serializar_vector(v),
+            "resultado": serializar_vector(
+                resultado
+            ),
+        }
+
+    # ========================================================
+    # VECTOR OPUESTO
+    # ========================================================
+
+    if operacion == "opuesto":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        resultado = vector_opuesto(
+            u
+        )
+
+        return {
+            "operacion": "opuesto",
+            "u": serializar_vector(u),
+            "resultado": serializar_vector(
+                resultado
+            ),
+        }
+
+    # ========================================================
+    # MULTIPLICACIÓN POR ESCALAR
+    # ========================================================
+
+    if operacion == "escalar":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        c = convertir_numero(
+            datos.get("c", "")
+        )
+
+        resultado = (
+            multiplicar_escalar(
+                c,
+                u
+            )
+        )
+
+        return {
+            "operacion": "escalar",
+            "u": serializar_vector(u),
+            "c": str(c),
+            "resultado": serializar_vector(
+                resultado
+            ),
+        }
+
+    # ========================================================
+    # COMBINACIÓN CON COEFICIENTES CONOCIDOS
+    #
+    # c u + d v
+    # ========================================================
+
+    if operacion == "combinacion":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        v = leer_vector_celdas(
+            datos.get("v", []),
+            "vector v"
+        )
+
+        c = convertir_numero(
+            datos.get("c", "")
+        )
+
+        d = convertir_numero(
+            datos.get("d", "")
+        )
+
+        resultado = (
+            combinacion_dos_vectores(
+                c,
+                u,
+                d,
+                v
+            )
+        )
+
+        return {
+            "operacion": "combinacion",
+
+            "u":
+                serializar_vector(u),
+
+            "v":
+                serializar_vector(v),
+
+            "c":
+                str(c),
+
+            "d":
+                str(d),
+
+            "cu":
+                serializar_vector(
+                    multiplicar_escalar(
+                        c,
+                        u
+                    )
+                ),
+
+            "dv":
+                serializar_vector(
+                    multiplicar_escalar(
+                        d,
+                        v
+                    )
+                ),
+
+            "resultado":
+                serializar_vector(
+                    resultado
+                ),
+        }
+
+    # ========================================================
+    # NORMA
+    # ========================================================
+
+    if operacion == "norma":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        norma2 = norma_cuadrada(
+            u
+        )
+
+        return {
+            "operacion": "norma",
+
+            "u":
+                serializar_vector(u),
+
+            "norma2":
+                str(
+                    norma2
+                ),
+
+            # La interfaz representará:
+            #
+            # ||u|| = sqrt(norma2)
+            #
+            "norma_exacta":
+                f"sqrt({norma2})",
+        }
+
+    # ========================================================
+    # PROPIEDADES
+    # ========================================================
+
+    if operacion == "propiedades":
+
+        u = leer_vector_celdas(
+            datos.get("u", []),
+            "vector u"
+        )
+
+        v = leer_vector_celdas(
+            datos.get("v", []),
+            "vector v"
+        )
+
+        w = leer_vector_celdas(
+            datos.get("w", []),
+            "vector w"
+        )
+
+        c = convertir_numero(
+            datos.get("c", "")
+        )
+
+        d = convertir_numero(
+            datos.get("d", "")
+        )
+
+        propiedades = (
+            comprobar_propiedades(
+                u,
+                v,
+                w,
+                c,
+                d
+            )
+        )
+
+        return {
+            "operacion": "propiedades",
+
+            "u":
+                serializar_vector(u),
+
+            "v":
+                serializar_vector(v),
+
+            "w":
+                serializar_vector(w),
+
+            "c":
+                str(c),
+
+            "d":
+                str(d),
+
+            "propiedades":
+                serializar_propiedades(
+                    propiedades
+                ),
+        }
+
+    raise ValueError(
+        "Selecciona una operación válida "
+        "para vectores"
+    )
+
+
+# ============================================================
+# Punto de entrada desde JavaScript
+# ============================================================
+
+def ejecutar_tema(
+    datos
+):
+    """
+    Punto de entrada utilizado por Pyodide.
+    """
+
+    if datos.get(
+        "accion"
+    ) != "vectores":
+
+        raise ValueError(
+            "La operación solicitada "
+            "no pertenece al módulo de vectores"
+        )
+
+    return ejecutar_operacion(
+        datos
+    )
