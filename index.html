@@ -1,496 +1,186 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es" class="h-full bg-slate-950">
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexoLineal · Álgebra Lineal</title>
+  <meta name="description" content="Calculadora educativa de Álgebra Lineal: sistemas lineales, vectores y matrices.">
+  <link rel="icon" href="assets/icono.ico">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            nexo: {
+              950: '#07111f',
+              900: '#0b1728',
+              850: '#101f35',
+              800: '#142944',
+              700: '#1f426c',
+              600: '#1769c2',
+              500: '#2196f3',
+              400: '#54b5ff',
+              gold: '#ffc107'
+            }
+          },
+          boxShadow: {
+            nexo: '0 18px 50px rgba(0,0,0,.35)'
+          }
+        }
+      }
+    };
+  </script>
 
-  <title>
-    NexoLineal · Álgebra Lineal
-  </title>
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <meta
-    name="description"
-    content="
-      NexoLineal es una calculadora educativa de Álgebra Lineal.
-      Resuelve sistemas lineales, operaciones con vectores,
-      combinación e independencia lineal y operaciones con matrices.
-    "
-  >
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
-  <meta
-    name="author"
-    content="MTM0120 — Universidad Americana"
-  >
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
 
-
-  <!-- ======================================================
-       Open Graph
-       ====================================================== -->
-
-  <meta
-    property="og:title"
-    content="NexoLineal · Álgebra Lineal"
-  >
-
-  <meta
-    property="og:description"
-    content="
-      Sistemas lineales, vectores y matrices
-      con procedimientos paso a paso.
-    "
-  >
-
-  <meta
-    property="og:type"
-    content="website"
-  >
-
-
-  <!-- ======================================================
-       KaTeX
-       ====================================================== -->
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
-    crossorigin="anonymous"
-  >
-
-  <script
-    defer
-    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
-    crossorigin="anonymous"
-  ></script>
-
-  <script
-    defer
-    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-    crossorigin="anonymous"
-  ></script>
-
-
-  <!-- ======================================================
-       Pyodide
-       ====================================================== -->
-
-  <script
-    src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"
-  ></script>
-
-
-  <!-- ======================================================
-       Estilos de NexoLineal
-       ====================================================== -->
-
-  <link
-    rel="stylesheet"
-    href="css/estilos.css"
-  >
-
-  <link
-    rel="stylesheet"
-    href="css/temas.css"
-  >
-
+  <!-- Ajustes visuales pequeños que Tailwind no cubre cómodamente -->
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
+<body class="min-h-full bg-nexo-950 text-slate-100 antialiased">
 
-
-<body>
-
-
-  <!-- ======================================================
-       PANTALLA DE CARGA
-       ====================================================== -->
-
-  <div
-    id="contenedor-carga"
-    role="status"
-    aria-live="polite"
-    aria-label="Cargando NexoLineal"
-  >
-
-    <div class="carga-logo">
-
-      <div
-        class="carga-escudo"
-        aria-hidden="true"
-      >
-        ∑
-      </div>
-
-
-      <div>
-
-        <div class="carga-titulo">
-          NexoLineal
+  <!-- Pantalla de carga -->
+  <div id="contenedor-carga" class="fixed inset-0 z-[100] flex items-center justify-center bg-nexo-950 transition-opacity duration-500">
+    <div class="w-[min(92vw,420px)] rounded-3xl border border-slate-800 bg-nexo-900 p-8 shadow-nexo">
+      <div class="flex items-center gap-4">
+        <img src="assets/icono.ico" alt="NexoLineal" class="h-14 w-14 rounded-2xl shadow-lg">
+        <div>
+          <p class="text-lg font-bold text-white">NexoLineal</p>
+          <p id="texto-carga" class="text-sm text-slate-400">Inicializando Python…</p>
         </div>
-
-        <div class="carga-subtitulo">
-          MTM0120 · Álgebra Lineal · UAM
-        </div>
-
       </div>
-
+      <div class="mt-6 h-2 overflow-hidden rounded-full bg-slate-800">
+        <div id="barra-carga" class="h-full w-0 rounded-full bg-gradient-to-r from-blue-600 via-sky-400 to-cyan-300 transition-all duration-500"></div>
+      </div>
     </div>
-
-
-    <div
-      class="carga-barra-bg"
-      role="progressbar"
-      aria-valuemin="0"
-      aria-valuemax="100"
-    >
-
-      <div id="barra-carga"></div>
-
-    </div>
-
-
-    <p id="texto-carga">
-      Inicializando…
-    </p>
-
   </div>
 
+  <!-- Barra superior: solo icono + navegación -->
+  <header class="sticky top-0 z-50 border-b border-slate-800/90 bg-nexo-950/95 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-[1760px] items-center justify-between gap-4 px-3 py-3 sm:px-5 lg:px-6 2xl:px-8">
+      <button type="button" data-nav="sistemas" class="flex shrink-0 items-center gap-3 rounded-2xl p-1 pr-3 transition hover:bg-slate-800/70" aria-label="Ir a sistemas lineales">
+        <img src="assets/icono.ico" alt="NexoLineal" class="h-11 w-11 rounded-xl">
+        <span class="hidden text-lg font-black tracking-tight text-white sm:inline">NexoLineal</span>
+      </button>
 
-  <!-- ======================================================
-       ENCABEZADO
-       ====================================================== -->
-
-  <header id="encabezado">
-
-    <div class="header-inner">
-
-
-      <div
-        class="header-escudo"
-        aria-hidden="true"
-      >
-        ∑
-      </div>
-
-
-      <div class="header-texto">
-
-        <div class="header-materia">
-          MTM0120 · Álgebra Lineal · UAM
-        </div>
-
-
-        <h1 class="header-titulo">
-          NexoLineal
-        </h1>
-
-
-        <div class="header-subtitulo">
-          Sistemas lineales · Vectores · Matrices
-        </div>
-
-      </div>
-
-
-      <div
-        class="header-badge"
-        aria-label="Motor de cálculo"
-      >
-        Python estándar
-      </div>
-
+      <nav class="flex min-w-0 items-center gap-1 rounded-2xl border border-slate-800 bg-nexo-900 p-1.5 shadow-lg" aria-label="Menú principal">
+        <button type="button" data-nav="sistemas" class="nav-btn nav-activo">Sistemas lineales</button>
+        <button type="button" data-nav="vectores" class="nav-btn">Vectores</button>
+        <button type="button" data-nav="matrices" class="nav-btn">Matrices</button>
+      </nav>
     </div>
-
   </header>
 
+  <main class="mx-auto w-full max-w-[1760px] px-3 py-6 sm:px-5 lg:px-6 2xl:px-8">
 
-  <!-- ======================================================
-       APLICACIÓN
-       ====================================================== -->
+    <!-- SISTEMAS LINEALES -->
+    <section id="vista-sistemas" data-vista class="space-y-6">
+      <div id="sistema-configuracion" class="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_360px]">
 
-  <div class="app-layout">
-
-
-    <!-- ====================================================
-         MENÚ LATERAL PRINCIPAL
-         ==================================================== -->
-
-    <aside
-      class="menu-lateral"
-      aria-label="Menú principal"
-    >
-
-      <div class="menu-titulo">
-        Menú
-      </div>
-
-
-      <button
-        type="button"
-        class="menu-opcion activo"
-        data-vista="sistemas"
-        aria-pressed="true"
-        aria-current="page"
-      >
-        Sistemas lineales
-      </button>
-
-
-      <button
-        type="button"
-        class="menu-opcion"
-        data-vista="vectores"
-        aria-pressed="false"
-      >
-        Vectores
-      </button>
-
-
-      <button
-        type="button"
-        class="menu-opcion"
-        data-vista="matrices"
-        aria-pressed="false"
-      >
-        Matrices
-      </button>
-
-    </aside>
-
-
-    <!-- ====================================================
-         CONTENEDOR DE VISTAS
-         ==================================================== -->
-
-    <div class="app-vistas">
-
-
-      <!-- ==================================================
-           SISTEMAS LINEALES
-           ================================================== -->
-
-      <main id="main">
-
-
-        <!-- ================================================
-             PANEL IZQUIERDO
-             ENTRADA DEL SISTEMA
-             ================================================ -->
-
-        <aside
-          id="seccion-entrada"
-          aria-label="Entrada del sistema"
-        >
-
-          <div class="panel">
-
-
-            <h2 class="panel-titulo">
-
-              <span
-                class="panel-titulo-icono"
-                aria-hidden="true"
-              >
-                ⊞
-              </span>
-
-              Ingresar sistema
-
-            </h2>
-
-
-            <!-- ============================================
-                 DIMENSIONES
-                 ============================================ -->
-
-            <div class="selectores">
-
-
-              <div class="selector-grupo">
-
-                <label for="sel-ecuaciones">
-                  Ecuaciones
-                </label>
-
-                <select
-                  id="sel-ecuaciones"
-                  aria-label="Número de ecuaciones"
-                ></select>
-
-              </div>
-
-
-              <div class="selector-grupo">
-
-                <label for="sel-variables">
-                  Variables
-                </label>
-
-                <select
-                  id="sel-variables"
-                  aria-label="Número de variables"
-                ></select>
-
-              </div>
-
-
+        <!-- Ingreso del sistema -->
+        <article class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Sistemas lineales</p>
+              <h1 class="mt-1 text-2xl font-black text-white">Agregar matriz aumentada</h1>
+              <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-400">Ingresa los coeficientes de <span class="font-mono text-slate-200">A</span> y el vector <span class="font-mono text-slate-200">b</span>. Puedes usar enteros, decimales o fracciones.</p>
             </div>
-
-
-            <!-- ============================================
-                 MATRIZ AUMENTADA
-                 ============================================ -->
-
-            <div class="matriz-label">
-
-              Matriz aumentada [A | b]
-
+            <div class="flex gap-3">
+              <label class="block">
+                <span class="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">Ecuaciones</span>
+                <select id="sel-ecuaciones" class="select-nexo"></select>
+              </label>
+              <label class="block">
+                <span class="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">Variables</span>
+                <select id="sel-variables" class="select-nexo"></select>
+              </label>
             </div>
-
-
-            <div
-              id="wrapper-matriz"
-              role="group"
-              aria-label="Cuadrícula de la matriz aumentada"
-            >
-
-              <div id="contenedor-matriz"></div>
-
-            </div>
-
-
-            <!-- ============================================
-                 BOTONES
-                 ============================================ -->
-
-            <div class="botones">
-
-
-              <button
-                id="btn-resolver"
-                class="btn-resolver"
-                type="button"
-                aria-label="Resolver el sistema"
-              >
-
-                <span class="btn-texto">
-                  Resolver
-                </span>
-
-              </button>
-
-
-              <button
-                id="btn-limpiar"
-                class="btn-limpiar"
-                type="button"
-                aria-label="Limpiar todos los campos"
-                title="Limpiar sistema"
-              >
-                ✕
-              </button>
-
-
-            </div>
-
-
           </div>
 
+          <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 sm:p-5">
+            <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <span class="text-sm font-bold text-slate-200">Matriz aumentada [A | b]</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="btn-ejemplo-sistema" type="button" class="btn-secundario text-xs">Cargar ejemplo</button>
+                <button id="btn-limpiar-sistema" type="button" class="btn-secundario text-xs">Limpiar</button>
+                <button id="btn-resolver-sistema" type="button" class="btn-primario text-xs">Resolver sistema</button>
+              </div>
+            </div>
+            <div id="sistema-grid" class="overflow-x-auto pb-2"></div>
+          </div>
+        </article>
+
+        <!-- Historial -->
+        <aside class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Memoria</p>
+              <h2 class="mt-1 text-lg font-extrabold text-white">Historial</h2>
+            </div>
+            <button id="btn-ver-historial" type="button" class="btn-icono" title="Ver historial completo" aria-label="Ver historial completo">↗</button>
+          </div>
+          <p class="mt-2 text-sm leading-6 text-slate-400">Los sistemas resueltos se guardan en este navegador para que puedas volver a abrirlos.</p>
+          <div id="historial-lista" class="mt-5 space-y-3"></div>
+          <button id="btn-borrar-historial" type="button" class="mt-4 hidden w-full rounded-xl border border-rose-500/25 bg-rose-500/5 px-3 py-2 text-xs font-bold text-rose-300 transition hover:bg-rose-500/10">Borrar historial</button>
         </aside>
+      </div>
 
+      <!-- Resultado / resumen -->
+      <section id="resultado-sistema" class="hidden space-y-5"></section>
+    </section>
 
-        <!-- ================================================
-             PANEL DERECHO
-             RESULTADOS
-             ================================================ -->
+    <!-- VECTORES -->
+    <section id="vista-vectores" data-vista class="hidden space-y-6">
+      <div class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Rⁿ</p>
+            <h1 class="mt-1 text-2xl font-black text-white">Vectores</h1>
+            <p class="mt-2 text-sm text-slate-400">Calcula todas las operaciones de una vez y analiza combinación e independencia con un solo conjunto.</p>
+          </div>
+          <div class="subnav" data-subnav="vectores">
+            <button type="button" data-vector-tab="operaciones" class="subnav-btn subnav-activo">Operaciones</button>
+            <button type="button" data-vector-tab="analisis" class="subnav-btn">Análisis del conjunto</button>
+          </div>
+        </div>
+      </div>
+      <div id="vector-contenido"></div>
+    </section>
 
-        <section
-          id="seccion-resultado"
-          aria-live="polite"
-          aria-label="Resultado del sistema"
-        ></section>
+    <!-- MATRICES -->
+    <section id="vista-matrices" data-vista class="hidden space-y-6">
+      <div class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+        <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Álgebra matricial</p>
+            <h1 class="mt-1 text-2xl font-black text-white">Matrices</h1>
+            <p class="mt-2 text-sm text-slate-400">Ingresa cada matriz una sola vez: NexoLineal la conserva para operaciones, análisis y propiedades.</p>
+          </div>
+          <div class="subnav" data-subnav="matrices">
+            <button type="button" data-matriz-tab="operaciones" class="subnav-btn subnav-activo">Operaciones</button>
+            <button type="button" data-matriz-tab="analisis" class="subnav-btn">Análisis de A</button>
+            <button type="button" data-matriz-tab="propiedades" class="subnav-btn">Propiedades</button>
+          </div>
+        </div>
+      </div>
+      <div id="matriz-contenido"></div>
+    </section>
 
+  </main>
 
-      </main>
-
-      <div id="herramientas"></div>
-
-
-    </div>
-
-  </div>
-
-
-  <!-- ======================================================
-       PIE DE PÁGINA
-       ====================================================== -->
-
-  <footer id="pie">
-
-    NexoLineal ·
-    MTM0120 Álgebra Lineal ·
-
-    <span>
-      Universidad Americana (UAM)
-    </span>
-
-    · Python estándar ejecutado localmente con
-
-    <a
-      href="https://pyodide.org"
-      target="_blank"
-      rel="noopener"
-      style="color: var(--uam-accent)"
-    >
-      Pyodide
-    </a>
-
-    · Fórmulas renderizadas con
-
-    <a
-      href="https://katex.org"
-      target="_blank"
-      rel="noopener"
-      style="color: var(--uam-accent)"
-    >
-      KaTeX
-    </a>
-
-  </footer>
-
-  <script
-    src="js/ejecutar_python.js"
-  ></script>
-
-  <script
-    src="js/interfaz.js"
-  ></script>
-
-
-  <!--
-    3. Módulo de Vectores.
-  -->
-
-  <script
-    src="js/vectores.js"
-  ></script>
-
-
-  <!--
-    4. Módulo de Matrices.
-  -->
-
-  <script
-    src="js/matrices.js"
-  ></script>
-  <script
-    src="js/temas.js"
-  ></script>
-
-
+  <script src="js/ejecutar_python.js"></script>
+  <script src="js/app.js"></script>
 </body>
-
 </html>

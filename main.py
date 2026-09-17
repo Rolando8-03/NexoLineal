@@ -19,7 +19,7 @@ def iniciar_aplicacion():
     ruta_icono = obtener_ruta_recurso("assets/icono.ico")
 
     webview.create_window(
-        title="Calculadora de Álgebra Lineal",
+        title="NexoLineal · Álgebra Lineal",
         url=str(ruta_index),
         width=1900,
         height=1000,
@@ -35,13 +35,12 @@ def iniciar_aplicacion():
 if __name__ == "__main__":
     iniciar_aplicacion()
 
-'''
-Instalar dependencias:
-pip install pywebview
-pip install pyinstaller
 
-Crear ejecutable:
-py -m PyInstaller --noconfirm --clean --onefile --windowed --name "NexoLineal" 
---icon "assets\icono.ico" --add-data "index.html;." --add-data "css;css" 
---add-data "js;js" --add-data "python;python" --add-data "assets;assets" main.py
-'''
+# Dependencias para la versión de escritorio:
+#   pip install pywebview
+#   pip install pyinstaller
+#
+# Ejemplo de compilación en Windows (ejecutar en una sola línea):
+# py -m PyInstaller --noconfirm --clean --onefile --windowed --name "NexoLineal"
+# --icon "assets\icono.ico" --add-data "index.html;." --add-data "css;css"
+# --add-data "js;js" --add-data "python;python" --add-data "assets;assets" main.py

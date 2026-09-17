@@ -1,320 +1,71 @@
+"""Lectura y validación de los datos ingresados por el usuario."""
+
 from fractions import Fraction
 
-# ============================================================
-# Conversión de números
-# ============================================================
 
-def convertir_numero(valor):
-    """
-    Convierte un dato ingresado por el usuario en un número exacto.
-
-    Se utiliza Fraction para conservar resultados exactos.
-    """
-
-    if isinstance(valor, Fraction):
-        return valor
-
-    limpio = str(valor).strip().replace(",", ".")
+def convertir_numero(texto):
+    """Convierte enteros, decimales o fracciones en un valor exacto."""
+    limpio = str(texto).strip().replace(",", ".")
 
     if limpio == "":
         raise ValueError("hay una celda vacía")
 
     try:
         return Fraction(limpio)
-
     except (ValueError, ZeroDivisionError):
-        raise ValueError(
-            f"'{valor}' no es un número válido"
-        ) from None
+        raise ValueError(f"'{texto}' no es un número válido") from None
 
 
-# ============================================================
-# Validación de dimensiones
-# ============================================================
-
-def validar_dimension(
-    valor,
-    nombre,
-    minimo=1,
-    maximo=6
-):
-    """
-    Comprueba que una dimensión sea un número entero
-    dentro del intervalo permitido.
-    """
-
+def validar_dimension(texto, nombre, minimo=1, maximo=6):
+    """Comprueba que una dimensión sea un entero dentro del límite permitido."""
     try:
-        dimension = int(
-            str(valor).strip()
-        )
+        valor = int(str(texto).strip())
+    except ValueError:
+        raise ValueError(f"{nombre} debe ser un número entero") from None
 
-    except (ValueError, TypeError):
-        raise ValueError(
-            f"{nombre} debe ser un número entero"
-        ) from None
+    if valor < minimo or valor > maximo:
+        raise ValueError(f"{nombre} debe estar entre {minimo} y {maximo}")
 
-    if dimension < minimo or dimension > maximo:
-        raise ValueError(
-            f"{nombre} debe estar entre "
-            f"{minimo} y {maximo}"
-        )
-
-    return dimension
+    return valor
 
 
-# ============================================================
-# Lectura de vectores desde celdas
-# ============================================================
+def leer_matriz_texto(textos_A, textos_b):
+    """Convierte las celdas de texto en la matriz A y el vector b."""
+    A = []
+    b = []
 
-def leer_vector_celdas(
-    textos,
-    nombre="vector"
-):
-    """
-    Convierte una lista de celdas en un vector.
-    """
+    for i in range(len(textos_A)):
+        fila = []
+        for j in range(len(textos_A[i])):
+            try:
+                fila.append(convertir_numero(textos_A[i][j]))
+            except ValueError as error:
+                raise ValueError(f"Error en la ecuación {i + 1}, x{j + 1}: {error}") from error
 
-    if not isinstance(textos, list):
-        raise ValueError(
-            f"El {nombre} debe recibirse como una lista"
-        )
-
-    if not 1 <= len(textos) <= 6:
-        raise ValueError(
-            f"El {nombre} debe tener entre "
-            "1 y 6 componentes"
-        )
-
-    vector = []
-
-    for indice, texto in enumerate(textos):
         try:
-            valor = convertir_numero(
-                texto
-            )
-
+            termino = convertir_numero(textos_b[i])
         except ValueError as error:
             raise ValueError(
-                f"Error en {nombre}, "
-                f"componente {indice + 1}: "
-                f"{error}"
+                f"Error en el término independiente de la ecuación {i + 1}: {error}"
             ) from error
 
-        vector.append(
-            valor
-        )
+        A.append(fila)
+        b.append(termino)
 
-    return vector
-
-
-# ============================================================
-# Lectura de matrices desde cuadrículas
-# ============================================================
-
-def leer_matriz_celdas(
-    textos,
-    nombre="matriz"
-):
-    if not isinstance(textos, list):
-        raise ValueError(
-            f"La {nombre} debe recibirse "
-            "como una lista de filas"
-        )
-
-    if not textos:
-        raise ValueError(
-            f"La {nombre} no puede estar vacía"
-        )
-
-    if not 1 <= len(textos) <= 6:
-        raise ValueError(
-            f"La {nombre} debe tener entre "
-            "1 y 6 filas"
-        )
-
-    if not isinstance(textos[0], list):
-        raise ValueError(
-            f"La {nombre} debe contener filas"
-        )
-
-    if not textos[0]:
-        raise ValueError(
-            f"La {nombre} debe tener "
-            "al menos una columna"
-        )
-
-    numero_columnas = len(
-        textos[0]
-    )
-
-    if not 1 <= numero_columnas <= 6:
-        raise ValueError(
-            f"La {nombre} debe tener entre "
-            "1 y 6 columnas"
-        )
-
-    matriz = []
-
-    for i, fila_texto in enumerate(textos):
-
-        if not isinstance(fila_texto, list):
-            raise ValueError(
-                f"La fila {i + 1} de la "
-                f"{nombre} no es válida"
-            )
-
-        if len(fila_texto) != numero_columnas:
-            raise ValueError(
-                f"Todas las filas de la {nombre} "
-                "deben tener la misma cantidad "
-                "de columnas"
-            )
-
-        fila = []
-
-        for j, texto in enumerate(fila_texto):
-
-            try:
-                valor = convertir_numero(
-                    texto
-                )
-
-            except ValueError as error:
-                raise ValueError(
-                    f"Error en {nombre}, "
-                    f"fila {i + 1}, "
-                    f"columna {j + 1}: "
-                    f"{error}"
-                ) from error
-
-            fila.append(
-                valor
-            )
-
-        matriz.append(
-            fila
-        )
-
-    return matriz
-
-
-# ============================================================
-# Validación general de matrices
-# ============================================================
-
-def validar_matriz(
-    matriz,
-    nombre="matriz"
-):
-    """
-    Comprueba que una matriz exista y sea rectangular.
-
-    Devuelve:
-        filas, columnas
-    """
-
-    if not isinstance(matriz, list):
-        raise ValueError(
-            f"La {nombre} no es válida"
-        )
-
-    if not matriz:
-        raise ValueError(
-            f"La {nombre} no puede estar vacía"
-        )
-
-    if not isinstance(matriz[0], list):
-        raise ValueError(
-            f"La {nombre} debe contener filas"
-        )
-
-    if not matriz[0]:
-        raise ValueError(
-            f"La {nombre} debe tener "
-            "al menos una columna"
-        )
-
-    numero_columnas = len(
-        matriz[0]
-    )
-
-    for i, fila in enumerate(matriz):
-
-        if not isinstance(fila, list):
-            raise ValueError(
-                f"La fila {i + 1} de la "
-                f"{nombre} no es válida"
-            )
-
-        if len(fila) != numero_columnas:
-            raise ValueError(
-                f"Todas las filas de la {nombre} "
-                "deben tener la misma cantidad "
-                "de columnas"
-            )
-
-    return (
-        len(matriz),
-        numero_columnas,
-    )
-
-
-# ============================================================
-# Sistemas lineales
-# ============================================================
-
-def validar_sistema(
-    A,
-    b
-):
-    """
-    Verifica que A y b formen un sistema Ax = b válido.
-    """
-
-    filas, _ = validar_matriz(
-        A,
-        "matriz de coeficientes"
-    )
-
-    if not isinstance(b, list):
-        raise ValueError(
-            "El vector b no es válido"
-        )
-
-    if len(b) != filas:
-        raise ValueError(
-            "Debe existir un término independiente "
-            "por cada ecuación"
-        )
-
-
-def leer_matriz_texto(
-    textos_A,
-    textos_b
-):
-    """
-    Lee la matriz aumentada utilizada actualmente
-    por la sección Sistemas lineales.
-
-    La interfaz envía por separado:
-
-        textos_A -> matriz de coeficientes
-        textos_b -> términos independientes
-    """
-
-    A = leer_matriz_celdas(
-        textos_A,
-        "matriz de coeficientes"
-    )
-
-    b = leer_vector_celdas(
-        textos_b,
-        "vector b"
-    )
-
-    validar_sistema(
-        A,
-        b
-    )
-
+    validar_sistema(A, b)
     return A, b
+
+
+def validar_sistema(A, b):
+    """Verifica que A y b describan un sistema rectangular válido."""
+    if not A or not A[0]:
+        raise ValueError("La matriz de coeficientes no puede estar vacía")
+
+    if len(A) != len(b):
+        raise ValueError("Debe existir un término independiente por ecuación")
+
+    numero_columnas = len(A[0])
+    for fila in A:
+        if len(fila) != numero_columnas:
+            raise ValueError("Todas las filas deben tener la misma cantidad de datos")
+
