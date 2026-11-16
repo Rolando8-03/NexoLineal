@@ -4,8 +4,8 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 
-from vectores import ejecutar_tema
-from relaciones_vectoriales import ejecutar_relaciones
+from python.vectores import ejecutar_tema
+from python.relaciones_vectoriales import ejecutar_relaciones
 
 
 def ejecutar_vectores_interfaz(datos):

@@ -4,8 +4,8 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 
-from entrada_datos import leer_matriz_texto
-from analisis_sistema import resolver_sistema
+from python.entrada_datos import leer_matriz_texto
+from python.analisis_sistema import resolver_sistema
 
 
 def resolver_desde_interfaz(datos):

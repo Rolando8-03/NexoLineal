@@ -4,7 +4,7 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 from fractions import Fraction
-from entrada_datos import convertir_numero
+from python.entrada_datos import convertir_numero
 from modulos.modulo_matrices import (matriz_exacta, identidad, producto, determinante,
                                      inversa_gauss_jordan, _registrar, _eliminar_columna)
 

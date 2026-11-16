@@ -5,10 +5,11 @@ Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 
 from fractions import Fraction
+from nexolineal.algorithms import matrices as nucleo
 
-from entrada_datos import convertir_numero
-from formas_matriciales import analizar_forma
-from operaciones_fila import (
+from .entrada_datos import convertir_numero
+from .formas_matriciales import analizar_forma
+from .operaciones_fila import (
     buscar_pivote_menor,
     copiar_matriz,
     eliminar_denominadores,
@@ -81,41 +82,24 @@ def matriz_cero(filas, columnas):
 
 
 def matriz_identidad(orden):
-    """Construye la matriz identidad de orden n. Recibe orden."""
-    return [
-        [Fraction(1 if i == j else 0) for j in range(orden)]
-        for i in range(orden)
-    ]
-
+    """Identidad exacta calculada por el núcleo compartido."""
+    return nucleo.identidad(orden)
 
 def sumar_matrices(A, B):
-    """Suma matrices de iguales dimensiones entrada a entrada. Recibe A, B."""
+    """Mantiene la firma y el mensaje del adaptador."""
     if not mismas_dimensiones(A, B):
-        raise ValueError(
-            "Para sumar matrices, A y B deben tener las mismas dimensiones."
-        )
-    return [
-        [A[i][j] + B[i][j] for j in range(len(A[0]))]
-        for i in range(len(A))
-    ]
-
+        raise ValueError("Para sumar matrices, A y B deben tener las mismas dimensiones.")
+    return nucleo.suma(A, B)
 
 def restar_matrices(A, B):
-    """Resta matrices de iguales dimensiones entrada a entrada. Recibe A, B."""
+    """Resta por el núcleo compartido."""
     if not mismas_dimensiones(A, B):
-        raise ValueError(
-            "Para restar matrices, A y B deben tener las mismas dimensiones."
-        )
-    return [
-        [A[i][j] - B[i][j] for j in range(len(A[0]))]
-        for i in range(len(A))
-    ]
-
+        raise ValueError("Para restar matrices, A y B deben tener las mismas dimensiones.")
+    return nucleo.resta(A, B)
 
 def multiplicar_por_escalar(escalar, A):
-    """Multiplica cada entrada de A por un número real. Recibe escalar, A."""
-    return [[escalar * valor for valor in fila] for fila in A]
-
+    """Adapta el orden histórico de los argumentos."""
+    return nucleo.escalar(A, escalar)
 
 def multiplicacion_definida(A, B):
     """AB existe si columnas(A) = filas(B). Recibe A, B."""
@@ -123,58 +107,14 @@ def multiplicacion_definida(A, B):
 
 
 def multiplicar_matrices(A, B):
-    """Calcula AB mediante la regla fila-columna y registra cada entrada. Recibe A, B."""
+    """Devuelve producto y pasos desde una única implementación."""
     if not multiplicacion_definida(A, B):
-        raise ValueError(
-            "AB no está definida: columnas(A) debe ser igual a filas(B)."
-        )
-
-    producto = []
-    pasos = []
-
-    
-    for i in range(len(A)):
-        fila_resultado = []
-
-        
-        for j in range(len(B[0])):
-            total = Fraction(0)
-            terminos = []
-
-            
-            for k in range(len(B)):
-                parcial = A[i][k] * B[k][j]
-                total += parcial
-                terminos.append(
-                    {
-                        "a": A[i][k],
-                        "b": B[k][j],
-                        "producto": parcial,
-                    }
-                )
-
-            fila_resultado.append(total)
-            pasos.append(
-                {
-                    "fila": i,
-                    "columna": j,
-                    "terminos": terminos,
-                    "resultado": total,
-                }
-            )
-
-        producto.append(fila_resultado)
-
-    return producto, pasos
-
+        raise ValueError("AB no está definida: columnas(A) debe ser igual a filas(B).")
+    return nucleo.multiplicar_con_pasos(A, B)
 
 def transponer(A):
-    """Intercambia filas por columnas para obtener A^T. Recibe A."""
-    return [
-        [A[i][j] for i in range(len(A))]
-        for j in range(len(A[0]))
-    ]
-
+    """Transposición del núcleo común."""
+    return nucleo.transpuesta(A)
 
 def son_iguales(A, B):
     """Comprueba igualdad por tamaño y entradas correspondientes. Recibe A, B."""

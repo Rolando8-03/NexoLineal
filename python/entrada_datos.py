@@ -4,21 +4,12 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 
-from fractions import Fraction
+from nexolineal.parsing.numbers import parse_number
 
 
 def convertir_numero(texto):
-    """Convierte enteros, decimales o fracciones en un valor exacto. Recibe texto."""
-    limpio = str(texto).strip().replace(",", ".")
-
-    if limpio == "":
-        raise ValueError("hay una celda vacía")
-
-    try:
-        return Fraction(limpio)
-    except (ValueError, ZeroDivisionError):
-        raise ValueError(f"'{texto}' no es un número válido") from None
-
+    """Conserva la firma recibida y delega la conversión exacta."""
+    return parse_number(texto)
 
 def validar_dimension(texto, nombre, minimo=1, maximo=6):
     """Comprueba que una dimensión sea un entero dentro del límite permitido. Recibe texto, nombre, minimo, maximo."""

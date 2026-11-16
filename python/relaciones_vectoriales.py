@@ -6,8 +6,8 @@ Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 
 from fractions import Fraction
 
-from analisis_sistema import resolver_sistema
-from entrada_datos import convertir_numero
+from .analisis_sistema import resolver_sistema
+from .entrada_datos import convertir_numero
 
 
 def leer_vector(texto, nombre="vector"):

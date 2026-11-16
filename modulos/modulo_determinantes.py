@@ -4,7 +4,7 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 
-from operaciones_matrices import analizar_determinante, _serializar
+from python.operaciones_matrices import analizar_determinante, _serializar
 from modulos.modulo_matrices import matriz_exacta, determinante, determinante_cofactores, sarrus
 
 

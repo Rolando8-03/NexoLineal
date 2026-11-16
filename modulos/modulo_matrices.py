@@ -4,69 +4,15 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 from fractions import Fraction
-from entrada_datos import convertir_numero
-from operaciones_matrices import ejecutar_matrices, multiplicar_matrices, _serializar
+from nexolineal.parsing.numbers import parse_matrix
+from nexolineal.algorithms.matrices import suma, resta, escalar, producto, transpuesta, identidad
+from python.entrada_datos import convertir_numero
+from python.operaciones_matrices import ejecutar_matrices, multiplicar_matrices, _serializar
 
 
 def matriz_exacta(datos, cuadrada=False):
-    """Recibe texto o filas numéricas; devuelve una matriz rectangular de Fraction."""
-    if isinstance(datos, str):
-        datos = [f.split() for f in datos.replace(';', '\n').splitlines() if f.strip()]
-    if (not isinstance(datos, (list, tuple)) or not datos
-            or not isinstance(datos[0], (list, tuple)) or not datos[0]):
-        raise ValueError('La matriz no puede estar vacía.')
-    if any(not isinstance(f, (list, tuple)) or len(f) != len(datos[0]) for f in datos):
-        raise ValueError('Todas las filas deben tener la misma cantidad de elementos.')
-    if cuadrada and len(datos) != len(datos[0]):
-        raise ValueError('La operación requiere una matriz cuadrada.')
-    return [[convertir_numero(v) for v in fila] for fila in datos]
-
-
-def identidad(orden):
-    """Recibe un orden positivo y devuelve la matriz identidad exacta."""
-    if not isinstance(orden, int) or orden < 1:
-        raise ValueError('El orden debe ser un entero positivo.')
-    return [[Fraction(i == j) for j in range(orden)] for i in range(orden)]
-
-
-def suma(A, B):
-    """Recibe matrices de igual tamaño y devuelve su suma exacta."""
-    A, B = matriz_exacta(A), matriz_exacta(B)
-    if (len(A), len(A[0])) != (len(B), len(B[0])):
-        raise ValueError('Suma y resta requieren matrices de las mismas dimensiones.')
-    return [[a + b for a, b in zip(fa, fb)] for fa, fb in zip(A, B)]
-
-
-def escalar(A, numero):
-    """Recibe una matriz y un escalar; devuelve el producto por ese escalar."""
-    numero = convertir_numero(numero)
-    return [[numero * v for v in fila] for fila in matriz_exacta(A)]
-
-
-def resta(A, B):
-    """Recibe matrices de igual tamaño y devuelve A menos B."""
-    return suma(A, escalar(B, -1))
-
-
-def producto(A, B):
-    """Recibe A de m×n y B de n×p; devuelve AB mediante la regla fila-columna."""
-    A, B = matriz_exacta(A), matriz_exacta(B)
-    if len(A[0]) != len(B):
-        raise ValueError(f'No se puede multiplicar: Columnas de A [{len(A[0])}] ≠ Filas de B [{len(B)}]')
-    resultado = []
-    for fila in A:
-        nueva = []
-        for columna in range(len(B[0])):
-            nueva.append(sum(fila[k] * B[k][columna] for k in range(len(B))))
-        resultado.append(nueva)
-    return resultado
-
-
-def transpuesta(A):
-    """Recibe A de m×n y devuelve su transpuesta de n×m."""
-    A = matriz_exacta(A)
-    return [[A[i][j] for i in range(len(A))] for j in range(len(A[0]))]
-
+    """Adapta la firma histórica al parser compartido."""
+    return parse_matrix(datos, square=cuadrada)
 
 def menor(A, fila, columna):
     """Recibe A e índices desde cero; devuelve la submatriz sin esa fila y columna."""

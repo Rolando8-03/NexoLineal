@@ -6,10 +6,10 @@ Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 
 from fractions import Fraction
 
-from formas_matriciales import analizar_forma
+from .formas_matriciales import analizar_forma
 
-from entrada_datos import validar_sistema
-from metodos_eliminacion import (
+from .entrada_datos import validar_sistema
+from .metodos_eliminacion import (
     aplicar_gauss,
     aplicar_gauss_jordan,
     construir_matriz_aumentada,

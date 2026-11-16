@@ -13,8 +13,8 @@ from modulos.factorizacion import factorizar_lu, resolver_lu, cramer, resolver_p
 from modulos.modulo_sistemas import resolver_desde_interfaz
 from modulos.modulo_vectores import ejecutar_relaciones_interfaz, ejecutar_vectores_interfaz
 from modulos.modulo_determinantes import ejecutar_determinante_interfaz
-from operaciones_matrices import ejecutar_matrices
-from analisis_sistema import resolver_sistema
+from python.operaciones_matrices import ejecutar_matrices
+from python.analisis_sistema import resolver_sistema
 
 
 class PruebasAlgebra(unittest.TestCase):

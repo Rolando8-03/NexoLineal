@@ -1,4 +1,4 @@
-"""Inicia los menús de consola o la ventana gráfica de NexoLineal.
+"""Inicia la ventana gráfica de NexoLineal.
 Integra los módulos de las tareas 1 a 5 de Álgebra Lineal.
 Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
@@ -6,8 +6,6 @@ Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 
 import sys
 from pathlib import Path
-from modulos import modulo_matrices
-from modulos.consola import menu_principal
 
 def obtener_ruta_recurso(nombre_recurso):
     """Recibe el nombre de un recurso y devuelve su ruta local o empaquetada."""
@@ -41,12 +39,4 @@ def iniciar_aplicacion():
     )
 
 if __name__ == "__main__":
-    try:
-        if "--gui" in sys.argv:
-            iniciar_aplicacion()
-        else:
-            menu_principal()
-    except (EOFError, KeyboardInterrupt):
-        print("\nHasta luego.")
-
-
+    iniciar_aplicacion()
