@@ -512,7 +512,15 @@ def ejecutar_matrices(datos):
             )
 
         if multiplicacion_definida(A, B):
-            resultado["producto_AB"], resultado["pasos_AB"] = multiplicar_matrices(A, B)
+            from nexolineal.application.service import execute
+            contract = execute({"schema_version": "1.0", "operation_id": "matrices.producto",
+                                "input": {"A": A, "B": B}})
+            if contract["status"] != "ok":
+                raise ValueError(contract["error"]["message"])
+            resultado["producto_AB"] = [[convertir_numero(v) for v in row]
+                                        for row in contract["result"]["matrix"]]
+            resultado["pasos_AB"] = [step["data"] for step in contract["steps"]]
+            resultado["contrato_producto"] = contract
         else:
             resultado["mensaje_AB"] = (
                 f"AB no está definida: A tiene {len(A[0])} columna(s) y "

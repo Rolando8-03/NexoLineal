@@ -2,6 +2,18 @@
 // Conecta la interfaz de NexoLineal con Python mediante Pyodide.
 
 const PYTHON_FILES = [
+  "python/__init__.py",
+  "packages/core/src/nexolineal/__init__.py",
+  "packages/core/src/nexolineal/domain/__init__.py",
+  "packages/core/src/nexolineal/parsing/__init__.py",
+  "packages/core/src/nexolineal/algorithms/__init__.py",
+  "packages/core/src/nexolineal/application/__init__.py",
+  "packages/core/src/nexolineal/domain/models.py",
+  "packages/core/src/nexolineal/parsing/numbers.py",
+  "packages/core/src/nexolineal/algorithms/matrices.py",
+  "packages/core/src/nexolineal/algorithms/calculo.py",
+  "packages/core/src/nexolineal/algorithms/domains.py",
+  "packages/core/src/nexolineal/application/service.py",
   "python/operaciones_fila.py",
   "python/entrada_datos.py",
   "python/metodos_eliminacion.py",
@@ -87,11 +99,8 @@ async function inicializarPyodide() {
 
       const codigo = await respuesta.text();
 
-      // Los archivos originales conservan sus importaciones.
-      // Los paquetes nuevos conservan sus carpetas.
-      const rutaRelativa = ruta.startsWith("python/")
-        ? ruta.split("/").pop()
-        : ruta;
+      // Conserva la estructura de paquetes de Python también en Pyodide.
+      const rutaRelativa = ruta.replace("packages/core/src/", "");
 
       const destino = `${carpetaBase}/${rutaRelativa}`;
 
@@ -111,27 +120,21 @@ async function inicializarPyodide() {
 
     // Comprueba las importaciones antes de habilitar la interfaz.
     pyodide.runPython(`
-import sys
-import os
 import importlib
-
-_carpeta_trabajo = os.getcwd()
-if _carpeta_trabajo not in sys.path:
-    sys.path.insert(0, _carpeta_trabajo)
-
 importlib.invalidate_caches()
 
 import json
-import operaciones_fila
-import entrada_datos
-import metodos_eliminacion
-import formas_matriciales
-import analisis_sistema
-import vectores
-import operaciones_matrices
-import relaciones_vectoriales
-import formato_latex
-import calculo_basico
+import nexolineal.application.service
+import python.operaciones_fila
+import python.entrada_datos
+import python.metodos_eliminacion
+import python.formas_matriciales
+import python.analisis_sistema
+import python.vectores
+import python.operaciones_matrices
+import python.relaciones_vectoriales
+import python.formato_latex
+import python.calculo_basico
 import teoremas.resumen_teoremas
 import modulos.modulo_sistemas
 import modulos.modulo_vectores
@@ -252,7 +255,7 @@ _resultado = ejecutar_programa5(_entrada)`, datos, "_programa5_js");
   // Cálculo y calculadora básica.
   if (accion === "calculo" || accion === "basica") {
     return ejecutarJSON(
-`from calculo_basico import ejecutar_calculo
+`from python.calculo_basico import ejecutar_calculo
 _resultado = ejecutar_calculo(_entrada)`,
       datos,
       "_tema_js"
