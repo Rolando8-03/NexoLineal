@@ -45,7 +45,7 @@ def analizar(texto, variable=False):
     return nodo
 
 
-def evaluar(n, x=0, ans=0, grados=False):
+def _evaluar(n, x=0, ans=0, grados=False):
     """Recibe el árbol, x, Ans y modo angular; devuelve su valor real finito."""
     if isinstance(n, ast.Constant):
         y = parse_number(getattr(n, '_literal', str(n.value)))
@@ -82,6 +82,16 @@ def evaluar(n, x=0, ans=0, grados=False):
     if isinstance(y, complex) or (not isinstance(y, Fraction) and not math.isfinite(y)):
         raise ValueError('El resultado no es un número real finito.')
     return y
+
+
+def evaluar(n, x=0, ans=0, grados=False):
+    """Convierte los fallos aritméticos en errores explícitos de dominio."""
+    try:
+        return _evaluar(n, x, ans, grados)
+    except DomainError:
+        raise
+    except (ValueError, ZeroDivisionError, OverflowError) as error:
+        raise DomainError(str(error)) from None
 
 
 def numero(v):

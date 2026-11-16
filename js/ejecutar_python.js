@@ -74,7 +74,7 @@ async function inicializarPyodide() {
     pyodide = await loadPyodide();
 
     // Usa rutas absolutas dentro del sistema de archivos de Pyodide.
-    let carpetaBase = pyodide.FS.cwd();
+    let carpetaBase = pyodide.runPython("import sysconfig; sysconfig.get_path(\"purelib\")");
 
     if (carpetaBase.endsWith("/")) {
       carpetaBase = carpetaBase.slice(0, -1);

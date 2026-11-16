@@ -598,7 +598,3 @@ def ejecutar_matrices_interfaz(datos):
     return ejecutar_matrices(datos)
 
 
-def menu_matrices():
-    """Sin argumentos; muestra el menú de consola del Módulo III y retorna al salir."""
-    from modulos.consola import menu_matrices_cli
-    menu_matrices_cli()

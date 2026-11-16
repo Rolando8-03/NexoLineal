@@ -18,7 +18,3 @@ def ejecutar_relaciones_interfaz(datos):
     return ejecutar_relaciones(datos)
 
 
-def menu_vectores():
-    """Sin argumentos; abre el menú de vectores y regresa cuando se elige volver."""
-    from modulos.consola import menu_vectores_cli
-    menu_vectores_cli()

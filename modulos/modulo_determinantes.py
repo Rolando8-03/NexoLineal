@@ -13,7 +13,3 @@ def ejecutar_determinante_interfaz(datos):
     return _serializar(analizar_determinante(matriz_exacta(datos.get("A", ""))))
 
 
-def menu_determinantes():
-    """Sin argumentos; muestra las opciones del módulo de determinantes en consola."""
-    from modulos.consola import menu_matrices_cli
-    menu_matrices_cli("determinantes")
