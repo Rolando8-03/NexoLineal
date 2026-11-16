@@ -32,6 +32,15 @@ class PlatformControl(unittest.TestCase):
         self.assertEqual(result["status"], "cancelled")
         self.assertIsNone(result["result"])
 
+    def test_cancel_before_publishing_completed_product(self):
+        event = threading.Event()
+        def update(value):
+            if value == 100:
+                event.set()
+        result = execute(PROBLEM, is_cancelled=event.is_set, on_progress=update)
+        self.assertEqual(result["status"], "cancelled")
+        self.assertIsNone(result["result"])
+
     def test_progress_reaches_completion(self):
         progress = []
         result = execute(PROBLEM, on_progress=progress.append)

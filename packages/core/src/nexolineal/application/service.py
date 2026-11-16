@@ -65,7 +65,11 @@ def execute(data, *, is_cancelled=None, on_progress=None):
         _validate(problem)
         checkpoint()
         if operation == "matrices.producto":
-            return _product(problem, checkpoint, on_progress).to_dict()
+            result = _product(problem, checkpoint, on_progress)
+            checkpoint()
+            response = result.to_dict()
+            checkpoint()
+            return response
         payload = dict(inputs)
         if operation == "calculadora.evaluar":
             payload["accion"] = "basica"

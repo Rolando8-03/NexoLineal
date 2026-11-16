@@ -161,7 +161,7 @@ export function App() {
         </section>
         <section id="resultado" className="panel result-panel" aria-live="polite" aria-labelledby="resultado-titulo" data-status={result?.status || (error ? "transport_error" : "idle")}>
           <div className="panel-heading"><h2 id="resultado-titulo">Resultado</h2>
-            {successful && import.meta.env.VITE_TARGET === "web" && <button id="exportar" type="button" className="secondary" onClick={exportResult}>Exportar JSON</button>}
+            {successful && (import.meta.env.VITE_TARGET || "web") === "web" && <button id="exportar" type="button" className="secondary" onClick={exportResult}>Exportar JSON</button>}
           </div>
           {error && <><p className="error" role="alert">{error}</p>
             {!ready && <button id="reintentar-motor" type="button" className="secondary" onClick={() => void initialize()}>Reintentar</button>}</>}

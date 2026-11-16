@@ -7,7 +7,9 @@ import threading
 import faulthandler
 
 if __name__ == "__main__":
-    diagnostic = Path(os.environ.get("NEXO_EVIDENCE", "nexolineal-error"))
+    default_log = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "NexoLineal" / "logs" / "inicio"
+    diagnostic = Path(os.environ.get("NEXO_EVIDENCE", str(default_log)))
+    diagnostic.parent.mkdir(parents=True, exist_ok=True)
     def thread_failed(arguments):
         diagnostic.with_name(diagnostic.name + ".error.log").write_text(
             "".join(traceback.format_exception(arguments.exc_type, arguments.exc_value, arguments.exc_traceback)),
@@ -24,6 +26,12 @@ if __name__ == "__main__":
             trace.write("MAIN_RETURNED " + repr([(t.name, t.daemon) for t in threading.enumerate()]) + "\n")
             trace.flush()
     except Exception:
-        diagnostic = Path(os.environ.get("NEXO_EVIDENCE", "nexolineal-error")) 
         diagnostic.with_name(diagnostic.name + ".error.log").write_text(traceback.format_exc(), encoding="utf-8")
+        if "--self-test" not in sys.argv:
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(
+                None,
+                "No se pudo iniciar NexoLineal. Comprobá que WebView2 esté instalado. "
+                "El detalle se guardó en " + str(diagnostic.with_name(diagnostic.name + ".error.log")),
+                "NexoLineal", 0x10)
         raise SystemExit(1)

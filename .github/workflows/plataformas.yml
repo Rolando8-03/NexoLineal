@@ -10,7 +10,6 @@ on:
       - '.github/scripts/*fase03*'
       - '.github/scripts/casos_plataformas.py'
       - '.github/workflows/plataformas.yml'
-      - 'docs/fase03/**'
   workflow_dispatch:
 permissions:
   contents: read
@@ -40,8 +39,6 @@ jobs:
           python .github/scripts/casos_plataformas.py
       - name: Compilar web con Python local
         working-directory: apps/frontend
-        env:
-          VITE_TARGET: web
         run: |
           npm ci
           npm audit --audit-level=low
@@ -104,7 +101,7 @@ jobs:
       - name: Empaquetar ejecutable gráfico
         shell: pwsh
         run: |
-          pyinstaller --noconsole --onefile --name NexoLineal-Prototipo --add-data "apps/frontend/dist;ui" --collect-submodules nexolineal --hidden-import apps.windows.main --hidden-import apps.windows.smoke --paths . apps/windows/entrypoint.py
+          pyinstaller --noconsole --onefile --name NexoLineal-Prototipo --icon assets/icono.ico --add-data "apps/frontend/dist;ui" --collect-submodules nexolineal --hidden-import apps.windows.main --hidden-import apps.windows.smoke --paths . apps/windows/entrypoint.py
           if ($LASTEXITCODE -ne 0) { throw 'Falló empaquetado' }
           python -c "import pefile; p=pefile.PE('dist/NexoLineal-Prototipo.exe'); assert p.OPTIONAL_HEADER.Subsystem == 2"
       - name: Ejecutar aplicación empaquetada
