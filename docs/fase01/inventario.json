@@ -1,0 +1,231 @@
+{
+  "referencia_fuente": "95ebb05182749c783fee04c454a29ca2c76f46db",
+  "zip_sha256": "3a22a03feb8d04693d85642020825067bb350df96d8f9a2d11eb9dfffa0ba3b7",
+  "archivos": [
+    {
+      "ruta": ".github/workflows/static.yml",
+      "git_blob_sha": "d98aae3f9d71cbafe83f415251fe807c775edef4",
+      "bytes": 1295
+    },
+    {
+      "ruta": "Abrir_consola.bat",
+      "git_blob_sha": "ed08874e2055553ebd1d001ffda2a0c7fe79f380",
+      "bytes": 44
+    },
+    {
+      "ruta": "Abrir_ventana.bat",
+      "git_blob_sha": "3f63868508a624c2eac46d960ae1c3101ae873f8",
+      "bytes": 50
+    },
+    {
+      "ruta": "GUIA_DE_USO.md",
+      "git_blob_sha": "6ca9b8e3017c5edf112cd036abc5818f86279ab0",
+      "bytes": 5639
+    },
+    {
+      "ruta": "README.md",
+      "git_blob_sha": "f2f3380e4d3ff3fe2080c273b90236dbba842ad5",
+      "bytes": 8610
+    },
+    {
+      "ruta": "assets/icono.ico",
+      "git_blob_sha": "ec885374d8c6bc379544289a45ca9034e3041bab",
+      "bytes": 270398
+    },
+    {
+      "ruta": "assets/iconos/analizar.svg",
+      "git_blob_sha": "10dfe36bfe7de603b4e55753e64a3f0509e84079",
+      "bytes": 8017
+    },
+    {
+      "ruta": "assets/iconos/basica.svg",
+      "git_blob_sha": "21852c775b5c83d48a733fce0dd2ae03d7ee05d5",
+      "bytes": 8042
+    },
+    {
+      "ruta": "assets/iconos/calcular.svg",
+      "git_blob_sha": "732c783ceef787958cdfcffe7fadfd3ff70de09e",
+      "bytes": 7977
+    },
+    {
+      "ruta": "assets/iconos/calculo.svg",
+      "git_blob_sha": "c24430b6a9de76349697132160379747208c6ef9",
+      "bytes": 8026
+    },
+    {
+      "ruta": "assets/iconos/ejemplo.svg",
+      "git_blob_sha": "2086c1c31a87f117752dd8d3a11f17175b398c6c",
+      "bytes": 7990
+    },
+    {
+      "ruta": "assets/iconos/historial.svg",
+      "git_blob_sha": "fc7787de46aa3a6d0ba5691509c19afa7ded6212",
+      "bytes": 7990
+    },
+    {
+      "ruta": "assets/iconos/limpiar.svg",
+      "git_blob_sha": "20b6f6cd650d8cc259a5702d808004d03e82fc7f",
+      "bytes": 7995
+    },
+    {
+      "ruta": "assets/iconos/matrices.svg",
+      "git_blob_sha": "9fd91457bb154e61685a9d2a45574a6194aa0554",
+      "bytes": 8010
+    },
+    {
+      "ruta": "assets/iconos/propiedades.svg",
+      "git_blob_sha": "52d33114dcea143b473dbe09f392917ca7d4f143",
+      "bytes": 8036
+    },
+    {
+      "ruta": "assets/iconos/sistemas.svg",
+      "git_blob_sha": "c354716ccf8e72a235fa96d37c485a29a19fa58d",
+      "bytes": 8030
+    },
+    {
+      "ruta": "assets/iconos/transferir.svg",
+      "git_blob_sha": "124f6e2ddcf7bb27fb9eeddfc963d78a08873881",
+      "bytes": 7988
+    },
+    {
+      "ruta": "assets/iconos/vectores.svg",
+      "git_blob_sha": "c9c7054ff25bbfcd1164756b0691aa5970130fc7",
+      "bytes": 7977
+    },
+    {
+      "ruta": "css/estilos.css",
+      "git_blob_sha": "b3cc9caf1cd47d713ccf553de613f47239d03622",
+      "bytes": 9023
+    },
+    {
+      "ruta": "index.html",
+      "git_blob_sha": "e29f341b83fc350225bb39ba3cb67aeffdb7e570",
+      "bytes": 19117
+    },
+    {
+      "ruta": "js/app.js",
+      "git_blob_sha": "653e44c4ef20cd4605d166a08075b547fd0e8afb",
+      "bytes": 123714
+    },
+    {
+      "ruta": "js/ejecutar_python.js",
+      "git_blob_sha": "c544307a856295b0ea8b28fc097bef121458a48e",
+      "bytes": 8596
+    },
+    {
+      "ruta": "js/programa5.js",
+      "git_blob_sha": "82dfbdca058ea7898fceb0aa03851ef592c3645c",
+      "bytes": 28704
+    },
+    {
+      "ruta": "main.py",
+      "git_blob_sha": "f6249b1075522b0d40d2be2bd45474edf809e936",
+      "bytes": 1449
+    },
+    {
+      "ruta": "modulos/__init__.py",
+      "git_blob_sha": "2ce94b079233ab677671d0c111a8b2fc697a4fac",
+      "bytes": 497
+    },
+    {
+      "ruta": "modulos/consola.py",
+      "git_blob_sha": "aea50d804b4d43b2ca9f58c02e8f6371b129451d",
+      "bytes": 11816
+    },
+    {
+      "ruta": "modulos/factorizacion.py",
+      "git_blob_sha": "c67feff828773d8f2daf726208713ce080b52840",
+      "bytes": 10358
+    },
+    {
+      "ruta": "modulos/modulo_determinantes.py",
+      "git_blob_sha": "d225e44f9c8dfeba81b7cbc74a702242045bdc24",
+      "bytes": 873
+    },
+    {
+      "ruta": "modulos/modulo_lu.py",
+      "git_blob_sha": "32ad641307043531ed527a5fd1fd85a46dff9da9",
+      "bytes": 2609
+    },
+    {
+      "ruta": "modulos/modulo_matrices.py",
+      "git_blob_sha": "a30ba09d94e091fb8d7782feaaa0d06f1ac05be0",
+      "bytes": 33563
+    },
+    {
+      "ruta": "modulos/modulo_sistemas.py",
+      "git_blob_sha": "cb8c8aefda89aa2ab6f39af8fa88a482dc9f3c3a",
+      "bytes": 605
+    },
+    {
+      "ruta": "modulos/modulo_vectores.py",
+      "git_blob_sha": "1d3f0a8d542db7ab2e14cd52a0d9eabb6d4f5565",
+      "bytes": 891
+    },
+    {
+      "ruta": "pruebas.py",
+      "git_blob_sha": "26f5c0ad74349602f98cc133532fdc77494278ac",
+      "bytes": 19103
+    },
+    {
+      "ruta": "python/analisis_sistema.py",
+      "git_blob_sha": "359e312e576fdec1bac4b902e5eb2f2be140cddc",
+      "bytes": 12131
+    },
+    {
+      "ruta": "python/calculo_basico.py",
+      "git_blob_sha": "90d44eb12ccdf80c829271a14bcb141bfee2cc5f",
+      "bytes": 13812
+    },
+    {
+      "ruta": "python/entrada_datos.py",
+      "git_blob_sha": "e6573ca8d6ed8b7cfbce8d2591c5cc6bb03152be",
+      "bytes": 2492
+    },
+    {
+      "ruta": "python/formas_matriciales.py",
+      "git_blob_sha": "9d5a293a3882ce090e6331716ffaffd08568cc58",
+      "bytes": 1823
+    },
+    {
+      "ruta": "python/formato_latex.py",
+      "git_blob_sha": "8ad28728551aa9ff70c5ebfb3eaf4e444b4d46f8",
+      "bytes": 14365
+    },
+    {
+      "ruta": "python/metodos_eliminacion.py",
+      "git_blob_sha": "a2ead7866e9ebef36bb2db323212973be9fab1c8",
+      "bytes": 11574
+    },
+    {
+      "ruta": "python/operaciones_fila.py",
+      "git_blob_sha": "d5f5819f59cc3bcb725284fa1c5dba2cea87d6fc",
+      "bytes": 2798
+    },
+    {
+      "ruta": "python/operaciones_matrices.py",
+      "git_blob_sha": "9a198be6f9a18fe803f43f4820e4b17b5bbbc21e",
+      "bytes": 20980
+    },
+    {
+      "ruta": "python/relaciones_vectoriales.py",
+      "git_blob_sha": "80a37b2001ccba1a9e83970489b83ecce82a743e",
+      "bytes": 10199
+    },
+    {
+      "ruta": "python/vectores.py",
+      "git_blob_sha": "0d35267555a56d430d6a49d404a5942da05f935b",
+      "bytes": 3832
+    },
+    {
+      "ruta": "teoremas/__init__.py",
+      "git_blob_sha": "2f3f7dd7d39bc1335a03b4c14b46d2309ccbf23d",
+      "bytes": 262
+    },
+    {
+      "ruta": "teoremas/resumen_teoremas.py",
+      "git_blob_sha": "05c603887ae2071c882990efe797c40cd8d19562",
+      "bytes": 9887
+    }
+  ]
+}
