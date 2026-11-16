@@ -1,0 +1,27 @@
+{
+  "phase": "02",
+  "verified_code_commit": "424287d5acaf1bd3a1f7dc6f3af683b90427804c",
+  "workflow_run": 43971834030,
+  "workflow_url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43971834030",
+  "conclusion": "success",
+  "original_tests_adapted": 29,
+  "new_regression_tests": 32,
+  "independent_systems": 288,
+  "independent_checks": 1572,
+  "lu_applicable_cases": 256,
+  "reference": "SymPy 1.14.0",
+  "browser_cases": 11,
+  "browser_errors": [],
+  "native_web_parity": [
+    "matrices.producto ok",
+    "matrices.producto invalid_input",
+    "calculo.definida domain_error"
+  ],
+  "exact_fraction_screen_and_export": "9007199254740993/2",
+  "exact_polynomial_integral": "2/3",
+  "retired_paths": [
+    "Abrir_consola.bat",
+    "Abrir_ventana.bat",
+    "modulos/consola.py"
+  ]
+}
