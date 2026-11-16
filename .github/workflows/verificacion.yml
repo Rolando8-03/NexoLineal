@@ -48,7 +48,7 @@ jobs:
           python -B -m unittest discover -s tests -v 2>&1 | tee evidencia-ci/pruebas-fase02.log
           python -m compileall -q packages/core/src python modulos
       - name: Referencia matemática independiente
-        run: python .github/scripts/auditoria_matematica.py
+        run: python -m tests.auditoria_matematica
       - name: Preparar referencia del contrato nativo
         run: python .github/scripts/contratos_nativos.py
       - name: Sintaxis JavaScript

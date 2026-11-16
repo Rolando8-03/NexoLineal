@@ -42,7 +42,7 @@ Los valores racionales se transportan como texto. Una integral polinómica de x�
 python -m pip install sympy==1.14.0 jsonschema==4.23.0
 python -B pruebas.py -v
 python -B -m unittest discover -s tests -v
-python .github/scripts/auditoria_matematica.py
+python -m tests.auditoria_matematica
 ```
 
 SymPy se usa como referencia independiente en pruebas. Los algoritmos de producción conservan sus implementaciones explícitas en Python.
