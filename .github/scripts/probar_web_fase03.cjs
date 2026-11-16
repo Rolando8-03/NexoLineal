@@ -103,7 +103,7 @@ const report = { approved: false, cases: [], errors: [] };
         const result = JSON.parse(fs.readFileSync(await (await pendingDownload).path(), "utf8"));
         assert.deepEqual(result.result, item.expected.result);
         if (request.operation_id === "matrices.producto" && result.result.matrix[0][0].includes("9007199254740993")) {
-          assert.match(await page.locator("#resultado .katex-mathml annotation").first().innerText(), /9007199254740993/);
+          assert.match(await page.locator("#resultado .katex-mathml annotation").first().textContent(), /9007199254740993/);
         }
       } else {
         assert.ok((await page.getByRole("alert").innerText()).includes(item.expected.error.message));
