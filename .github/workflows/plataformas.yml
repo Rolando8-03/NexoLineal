@@ -121,7 +121,7 @@ jobs:
             Stop-Process -Id $process.Id -Force
             throw 'El ejecutable excedió dos minutos'
           }
-          if (Test-Path evidencia-fase03/windows-exe.json.error.log) { Get-Content evidencia-fase03/windows-exe.json.error.log }
+          if (Test-Path evidencia-fase03/windows-exe.json.error.log) { Get-Content evidencia-fase03/windows-exe.json.error.log; throw 'Excepción de ejecución gráfica' }
           if ($process.ExitCode -ne 0) { throw 'Falló ejecutable gráfico' }
           if (-not (Test-Path $env:NEXO_EVIDENCE)) { throw 'Falta evidencia del ejecutable' }
           python -c "import json,os; from pathlib import Path; print('NEXO_WINDOWS_EXE_REPORT='+json.dumps(json.loads(Path(os.environ['NEXO_EVIDENCE']).read_text(encoding='utf-8')),ensure_ascii=False))"
@@ -180,8 +180,8 @@ jobs:
           script: |
             adb shell svc wifi disable
             adb shell svc data disable
-            adb install -r apps/android/app/build/outputs/apk/debug/app-debug.apk
-            adb install -r apps/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            adb install -r -t apps/android/app/build/outputs/apk/debug/app-debug.apk
+            adb install -r -t apps/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
             adb shell am instrument -w org.nexolineal.app.test/androidx.test.runner.AndroidJUnitRunner > evidencia-fase03/instrumentacion-android.log
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.json > evidencia-fase03/android.json
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.png > evidencia-fase03/android.png
