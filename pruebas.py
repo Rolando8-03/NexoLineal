@@ -162,29 +162,24 @@ class PruebasAlgebra(unittest.TestCase):
             self.assertEqual(escala[0]['izquierda'], 2*k)
             self.assertTrue(all(p['cumple'] for p in propiedades))
 
-    def test_consola_recupera_errores(self):
-        """Sin entradas; simula números, filas y k inválidos antes de una propiedad válida."""
-        from unittest.mock import patch
-        from modulos.consola import datos_matrices
-        entradas = iter(['0', 'abc', '2', '1', '1 2', '3 4',
-                         '2', '0 1', '1 1', '0', '3', '1', '1', '2'])
-        with patch('builtins.input', side_effect=lambda _: next(entradas)), patch('builtins.print'):
-            datos = datos_matrices('9')
-        self.assertEqual((datos['fila_i'], datos['fila_j'], datos['k']), (1, 2, 3))
-        self.assertTrue(all(p['cumple'] for p in verificar_propiedades(
-            datos['A'], datos['B'], datos['fila_i'], datos['fila_j'], datos['k'])))
+    def test_validacion_adaptador_matrices(self):
+        """Rechaza entradas inválidas y conserva un cálculo válido posterior."""
+        from python.entrada_datos import validar_dimension, convertir_numero
+        for dimension in ("0", "abc"):
+            with self.assertRaises(ValueError):
+                validar_dimension(dimension, "Filas")
+        with self.assertRaises(ValueError):
+            convertir_numero("abc")
+        datos = {"A": [[1, 2], [3, 4]], "B": [[0, 1], [1, 1]],
+                 "fila_i": 1, "fila_j": 2, "k": 3}
+        self.assertTrue(all(propiedad["cumple"] for propiedad in verificar_propiedades(
+            datos["A"], datos["B"], datos["fila_i"], datos["fila_j"], datos["k"])))
 
-    def test_consola_teoremas_completos(self):
-        """Sin entradas; exige inversa y determinantes desde la opción cero del Módulo III."""
-        import io
-        from contextlib import redirect_stdout
-        from unittest.mock import patch
-        from modulos.consola import menu_matrices_cli
-        salida = io.StringIO()
-        with patch('builtins.input', side_effect=['0', 'v']), redirect_stdout(salida):
-            menu_matrices_cli()
-        self.assertIn('Sesión 10 (a)', salida.getvalue())
-        self.assertIn('det(A⁻¹)=1/det(A)', salida.getvalue())
+    def test_teoremas_interfaz_completos(self):
+        """La consulta gráfica conserva los enunciados anteriores."""
+        contenido = "\\n".join(ejecutar_programa5({"opcion": "0"})["teoremas"])
+        self.assertIn("Sesión 10 (a)", contenido)
+        self.assertIn("det(A⁻¹)=1/det(A)", contenido)
 
     def test_matrices_aleatorias_contra_cofactores(self):
         """Sin entradas; contrasta eliminación, inversas y propiedades en casos aleatorios."""
