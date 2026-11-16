@@ -323,3 +323,12 @@ _resultado = obtener_teoremas(_entrada["modulo"])`,
 window.addEventListener("DOMContentLoaded", () => {
   inicializarPyodide().catch(error => console.error(error));
 });
+
+// Entrada pública versionada para consumidores del núcleo.
+async function ejecutarContrato(solicitud) {
+  return ejecutarJSON(
+`from nexolineal.application.service import execute
+_resultado = execute(_entrada)`,
+    solicitud, "_contrato_js"
+  );
+}
