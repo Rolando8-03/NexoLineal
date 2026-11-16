@@ -22,7 +22,7 @@ def parse_number(value):
         raise InputError("hay una celda vacía")
     if len(text) > 1000:
         raise ResourceLimitError("El número supera 1000 caracteres.")
-    exponent = re.search(r"[eE]([+-]?\\d+)$", text)
+    exponent = re.search(r"[eE]([+-]?[0-9]+)$", text)
     if exponent and abs(int(exponent.group(1))) > 1000:
         raise ResourceLimitError("El exponente decimal supera el límite de 1000.")
     try:
