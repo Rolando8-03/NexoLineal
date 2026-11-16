@@ -106,7 +106,7 @@ def numero(v):
 
 def imprimir(n):
     """Recibe un nodo de expresión y devuelve su notación matemática en texto."""
-    if isinstance(n, ast.Constant): return str(n.value)
+    if isinstance(n, ast.Constant): return getattr(n, '_literal', str(n.value))
     if isinstance(n, ast.Name): return n.id
     if isinstance(n, ast.UnaryOp): return f'(-{imprimir(n.operand)})' if isinstance(n.op, ast.USub) else imprimir(n.operand)
     if isinstance(n, ast.Call): return f'{n.func.id}({imprimir(n.args[0])})'

@@ -119,6 +119,10 @@ class NumbersAndCalculus(unittest.TestCase):
         expression = "0.10000000000000000001"
         self.assertEqual(evaluar(analizar(expression)), F(10000000000000000001,10**20))
 
+    def test_symbolic_literal_preserves_decimal(self):
+        from nexolineal.algorithms.calculo import imprimir
+        self.assertEqual(imprimir(analizar("0.10000000000000000001")), "0.10000000000000000001")
+
     def test_small_values(self):
         self.assertEqual(numero(F(1,10**20)), "1/100000000000000000000")
         self.assertNotEqual(numero(1e-20), "0")
