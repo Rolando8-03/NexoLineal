@@ -1,0 +1,6 @@
+pluginManagement {
+    repositories { google(); mavenCentral(); gradlePluginPortal() }
+}
+rootProject.name = "NexoLineal"
+include ":app", ":capacitor-android"
+project(":capacitor-android").projectDir = new File(settingsDir, "../frontend/node_modules/@capacitor/android/capacitor")
