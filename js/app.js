@@ -32,12 +32,48 @@ function escapeHtml(valor) {
     .replaceAll("'", "&#039;");
 }
 
+// La presentación consulta signo, cero y unidad con enteros de precisión arbitraria.
+function partesRacionales(valor) {
+  if (typeof valor === "number" && (!Number.isFinite(valor) ||
+      (Number.isInteger(valor) && !Number.isSafeInteger(valor)))) {
+    throw new Error("El número exacto debe recibirse como texto.");
+  }
+  const texto = String(valor ?? "0").trim().replace(",", ".");
+  let numerador, denominador;
+  if (texto.includes("/")) {
+    const partes = texto.split("/");
+    if (partes.length !== 2) throw new Error("Fracción no válida.");
+    numerador = BigInt(partes[0]);
+    denominador = BigInt(partes[1]);
+  } else {
+    const match = texto.match(/^([+-]?)(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$/);
+    if (!match || !(match[2] || match[3])) throw new Error("Número no válido.");
+    const decimales = match[3] || "";
+    const exponente = Number(match[4] || "0");
+    if (!Number.isSafeInteger(exponente) || Math.abs(exponente) > 10000) {
+      throw new Error("Exponente fuera del límite de presentación.");
+    }
+    numerador = BigInt((match[2] || "0") + decimales);
+    if (match[1] === "-") numerador = -numerador;
+    const escala = decimales.length - exponente;
+    denominador = escala > 0 ? 10n ** BigInt(escala) : 1n;
+    if (escala < 0) numerador *= 10n ** BigInt(-escala);
+  }
+  if (denominador === 0n) throw new Error("El denominador no puede ser cero.");
+  if (denominador < 0n) {
+    numerador = -numerador;
+    denominador = -denominador;
+  }
+  return { numerador, denominador };
+}
+
 function formatFrac(valor) {
   const texto = String(valor ?? "0");
   if (!texto.includes("/")) return texto;
-  const [n, d] = texto.split("/");
-  const signo = Number(n) < 0 ? "-" : "";
-  return `${signo}\\frac{${Math.abs(Number(n))}}{${Math.abs(Number(d))}}`;
+  const { numerador, denominador } = partesRacionales(valor);
+  const signo = numerador < 0n ? "-" : "";
+  const magnitud = numerador < 0n ? -numerador : numerador;
+  return `${signo}\\frac{${magnitud}}{${denominador}}`;
 }
 
 function matrixLatex(matriz, aumentada = false) {
@@ -357,19 +393,18 @@ function reiniciarSistema(scroll = true) {
 // Formato matemático de Sistemas
 // ------------------------------------------------------------
 
-function parseFracValor(valor) {
-  if (typeof valor === "number") return valor;
-  const texto = String(valor ?? "0");
-  const partes = texto.split("/");
-  if (partes.length === 1) return Number(partes[0]);
-  return Number(partes[0]) / Number(partes[1]);
+function claseCoeficiente(valor) {
+  const { numerador, denominador } = partesRacionales(valor);
+  if (numerador === 0n) return 0;
+  const signo = numerador < 0n ? -1 : 1;
+  const magnitud = numerador < 0n ? -numerador : numerador;
+  return signo * (magnitud === denominador ? 1 : 2);
 }
 
 function fracAbsValor(valor) {
-  const texto = String(valor ?? "0");
-  if (!texto.includes("/")) return String(Math.abs(Number(texto)));
-  const [n, d] = texto.split("/");
-  return `${Math.abs(Number(n))}/${Math.abs(Number(d))}`;
+  const { numerador, denominador } = partesRacionales(valor);
+  const magnitud = numerador < 0n ? -numerador : numerador;
+  return denominador === 1n ? String(magnitud) : `${magnitud}/${denominador}`;
 }
 
 function sistemaLatex(A, b) {
@@ -377,7 +412,7 @@ function sistemaLatex(A, b) {
     let izquierda = "";
 
     fila.forEach((coef, j) => {
-      const valor = parseFracValor(coef);
+      const valor = claseCoeficiente(coef);
       if (valor === 0) return;
 
       const magnitud = formatFrac(fracAbsValor(coef));
@@ -412,7 +447,7 @@ function expresionLatex(indice, expresion, libres) {
   libres.forEach((libre, k) => {
     const coef = expresion?.terminos?.[String(libre)];
     if (coef === undefined) return;
-    const num = parseFracValor(coef);
+    const num = claseCoeficiente(coef);
     const abs = formatFrac(fracAbsValor(coef));
     const termino = Math.abs(num) === 1 ? `t_{${k + 1}}` : `${abs}t_{${k + 1}}`;
     if (!derecha) derecha = num < 0 ? `-${termino}` : termino;
@@ -498,7 +533,7 @@ function operacionFilaLatex(op = {}) {
   if (tipo === "combinacion") {
     const destino = Number(op.destino) + 1;
     const origen = Number(op.origen) + 1;
-    const kValor = parseFracValor(op.k);
+    const kValor = claseCoeficiente(op.k);
     const k = formatFrac(op.k);
     const fila = kValor < 0
       ? `F_{${destino}}\\leftarrow F_{${destino}}-\\left(${formatFrac(fracAbsValor(op.k))}\\right)F_{${origen}}`
@@ -567,7 +602,7 @@ function derechaExpresionLatex(expresion, libres) {
     const coef = terminos[String(libre)];
     if (coef === undefined) return;
 
-    const num = parseFracValor(coef);
+    const num = claseCoeficiente(coef);
     const magnitud = formatFrac(fracAbsValor(coef));
     const parametro = `t_{${k + 1}}`;
     const termino = Math.abs(num) === 1 ? parametro : `${magnitud}${parametro}`;
@@ -580,7 +615,7 @@ function derechaExpresionLatex(expresion, libres) {
 }
 
 function terminoCoefVariableLatex(coeficiente, contenido, primero = false) {
-  const valor = parseFracValor(coeficiente);
+  const valor = claseCoeficiente(coeficiente);
   if (valor === 0) return "";
 
   const magnitud = formatFrac(fracAbsValor(coeficiente));
@@ -595,7 +630,7 @@ function ecuacionFilaLatex(fila, numeroVariables) {
 
   for (let j = 0; j < numeroVariables; j++) {
     const coef = fila[j];
-    if (parseFracValor(coef) === 0) continue;
+    if (claseCoeficiente(coef) === 0) continue;
     izquierda += terminoCoefVariableLatex(coef, `x_{${j + 1}}`, izquierda === "");
   }
 
@@ -609,7 +644,7 @@ function ecuacionConSustitucionesLatex(fila, paso, r) {
 
   for (let j = 0; j < numeroVariables; j++) {
     const coef = fila[j];
-    if (parseFracValor(coef) === 0) continue;
+    if (claseCoeficiente(coef) === 0) continue;
 
     let contenido = `x_{${j + 1}}`;
 
@@ -627,13 +662,13 @@ function despejeRegresivoLatex(fila, paso, r) {
   const numeroVariables = r.numero_variables;
   const pivot = paso.variable;
   const coefPivot = fila[pivot];
-  const valorPivot = parseFracValor(coefPivot);
+  const valorPivot = claseCoeficiente(coefPivot);
 
   let derecha = formatFrac(fila[numeroVariables]);
 
   for (let j = pivot + 1; j < numeroVariables; j++) {
     const coef = fila[j];
-    const valor = parseFracValor(coef);
+    const valor = claseCoeficiente(coef);
     if (valor === 0) continue;
 
     const expr = r.expresiones_gauss?.[j];
@@ -668,7 +703,7 @@ function sustitucionRegresivaDetalladaSistema(r) {
   return `<div class="space-y-4">${pasos.map((paso, i) => {
     const fila = r.matriz_escalonada?.[paso.fila] || [];
     const tieneSustitucion = fila.slice(paso.variable + 1, r.numero_variables)
-      .some(v => parseFracValor(v) !== 0);
+      .some(v => claseCoeficiente(v) !== 0);
 
     return `
       <article class="rounded-2xl border border-slate-800 bg-slate-950/30 p-4 sm:p-5">
@@ -831,7 +866,7 @@ function renderGaussSistema(r) {
 function comprobacionEcuacionLatex(comp) {
   const partes = [];
   (comp.terminos || []).forEach(t => {
-    const coef = parseFracValor(t.coeficiente);
+    const coef = claseCoeficiente(t.coeficiente);
     if (coef === 0) return;
     const magnitud = formatFrac(fracAbsValor(t.coeficiente));
     const valor = formatFrac(t.valor);
@@ -884,7 +919,7 @@ function combinacionConCoeficientesSistema(vectores, coeficientes) {
   const terminos = [];
   vectores.forEach((vector, i) => {
     const coef = coeficientes?.[i] ?? "0";
-    const valor = parseFracValor(coef);
+    const valor = claseCoeficiente(coef);
     if (valor === 0) return;
 
     const magnitud = formatFrac(fracAbsValor(coef));
@@ -2030,6 +2065,7 @@ function renderResultadoOperacionesMatrices(cont, r) {
             <p class="mt-2 text-sm text-slate-400">Tus matrices siguen registradas. Puedes volver a editarlas sin escribirlas nuevamente.</p>
           </div>
           <div class="flex flex-wrap gap-2">
+            ${r.contrato_producto ? '<button id="btn-exportar-producto" class="btn-secundario" type="button">Exportar producto JSON</button>' : ""}
             <button id="btn-mat-editar" class="btn-primario" type="button">Editar matrices</button>
             <button id="btn-mat-nuevas" class="btn-secundario" type="button">Limpiar A y B</button>
           </div>
@@ -2077,6 +2113,15 @@ function renderResultadoOperacionesMatrices(cont, r) {
       ${teoremasMatricesHTML(r)}
     </section>`;
 
+  $("#btn-exportar-producto", cont)?.addEventListener("click", () => {
+    const json = JSON.stringify(r.contrato_producto, null, 2);
+    const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "nexolineal-producto.json";
+    enlace.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
   $("#btn-mat-editar", cont)?.addEventListener("click", () => {
     matrixState.modos.operaciones = "entrada";
     renderMatrizContenido();
@@ -2086,13 +2131,13 @@ function renderResultadoOperacionesMatrices(cont, r) {
 }
 
 function rangoDesdeRref(matriz = []) {
-  return matriz.filter(fila => fila.some(valor => parseFracValor(valor) !== 0)).length;
+  return matriz.filter(fila => fila.some(valor => claseCoeficiente(valor) !== 0)).length;
 }
 
 function pivotesDesdeRref(matriz = []) {
   const pivotes = [];
   matriz.forEach((fila, i) => {
-    const j = fila.findIndex(valor => parseFracValor(valor) !== 0);
+    const j = fila.findIndex(valor => claseCoeficiente(valor) !== 0);
     if (j >= 0) pivotes.push([i, j]);
   });
   return pivotes;
@@ -2478,7 +2523,7 @@ function inicializarCalculo() {
       if (r.valor !== undefined) {
         const valor = document.createElement("p");
         valor.className = "mt-3 text-lg font-bold text-emerald-300";
-        valor.textContent = `${r.punto ? `En x = ${r.punto}: ` : "Resultado: "}${r.valor}`;
+        valor.textContent = `${r.punto ? `En x = ${r.punto}: ` : "Resultado: "}${r.valor} (${r.exactitud === "exacta" ? "exacto" : "aproximado"})`;
         panel.append(valor);
       }
       panel.classList.remove("hidden");
@@ -2506,7 +2551,8 @@ function inicializarBasica() {
   const calcular = async () => {
     try {
       const r = await ejecutarTema({ accion: "basica", expresion: entrada.value, ans, grados: $("#basica-grados").checked });
-      ans = Number(r.valor);
+      ans = r.valor;
+      $("#basica-exactitud").textContent = r.exactitud === "exacta" ? "Resultado exacto" : "Resultado aproximado (53 bits)";
       $("#basica-resultado").textContent = r.valor;
     } catch (error) {
       $("#basica-resultado").textContent = error.message || String(error);
