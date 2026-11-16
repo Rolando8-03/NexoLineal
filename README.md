@@ -1,8 +1,22 @@
 # NexoLineal
 
-Calculadora educativa con motor matemático en Python e interfaz web. La fase 02 establece un núcleo instalable, números racionales exactos, contratos versionados y comprobaciones automáticas.
+Calculadora educativa con motor matemático en Python e interfaz web. La fase 03 añade una interfaz compartida para web, Windows y Android, conectada al mismo núcleo Python y al contrato JSON 1.0.
 
-## Preparar el entorno de desarrollo
+## Prototipos de los tres destinos
+
+La interfaz compartida ofrece producto matricial con pasos, evaluación de expresiones, derivadas e integrales definidas. Incluye menú principal, entrada mínima y presentaciones Serio y Explorador. Los recursos del nuevo frontend se empaquetan localmente.
+
+| Destino | Ejecución |
+| --- | --- |
+| Web | Python dentro de un Worker de Pyodide |
+| Windows | Ventana WebView2 y ejecutable gráfico con Python incluido |
+| Android | APK de prueba con Python de Chaquopy y puente Capacitor |
+
+[Compilación y artefactos](docs/fase03/compilacion.md) · [Arquitectura](docs/fase03/arquitectura.md) · [Compatibilidad](docs/fase03/compatibilidad.md) · [Cierre de fase 03](docs/fase03/cierre.md)
+
+Las compilaciones y los informes se generan en [Actions](https://github.com/Rolando8-03/NexoLineal/actions/workflows/plataformas.yml). El EXE y el APK debug son prototipos de viabilidad. El instalador Windows y las firmas de distribución se desarrollan en fase 08.
+
+## Preparar la interfaz anterior durante la migración
 
 Requiere Python 3.10 o posterior. La verificación automática utiliza Python 3.12 y Node 22.
 
@@ -28,6 +42,10 @@ Los valores racionales se transportan como texto. Una integral polinómica de x�
 
 | Ruta | Responsabilidad |
 | --- | --- |
+| apps/frontend | Interfaz compartida React y adaptadores de ejecución |
+| apps/windows | Ventana nativa y empaquetado gráfico |
+| apps/android | APK con Python incluido y prueba instrumentada |
+| docs/fase03 | Arquitectura, compilación, compatibilidad y evidencias |
 | packages/core | Paquete nexolineal-core independiente de la interfaz |
 | packages/contracts | Esquemas JSON 1.0 de problemas y resultados |
 | python y modulos | Adaptadores y algoritmos existentes con imports normales |
@@ -46,6 +64,8 @@ python -m tests.auditoria_matematica
 ```
 
 SymPy se usa como referencia independiente en pruebas. Los algoritmos de producción conservan sus implementaciones explícitas en Python.
+
+El workflow de plataformas compara siete contratos completos y la integridad del paquete Python entre destinos. Ejecuta pruebas de cancelación y recuperación, formularios web, modos y el APK offline.
 
 El workflow de verificación ejecuta los casos originales, las regresiones nuevas, 288 sistemas independientes y recorridos gráficos en Chromium. Los informes y capturas se conservan como nexolineal-evidencias en Actions.
 

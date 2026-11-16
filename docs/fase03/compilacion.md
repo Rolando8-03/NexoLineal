@@ -61,7 +61,7 @@ python -m apps.windows.main
 Crear el ejecutable gráfico con Python incluido.
 
 ```powershell
-pyinstaller --noconsole --onefile --name NexoLineal-Prototipo --add-data "apps/frontend/dist;ui" --collect-submodules nexolineal --hidden-import apps.windows.main --hidden-import apps.windows.smoke --paths . apps/windows/entrypoint.py
+pyinstaller --noconsole --onefile --name NexoLineal-Prototipo --icon assets/icono.ico --add-data "apps/frontend/dist;ui" --collect-submodules nexolineal --hidden-import apps.windows.main --hidden-import apps.windows.smoke --paths . apps/windows/entrypoint.py
 ```
 
 El resultado está en `dist/NexoLineal-Prototipo.exe`. El workflow abre la ventana desde fuente y después abre ese ejecutable, ejecuta el puente real y comprueba que su subsistema PE sea gráfico. El instalador con accesos directos, desinstalación y firma corresponde a fase 08.
@@ -95,3 +95,5 @@ Los artefactos de Actions se conservan durante 30 días. El código y las instru
 Las versiones fijadas incluyen las correcciones publicadas en [Capacitor GHSA-rvm3-566m-v7fv](https://github.com/ionic-team/capacitor/security/advisories/GHSA-rvm3-566m-v7fv), [Vite GHSA-p4f5-76q4-ffq7](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7) y [KaTeX GHSA-238p-pmpm-9mq7](https://github.com/KaTeX/KaTeX/security/advisories/GHSA-238p-pmpm-9mq7). CI ejecuta npm audit para comprobar el árbol instalado en el momento de cada compilación.
 
 La referencia de integridad de Gradle se obtiene de [sus checksums oficiales](https://gradle.org/release-checksums/).
+
+Las compilaciones debug de Android pueden usar certificados de prueba distintos entre ejecuciones de CI. Si Android rechaza una actualización por firma incompatible, el prototipo anterior debe desinstalarse antes de instalar el nuevo. La firma permanente y la actualización conservando datos se resuelven en fase 08.

@@ -1,2 +1,6 @@
 packages/core/** text eol=lf
-apps/** text eol=lf
+apps/** text=auto eol=lf
+apps/android/gradlew.bat text eol=crlf
+*.jar binary
+*.ico binary
+*.png binary

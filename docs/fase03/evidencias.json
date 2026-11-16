@@ -1,0 +1,1392 @@
+{
+  "phase": "03",
+  "date": "2026-11-16",
+  "validated_source_sha": "75d946093a1f6ad5bcdcebee4c21777939a46a36",
+  "platform_run": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43981418946",
+  "regression_run": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43981418942",
+  "unit_tests": {
+    "original": 29,
+    "core_and_platforms": 44
+  },
+  "mathematical_audit": {
+    "systems": 288,
+    "checks": 1572,
+    "applicable_lu": 256,
+    "failures": 0,
+    "reference": "SymPy 1.14.0"
+  },
+  "legacy_ui": {
+    "commit": "75d946093a1f6ad5bcdcebee4c21777939a46a36",
+    "casos": [
+      {
+        "nombre": "sistema 2x2",
+        "A": [
+          [
+            "2",
+            "1"
+          ],
+          [
+            "1",
+            "-1"
+          ]
+        ],
+        "b": [
+          "5",
+          "1"
+        ],
+        "esperado": [
+          "2",
+          "1"
+        ],
+        "observado": [
+          "2",
+          "1"
+        ],
+        "aprobado": true
+      },
+      {
+        "nombre": "aritmética",
+        "expresion": "(8+2)/5",
+        "esperado": "2",
+        "observado": "2",
+        "aprobado": true
+      },
+      {
+        "nombre": "Ans racional",
+        "esperado": "1",
+        "aprobado": true
+      },
+      {
+        "nombre": "integral racional exacta",
+        "esperado": "2/3",
+        "aprobado": true
+      },
+      {
+        "nombre": "singularidad 1/x+0",
+        "aprobado": true
+      },
+      {
+        "nombre": "singularidad 2*(1/x)",
+        "aprobado": true
+      },
+      {
+        "nombre": "fracción grande en pantalla y exportación",
+        "esperado": "9007199254740993/2",
+        "aprobado": true
+      },
+      {
+        "nombre": "entrada numérica insegura requiere texto",
+        "aprobado": true
+      },
+      {
+        "nombre": "paridad matrices.producto ok",
+        "aprobado": true
+      },
+      {
+        "nombre": "paridad matrices.producto invalid_input",
+        "aprobado": true
+      },
+      {
+        "nombre": "paridad calculo.definida domain_error",
+        "aprobado": true
+      }
+    ],
+    "errores": [],
+    "aprobado": true
+  },
+  "apk_bytes": 44697918,
+  "artifacts": [
+    {
+      "name": "fase03-android",
+      "id": 14283317425,
+      "zip_bytes": 24389127,
+      "sha256": "sha256:65c5c9623c810a5c86c82c4fc685d8121fe6974cfe64eb94df43eef3cfc91999",
+      "expires_at": "2026-12-16T23:44:01Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43981418946/artifacts/14283317425"
+    },
+    {
+      "name": "fase03-web",
+      "id": 14282964718,
+      "zip_bytes": 7920048,
+      "sha256": "sha256:9a2d76c6c4ff2ba1799d6040296c03ba7c43074b787a49d7521b1abcea59caa1",
+      "expires_at": "2026-12-16T23:42:10Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43981418946/artifacts/14282964718"
+    },
+    {
+      "name": "fase03-paridad",
+      "id": 14281679515,
+      "zip_bytes": 273,
+      "sha256": "sha256:690ddc9e5799102238b409155cf7cb7ab523785908dc44d0ac327e3bb6e64ba3",
+      "expires_at": "2026-12-16T23:44:32Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43981418946/artifacts/14281679515"
+    },
+    {
+      "name": "fase03-windows",
+      "id": 14281434904,
+      "zip_bytes": 14238752,
+      "sha256": "sha256:a54ebc12e9ce369b7464a4751716f05cd885ca1e850dfb29962a92a0726ec752",
+      "expires_at": "2026-12-16T23:42:47Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/43981418946/artifacts/14281434904"
+    }
+  ],
+  "summary": {
+    "approved": true,
+    "platforms": [
+      "web",
+      "windows-fuente",
+      "windows-ejecutable",
+      "android"
+    ],
+    "shared_contracts": 7,
+    "identical_core_files": 13,
+    "android_offline": true
+  },
+  "reports": {
+    "web": {
+      "approved": true,
+      "cases": [
+        {
+          "name": "recuperación tras fallo al cargar el motor",
+          "passed": true
+        },
+        {
+          "name": "interfaz, exportación y presentaciones",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "1/2",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "2"
+                ],
+                [
+                  "3"
+                ]
+              ]
+            },
+            "status": "ok",
+            "result": {
+              "matrix": [
+                [
+                  "7"
+                ]
+              ]
+            },
+            "steps": [
+              {
+                "id": 0,
+                "kind": "producto_fila_columna",
+                "description": "Producto de la fila por la columna.",
+                "data": {
+                  "fila": 0,
+                  "columna": 0,
+                  "terminos": [
+                    {
+                      "a": "1/2",
+                      "b": "2",
+                      "producto": "1"
+                    },
+                    {
+                      "a": "2",
+                      "b": "3",
+                      "producto": "6"
+                    }
+                  ],
+                  "resultado": "7"
+                },
+                "formula": "c_ij = sum_k(a_ik*b_kj)"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "rational_string",
+              "index_base": 0,
+              "method": "fila_columna",
+              "source": "algorithms.matrices"
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "9007199254740993/2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "status": "ok",
+            "result": {
+              "matrix": [
+                [
+                  "9007199254740993/2"
+                ]
+              ]
+            },
+            "steps": [
+              {
+                "id": 0,
+                "kind": "producto_fila_columna",
+                "description": "Producto de la fila por la columna.",
+                "data": {
+                  "fila": 0,
+                  "columna": 0,
+                  "terminos": [
+                    {
+                      "a": "9007199254740993/2",
+                      "b": "1",
+                      "producto": "9007199254740993/2"
+                    }
+                  ],
+                  "resultado": "9007199254740993/2"
+                },
+                "formula": "c_ij = sum_k(a_ik*b_kj)"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "rational_string",
+              "index_base": 0,
+              "method": "fila_columna",
+              "source": "algorithms.matrices"
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "1",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "status": "invalid_input",
+            "result": null,
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "index_base": 0
+            },
+            "error": {
+              "code": "input",
+              "message": "No se puede multiplicar: Columnas de A [2] ≠ Filas de B [1]"
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.definida",
+            "input": {
+              "expresion": "1/x+0",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "status": "domain_error",
+            "result": null,
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "index_base": 0
+            },
+            "error": {
+              "code": "domain",
+              "message": "El intervalo contiene una singularidad o un dominio que el método de integral definida no puede verificar. El denominador puede anularse en el intervalo."
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "calculadora.evaluar",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculadora.evaluar",
+            "input": {
+              "expresion": "9007199254740993/2"
+            },
+            "status": "ok",
+            "result": {
+              "valor": "9007199254740993/2",
+              "exactitud": "exacta",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.definida",
+            "input": {
+              "expresion": "x^2",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "status": "ok",
+            "result": {
+              "valor": "2/3",
+              "expresion": "(1/3)*x^3",
+              "tipo": "exacta",
+              "exactitud": "exacta",
+              "metodo": "primitiva_polinomica_racional",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.derivar",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.derivar",
+            "input": {
+              "expresion": "x^2",
+              "punto": "3"
+            },
+            "status": "ok",
+            "result": {
+              "expresion": "2*x^1",
+              "tipo": "derivada",
+              "valor": "6",
+              "punto": "3",
+              "exactitud": "exacta",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "siete ejercicios por sus formularios y fracción grande en pantalla",
+          "passed": true
+        },
+        {
+          "name": "cambio de presentación conserva el paso seleccionado",
+          "passed": true
+        },
+        {
+          "name": "navegación durante cálculo, cancelación y recuperación",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "windows-fuente": {
+      "approved": true,
+      "platform": "Windows-2022Server-10.0.20348-SP0",
+      "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+      "cases": [
+        {
+          "name": "interfaz y cambio de presentación",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "1/2",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "2"
+                ],
+                [
+                  "3"
+                ]
+              ]
+            },
+            "status": "ok",
+            "result": {
+              "matrix": [
+                [
+                  "7"
+                ]
+              ]
+            },
+            "steps": [
+              {
+                "id": 0,
+                "kind": "producto_fila_columna",
+                "description": "Producto de la fila por la columna.",
+                "data": {
+                  "fila": 0,
+                  "columna": 0,
+                  "terminos": [
+                    {
+                      "a": "1/2",
+                      "b": "2",
+                      "producto": "1"
+                    },
+                    {
+                      "a": "2",
+                      "b": "3",
+                      "producto": "6"
+                    }
+                  ],
+                  "resultado": "7"
+                },
+                "formula": "c_ij = sum_k(a_ik*b_kj)"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "rational_string",
+              "index_base": 0,
+              "method": "fila_columna",
+              "source": "algorithms.matrices"
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "9007199254740993/2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "status": "ok",
+            "result": {
+              "matrix": [
+                [
+                  "9007199254740993/2"
+                ]
+              ]
+            },
+            "steps": [
+              {
+                "id": 0,
+                "kind": "producto_fila_columna",
+                "description": "Producto de la fila por la columna.",
+                "data": {
+                  "fila": 0,
+                  "columna": 0,
+                  "terminos": [
+                    {
+                      "a": "9007199254740993/2",
+                      "b": "1",
+                      "producto": "9007199254740993/2"
+                    }
+                  ],
+                  "resultado": "9007199254740993/2"
+                },
+                "formula": "c_ij = sum_k(a_ik*b_kj)"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "rational_string",
+              "index_base": 0,
+              "method": "fila_columna",
+              "source": "algorithms.matrices"
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "1",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "status": "invalid_input",
+            "result": null,
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "index_base": 0
+            },
+            "error": {
+              "code": "input",
+              "message": "No se puede multiplicar: Columnas de A [2] ≠ Filas de B [1]"
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.definida",
+            "input": {
+              "expresion": "1/x+0",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "status": "domain_error",
+            "result": null,
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "index_base": 0
+            },
+            "error": {
+              "code": "domain",
+              "message": "El intervalo contiene una singularidad o un dominio que el método de integral definida no puede verificar. El denominador puede anularse en el intervalo."
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "calculadora.evaluar",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculadora.evaluar",
+            "input": {
+              "expresion": "9007199254740993/2"
+            },
+            "status": "ok",
+            "result": {
+              "valor": "9007199254740993/2",
+              "exactitud": "exacta",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.definida",
+            "input": {
+              "expresion": "x^2",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "status": "ok",
+            "result": {
+              "valor": "2/3",
+              "expresion": "(1/3)*x^3",
+              "tipo": "exacta",
+              "exactitud": "exacta",
+              "metodo": "primitiva_polinomica_racional",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.derivar",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.derivar",
+            "input": {
+              "expresion": "x^2",
+              "punto": "3"
+            },
+            "status": "ok",
+            "result": {
+              "expresion": "2*x^1",
+              "tipo": "derivada",
+              "valor": "6",
+              "punto": "3",
+              "exactitud": "exacta",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "cancelación y recuperación",
+          "passed": true
+        }
+      ]
+    },
+    "windows-ejecutable": {
+      "approved": true,
+      "platform": "Windows-2022Server-10.0.20348-SP0",
+      "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+      "cases": [
+        {
+          "name": "interfaz y cambio de presentación",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "1/2",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "2"
+                ],
+                [
+                  "3"
+                ]
+              ]
+            },
+            "status": "ok",
+            "result": {
+              "matrix": [
+                [
+                  "7"
+                ]
+              ]
+            },
+            "steps": [
+              {
+                "id": 0,
+                "kind": "producto_fila_columna",
+                "description": "Producto de la fila por la columna.",
+                "data": {
+                  "fila": 0,
+                  "columna": 0,
+                  "terminos": [
+                    {
+                      "a": "1/2",
+                      "b": "2",
+                      "producto": "1"
+                    },
+                    {
+                      "a": "2",
+                      "b": "3",
+                      "producto": "6"
+                    }
+                  ],
+                  "resultado": "7"
+                },
+                "formula": "c_ij = sum_k(a_ik*b_kj)"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "rational_string",
+              "index_base": 0,
+              "method": "fila_columna",
+              "source": "algorithms.matrices"
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "9007199254740993/2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "status": "ok",
+            "result": {
+              "matrix": [
+                [
+                  "9007199254740993/2"
+                ]
+              ]
+            },
+            "steps": [
+              {
+                "id": 0,
+                "kind": "producto_fila_columna",
+                "description": "Producto de la fila por la columna.",
+                "data": {
+                  "fila": 0,
+                  "columna": 0,
+                  "terminos": [
+                    {
+                      "a": "9007199254740993/2",
+                      "b": "1",
+                      "producto": "9007199254740993/2"
+                    }
+                  ],
+                  "resultado": "9007199254740993/2"
+                },
+                "formula": "c_ij = sum_k(a_ik*b_kj)"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "rational_string",
+              "index_base": 0,
+              "method": "fila_columna",
+              "source": "algorithms.matrices"
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "matrices.producto",
+            "input": {
+              "A": [
+                [
+                  "1",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "status": "invalid_input",
+            "result": null,
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "index_base": 0
+            },
+            "error": {
+              "code": "input",
+              "message": "No se puede multiplicar: Columnas de A [2] ≠ Filas de B [1]"
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.definida",
+            "input": {
+              "expresion": "1/x+0",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "status": "domain_error",
+            "result": null,
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "index_base": 0
+            },
+            "error": {
+              "code": "domain",
+              "message": "El intervalo contiene una singularidad o un dominio que el método de integral definida no puede verificar. El denominador puede anularse en el intervalo."
+            }
+          },
+          "passed": true
+        },
+        {
+          "name": "calculadora.evaluar",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculadora.evaluar",
+            "input": {
+              "expresion": "9007199254740993/2"
+            },
+            "status": "ok",
+            "result": {
+              "valor": "9007199254740993/2",
+              "exactitud": "exacta",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.definida",
+            "input": {
+              "expresion": "x^2",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "status": "ok",
+            "result": {
+              "valor": "2/3",
+              "expresion": "(1/3)*x^3",
+              "tipo": "exacta",
+              "exactitud": "exacta",
+              "metodo": "primitiva_polinomica_racional",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.derivar",
+          "response": {
+            "schema_version": "1.0",
+            "operation_id": "calculo.derivar",
+            "input": {
+              "expresion": "x^2",
+              "punto": "3"
+            },
+            "status": "ok",
+            "result": {
+              "expresion": "2*x^1",
+              "tipo": "derivada",
+              "valor": "6",
+              "punto": "3",
+              "exactitud": "exacta",
+              "precision_bits": null
+            },
+            "steps": [],
+            "verification": {},
+            "warnings": [],
+            "metadata": {
+              "exact": true,
+              "number_format": "text",
+              "precision_bits": null,
+              "index_base": 0
+            },
+            "error": null
+          },
+          "passed": true
+        },
+        {
+          "name": "cancelación y recuperación",
+          "passed": true
+        }
+      ]
+    },
+    "android": {
+      "approved": true,
+      "offline": true,
+      "api": 35,
+      "abis": [
+        "x86_64",
+        "arm64-v8a"
+      ],
+      "python": "3.12.15 (main, Oct  2 2026, 03:03:05) [Clang 18.0.4 (https://android.googlesource.com/toolchain/llvm-project d8003a456",
+      "cases": [
+        {
+          "name": "interfaz offline y cambio de presentación",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "error": null,
+            "input": {
+              "A": [
+                [
+                  "1/2",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "2"
+                ],
+                [
+                  "3"
+                ]
+              ]
+            },
+            "metadata": {
+              "exact": true,
+              "index_base": 0,
+              "method": "fila_columna",
+              "number_format": "rational_string",
+              "source": "algorithms.matrices"
+            },
+            "operation_id": "matrices.producto",
+            "result": {
+              "matrix": [
+                [
+                  "7"
+                ]
+              ]
+            },
+            "schema_version": "1.0",
+            "status": "ok",
+            "steps": [
+              {
+                "data": {
+                  "columna": 0,
+                  "fila": 0,
+                  "resultado": "7",
+                  "terminos": [
+                    {
+                      "a": "1/2",
+                      "b": "2",
+                      "producto": "1"
+                    },
+                    {
+                      "a": "2",
+                      "b": "3",
+                      "producto": "6"
+                    }
+                  ]
+                },
+                "description": "Producto de la fila por la columna.",
+                "formula": "c_ij = sum_k(a_ik*b_kj)",
+                "id": 0,
+                "kind": "producto_fila_columna"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "error": null,
+            "input": {
+              "A": [
+                [
+                  "9007199254740993/2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "metadata": {
+              "exact": true,
+              "index_base": 0,
+              "method": "fila_columna",
+              "number_format": "rational_string",
+              "source": "algorithms.matrices"
+            },
+            "operation_id": "matrices.producto",
+            "result": {
+              "matrix": [
+                [
+                  "9007199254740993/2"
+                ]
+              ]
+            },
+            "schema_version": "1.0",
+            "status": "ok",
+            "steps": [
+              {
+                "data": {
+                  "columna": 0,
+                  "fila": 0,
+                  "resultado": "9007199254740993/2",
+                  "terminos": [
+                    {
+                      "a": "9007199254740993/2",
+                      "b": "1",
+                      "producto": "9007199254740993/2"
+                    }
+                  ]
+                },
+                "description": "Producto de la fila por la columna.",
+                "formula": "c_ij = sum_k(a_ik*b_kj)",
+                "id": 0,
+                "kind": "producto_fila_columna"
+              }
+            ],
+            "verification": {
+              "kind": "consistencia_de_pasos",
+              "passed": true
+            },
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "response": {
+            "error": {
+              "code": "input",
+              "message": "No se puede multiplicar: Columnas de A [2] ≠ Filas de B [1]"
+            },
+            "input": {
+              "A": [
+                [
+                  "1",
+                  "2"
+                ]
+              ],
+              "B": [
+                [
+                  "1"
+                ]
+              ]
+            },
+            "metadata": {
+              "index_base": 0
+            },
+            "operation_id": "matrices.producto",
+            "result": null,
+            "schema_version": "1.0",
+            "status": "invalid_input",
+            "steps": [],
+            "verification": {},
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "error": {
+              "code": "domain",
+              "message": "El intervalo contiene una singularidad o un dominio que el método de integral definida no puede verificar. El denominador puede anularse en el intervalo."
+            },
+            "input": {
+              "expresion": "1/x+0",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "metadata": {
+              "index_base": 0
+            },
+            "operation_id": "calculo.definida",
+            "result": null,
+            "schema_version": "1.0",
+            "status": "domain_error",
+            "steps": [],
+            "verification": {},
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "calculadora.evaluar",
+          "response": {
+            "error": null,
+            "input": {
+              "expresion": "9007199254740993/2"
+            },
+            "metadata": {
+              "exact": true,
+              "index_base": 0,
+              "number_format": "text",
+              "precision_bits": null
+            },
+            "operation_id": "calculadora.evaluar",
+            "result": {
+              "exactitud": "exacta",
+              "precision_bits": null,
+              "valor": "9007199254740993/2"
+            },
+            "schema_version": "1.0",
+            "status": "ok",
+            "steps": [],
+            "verification": {},
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.definida",
+          "response": {
+            "error": null,
+            "input": {
+              "expresion": "x^2",
+              "inferior": "-1",
+              "superior": "1"
+            },
+            "metadata": {
+              "exact": true,
+              "index_base": 0,
+              "number_format": "text",
+              "precision_bits": null
+            },
+            "operation_id": "calculo.definida",
+            "result": {
+              "exactitud": "exacta",
+              "expresion": "(1/3)*x^3",
+              "metodo": "primitiva_polinomica_racional",
+              "precision_bits": null,
+              "tipo": "exacta",
+              "valor": "2/3"
+            },
+            "schema_version": "1.0",
+            "status": "ok",
+            "steps": [],
+            "verification": {},
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "calculo.derivar",
+          "response": {
+            "error": null,
+            "input": {
+              "expresion": "x^2",
+              "punto": "3"
+            },
+            "metadata": {
+              "exact": true,
+              "index_base": 0,
+              "number_format": "text",
+              "precision_bits": null
+            },
+            "operation_id": "calculo.derivar",
+            "result": {
+              "exactitud": "exacta",
+              "expresion": "2*x^1",
+              "precision_bits": null,
+              "punto": "3",
+              "tipo": "derivada",
+              "valor": "6"
+            },
+            "schema_version": "1.0",
+            "status": "ok",
+            "steps": [],
+            "verification": {},
+            "warnings": []
+          },
+          "passed": true
+        },
+        {
+          "name": "cancelación y recuperación",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "core_manifest": [
+    {
+      "path": "nexolineal/__init__.py",
+      "sha256": "5e82d037876f907b0635d6f86d8ae93c7f9705865527c3f4b06963668778922e"
+    },
+    {
+      "path": "nexolineal/algorithms/__init__.py",
+      "sha256": "818e9468130060ae2f5d9226047ddba15fa4ebc5072edaf322a88653c7b624f6"
+    },
+    {
+      "path": "nexolineal/algorithms/calculo.py",
+      "sha256": "7eb1ea6de23c0e81354a2ae52072b14e4c0ee0f0dc308ac604ee5def95ed83bb"
+    },
+    {
+      "path": "nexolineal/algorithms/domains.py",
+      "sha256": "ae8e1a4bf43d69a5440e0384b1c77ca345cadff0399edfa7e09e1c84c1323610"
+    },
+    {
+      "path": "nexolineal/algorithms/matrices.py",
+      "sha256": "22097ad47b12f66450f24b058b6b82a26015bd23e04765dc711bfe06c5c21631"
+    },
+    {
+      "path": "nexolineal/application/__init__.py",
+      "sha256": "6bf1235c26550cb73d80dfcd380239954a679683c810779ddb6f8efcc8e1031f"
+    },
+    {
+      "path": "nexolineal/application/service.py",
+      "sha256": "e09cea523f9f4478d0568fd1c05dd71a6c1fbe8518943edaf7cf2926a74545d8"
+    },
+    {
+      "path": "nexolineal/domain/__init__.py",
+      "sha256": "47265b467930fd5296f1a4bcd458f9764cdc896f7c7f0dd0fa9b6a7ba228282d"
+    },
+    {
+      "path": "nexolineal/domain/models.py",
+      "sha256": "8bd076638354d4a91f044628f37e8bbf682d84fcafb46484b2918c0829f33fc4"
+    },
+    {
+      "path": "nexolineal/parsing/__init__.py",
+      "sha256": "1cda29ffb65b12cfaadc85ac13338f214251ec4722cd68701b26c121d89f3fc0"
+    },
+    {
+      "path": "nexolineal/parsing/numbers.py",
+      "sha256": "d0cc73df620ea1dde3538d71586018ec7e61be96ddaf6f6cacd6d973e52304db"
+    },
+    {
+      "path": "nexolineal/platforms/__init__.py",
+      "sha256": "832a5cf5bac732aa2448116ce9103b09bd302b24547b9f8ffe789d85404b3db0"
+    },
+    {
+      "path": "nexolineal/platforms/jobs.py",
+      "sha256": "ab3acbc264fe29433fac3581797660acbf9062d9c952f1446dbf99065be3f8e8"
+    }
+  ]
+}
