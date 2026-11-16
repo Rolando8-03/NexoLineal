@@ -42,7 +42,7 @@ export class NativeEngine implements Engine {
       if (job.cancelled) await this.transport!.cancel({ requestId: job.id });
       if (onProgress) timer = setInterval(() => {
         void this.transport!.progress({ requestId: job.id })
-          .then(value => onProgress(value.progress)).catch(() => {});
+          .then(value => { if (this.active === job) onProgress(value.progress); }).catch(() => {});
       }, 150);
       const response = await this.transport!.execute({ requestId: job.id, problem });
       return response.response;

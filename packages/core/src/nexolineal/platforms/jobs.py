@@ -48,6 +48,12 @@ class JobPool:
                 job.cancelled.set()
         return {"cancelled": job is not None}
 
+    def cancel_all(self):
+        with self._lock:
+            for job in self._jobs.values():
+                job.cancelled.set()
+            self._jobs.clear()
+
     def progress(self, request_id):
         with self._lock:
             job = self._jobs.get(request_id)
@@ -66,3 +72,6 @@ def cancel(request_id):
 
 def progress(request_id):
     return json.dumps(_pool.progress(request_id), ensure_ascii=False)
+
+def cancel_all():
+    _pool.cancel_all()
