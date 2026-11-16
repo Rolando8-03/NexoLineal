@@ -2,6 +2,7 @@
 from fractions import Fraction
 from decimal import Decimal
 import math
+import re
 from ..domain.models import InputError, ResourceLimitError
 
 def parse_number(value):
@@ -21,6 +22,9 @@ def parse_number(value):
         raise InputError("hay una celda vacía")
     if len(text) > 1000:
         raise ResourceLimitError("El número supera 1000 caracteres.")
+    exponent = re.search(r"[eE]([+-]?\\d+)$", text)
+    if exponent and abs(int(exponent.group(1))) > 1000:
+        raise ResourceLimitError("El exponente decimal supera el límite de 1000.")
     try:
         return Fraction(text)
     except (ValueError, ZeroDivisionError, OverflowError):

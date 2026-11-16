@@ -83,6 +83,10 @@ class Contracts(unittest.TestCase):
         result = execute(request("matrices.producto", {"A": [["1"*1001]], "B": [["1"]]}))
         self.assertEqual(result["status"], "limit_reached")
 
+    def test_decimal_exponent_budget(self):
+        result = execute(request("matrices.producto", {"A": [["1e10000000"]], "B": [["1"]]}))
+        self.assertEqual(result["status"], "limit_reached")
+
     def test_legacy_adapter_contract(self):
         result = ejecutar_matrices({"A": "1/2 2", "B": "2\n3"})
         self.assertEqual(result["producto_AB"], [["7"]])

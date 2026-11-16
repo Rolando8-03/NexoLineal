@@ -16,6 +16,8 @@ class ResourceLimitError(ValueError):
 def serializar(value):
     """Conserva las magnitudes matemáticas como texto, sin redondeo binario."""
     if isinstance(value, Fraction):
+        if max(value.numerator.bit_length(), value.denominator.bit_length()) > 12000:
+            raise ResourceLimitError("El resultado supera el límite de representación exacta.")
         return str(value)
     if isinstance(value, Decimal):
         if not value.is_finite():
@@ -63,6 +65,10 @@ class Step:
     data: dict
     formula: str = ""
 
+    def __post_init__(self):
+        if type(self.id) is not int or self.id < 0 or not isinstance(self.data, dict):
+            raise InputError("El paso requiere un índice no negativo y datos estructurados.")
+
     def to_dict(self):
         return serializar(self.__dict__)
 
@@ -78,6 +84,13 @@ class CalculationResult:
     metadata: dict = field(default_factory=dict)
     error: object = None
     schema_version: str = "1.0"
+
+    def __post_init__(self):
+        allowed = {"ok", "invalid_input", "domain_error", "limit_reached", "singular",
+                   "inconsistent", "infinite", "not_applicable", "cancelled",
+                   "non_convergent", "internal_error"}
+        if self.status not in allowed:
+            raise InputError("Estado de cálculo no reconocido.")
 
     def to_dict(self):
         return serializar({

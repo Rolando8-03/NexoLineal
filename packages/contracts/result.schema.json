@@ -30,7 +30,14 @@
         "ok",
         "invalid_input",
         "domain_error",
-        "limit_reached"
+        "limit_reached",
+        "singular",
+        "inconsistent",
+        "infinite",
+        "not_applicable",
+        "cancelled",
+        "non_convergent",
+        "internal_error"
       ]
     },
     "result": {},
