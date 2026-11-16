@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NexoLineal CalculationResult 1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_id",
+    "input",
+    "status",
+    "result",
+    "steps",
+    "verification",
+    "warnings",
+    "metadata",
+    "error"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "operation_id": {
+      "type": "string"
+    },
+    "input": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "invalid_input",
+        "domain_error",
+        "limit_reached"
+      ]
+    },
+    "result": {},
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "description",
+          "data",
+          "formula"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "kind": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "formula": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "verification": {
+      "type": "object"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "error": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  }
+}

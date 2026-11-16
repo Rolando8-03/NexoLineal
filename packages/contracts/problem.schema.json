@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NexoLineal Problem 1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_id",
+    "input"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "operation_id": {
+      "enum": [
+        "matrices.producto",
+        "calculadora.evaluar",
+        "calculo.definida",
+        "calculo.derivar"
+      ]
+    },
+    "input": {
+      "type": "object"
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "include_steps": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
