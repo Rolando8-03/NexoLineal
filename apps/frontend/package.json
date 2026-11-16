@@ -9,8 +9,8 @@
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
-    "@capacitor/android": "7.4.3",
-    "@capacitor/core": "7.4.3",
+    "@capacitor/android": "7.6.10",
+    "@capacitor/core": "7.6.10",
     "katex": "0.18.2",
     "pyodide": "0.26.2",
     "react": "19.3.1",

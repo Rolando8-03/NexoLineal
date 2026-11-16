@@ -1,4 +1,4 @@
-name: Actualizar lock de fase 03
+name: Actualizar lock auditado de fase 03
 on:
   push:
     branches: [fase-03-plataformas]
