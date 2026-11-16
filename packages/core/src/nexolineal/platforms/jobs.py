@@ -52,7 +52,8 @@ class JobPool:
         with self._lock:
             for job in self._jobs.values():
                 job.cancelled.set()
-            self._jobs.clear()
+            # Los trabajos en ejecución conservan su identificador hasta su finally.
+            self._jobs = {key: job for key, job in self._jobs.items() if job.running}
 
     def progress(self, request_id):
         with self._lock:

@@ -1,6 +1,7 @@
 """Cancelación y aislamiento del motor común para las tres plataformas."""
 import threading
 import unittest
+from unittest.mock import patch
 from concurrent.futures import ThreadPoolExecutor
 from nexolineal.application.service import execute
 from nexolineal.platforms.jobs import JobPool
@@ -76,6 +77,29 @@ class PlatformControl(unittest.TestCase):
         pool.cancel_all()
         pool.prepare("again")
         self.assertEqual(pool.run("again", PROBLEM)["status"], "ok")
+
+    def test_cancel_all_reserves_running_identifier(self):
+        pool = JobPool()
+        pool.prepare("live")
+        started, release = threading.Event(), threading.Event()
+        def blocked(problem, **callbacks):
+            started.set()
+            if not release.wait(5):
+                raise AssertionError("No se liberó el trabajo de prueba.")
+            return execute(problem, **callbacks)
+        with patch("nexolineal.platforms.jobs.execute", side_effect=blocked):
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(pool.run, "live", PROBLEM)
+                try:
+                    self.assertTrue(started.wait(5))
+                    pool.cancel_all()
+                    with self.assertRaises(ValueError):
+                        pool.prepare("live")
+                finally:
+                    release.set()
+                self.assertEqual(future.result(timeout=5)["status"], "cancelled")
+        pool.prepare("live")
+        self.assertEqual(pool.run("live", PROBLEM)["status"], "ok")
 
     def test_job_cleanup(self):
         pool = JobPool()

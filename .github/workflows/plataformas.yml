@@ -113,15 +113,18 @@ jobs:
           $env:NEXO_FIXTURES = "$pwd/tests/fixtures/platform_contracts.json"
           $env:NEXO_EVIDENCE = "$pwd/evidencia-fase03/windows-exe.json"
           $process = Start-Process -FilePath "$pwd/dist/NexoLineal-Prototipo.exe" -ArgumentList '--self-test' -PassThru
-          if (-not $process.WaitForExit(180000)) {
+          if (-not $process.WaitForExit(120000)) {
             Get-ChildItem evidencia-fase03 | Format-Table
+            if (Test-Path evidencia-fase03/windows-exe.json) { Get-Content evidencia-fase03/windows-exe.json }
+            if (Test-Path evidencia-fase03/windows-exe.json.threads.log) { Get-Content evidencia-fase03/windows-exe.json.threads.log }
             if (Test-Path evidencia-fase03/windows-exe.json.error.log) { Get-Content evidencia-fase03/windows-exe.json.error.log }
             Stop-Process -Id $process.Id -Force
-            throw 'El ejecutable excedió tres minutos'
+            throw 'El ejecutable excedió dos minutos'
           }
           if (Test-Path evidencia-fase03/windows-exe.json.error.log) { Get-Content evidencia-fase03/windows-exe.json.error.log }
           if ($process.ExitCode -ne 0) { throw 'Falló ejecutable gráfico' }
           if (-not (Test-Path $env:NEXO_EVIDENCE)) { throw 'Falta evidencia del ejecutable' }
+          python -c "import json,os; from pathlib import Path; print('NEXO_WINDOWS_EXE_REPORT='+json.dumps(json.loads(Path(os.environ['NEXO_EVIDENCE']).read_text(encoding='utf-8')),ensure_ascii=False))"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -178,6 +181,7 @@ jobs:
             apps/android/gradlew -p apps/android connectedDebugAndroidTest --stacktrace
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.json > evidencia-fase03/android.json
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.png > evidencia-fase03/android.png
+            python -c "from pathlib import Path; print('NEXO_ANDROID_REPORT='+Path('evidencia-fase03/android.json').read_text())"
       - name: Comprobar contenido y tamaño del APK
         run: |
           python -c "from pathlib import Path; from zipfile import ZipFile; p=Path('apps/android/app/build/outputs/apk/debug/app-debug.apk'); z=ZipFile(p); a=['arm64-v8a','x86_64']; assert all('lib/'+abi+'/libpython3.12.so' in z.namelist() for abi in a); print({'apk_bytes':p.stat().st_size,'abis':a})"

@@ -22,3 +22,4 @@ summary = {"approved": True, "platforms": list(reports), "shared_contracts": len
            "identical_core_files": len(manifests[0]), "android_offline": reports["android"]["offline"]}
 (root / "paridad.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 print("NEXO_PARITY_REPORT=" + json.dumps(summary))
+print("NEXO_FULL_EVIDENCE=" + json.dumps({"summary":summary, "reports":reports, "core_manifest":manifests[0]}, ensure_ascii=False))

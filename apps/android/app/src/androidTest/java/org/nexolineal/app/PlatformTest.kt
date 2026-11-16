@@ -3,6 +3,8 @@ package org.nexolineal.app
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.SystemClock
+import android.os.Build
+import com.chaquo.python.Python
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -55,12 +57,21 @@ class PlatformTest {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val network = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        assertNull("La prueba debe iniciar sin red.", network.activeNetwork)
+        // Android Test Platform puede reactivar Wi-Fi durante la instalación.
+        // Se desconecta desde la instrumentación, antes de abrir la aplicación.
+        for (command in listOf("cmd connectivity airplane-mode enable", "svc wifi disable", "svc data disable")) {
+            android.os.ParcelFileDescriptor.AutoCloseInputStream(instrumentation.uiAutomation.executeShellCommand(command)).bufferedReader().use { it.readText() }
+        }
+        val disconnectDeadline = SystemClock.elapsedRealtime() + 15000
+        while (network.activeNetwork != null && SystemClock.elapsedRealtime() < disconnectDeadline) SystemClock.sleep(100)
+        assertNull("La prueba debe iniciar sin red: " + network.getNetworkCapabilities(network.activeNetwork), network.activeNetwork)
         val report = JSONObject().put("approved", false).put("offline", true)
+            .put("api", Build.VERSION.SDK_INT).put("abis", JSONArray(Build.SUPPORTED_ABIS.toList()))
         val cases = JSONArray()
         scenario = ActivityScenario.launch(MainActivity::class.java)
         try {
             waitFor("document.querySelector('#calcular') && !document.querySelector('#calcular').disabled")
+            report.put("python", Python.getInstance().getModule("sys").get("version").toString())
             js("document.querySelector('#calcular').click()")
             waitFor("document.querySelector('#resultado').dataset.status === 'ok'")
             val text = JSONArray("[" + js("document.querySelector('#resultado').innerText") + "]").getString(0)
