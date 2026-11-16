@@ -1,0 +1,172 @@
+[
+  {
+    "message": "nucleo: define paquete instalable, contratos versionados y operaciones racionales compartidas",
+    "sha": "dbc56e32779f6f72fd41cb3769d662474070f014",
+    "files": [
+      "packages/core/pyproject.toml",
+      "packages/core/src/nexolineal/__init__.py",
+      "packages/core/src/nexolineal/domain/__init__.py",
+      "packages/core/src/nexolineal/parsing/__init__.py",
+      "packages/core/src/nexolineal/algorithms/__init__.py",
+      "packages/core/src/nexolineal/application/__init__.py",
+      "packages/core/src/nexolineal/domain/models.py",
+      "packages/core/src/nexolineal/parsing/numbers.py",
+      "packages/core/src/nexolineal/algorithms/matrices.py"
+    ]
+  },
+  {
+    "message": "refactor: elimina lanzadores y menú de terminal, normaliza imports y comparte operaciones matriciales",
+    "sha": "daeeb8a9f20d45d5d5a2511b8bf8c503cd88d3cc",
+    "files": [
+      "python/__init__.py",
+      "modulos/__init__.py",
+      "Abrir_consola.bat",
+      "Abrir_ventana.bat",
+      "modulos/consola.py",
+      "modulos/factorizacion.py",
+      "modulos/modulo_determinantes.py",
+      "modulos/modulo_matrices.py",
+      "modulos/modulo_sistemas.py",
+      "modulos/modulo_vectores.py",
+      "pruebas.py",
+      "python/analisis_sistema.py",
+      "python/metodos_eliminacion.py",
+      "python/operaciones_matrices.py",
+      "python/relaciones_vectoriales.py",
+      "python/vectores.py",
+      "python/entrada_datos.py",
+      "main.py"
+    ]
+  },
+  {
+    "message": "calculo: conserva racionales exactos y verifica dominio completo de integrales",
+    "sha": "57ed2d43c7fc9093a0c70469862dfec5d2317d7e",
+    "files": [
+      "packages/core/src/nexolineal/algorithms/calculo.py",
+      "packages/core/src/nexolineal/algorithms/domains.py",
+      "python/calculo_basico.py"
+    ]
+  },
+  {
+    "message": "contratos: conecta producto matricial y cálculo al catálogo versionado del núcleo",
+    "sha": "d8a68026b79a28af3fe17912050fea0dd9b73282",
+    "files": [
+      "packages/core/src/nexolineal/application/service.py",
+      "packages/contracts/problem.schema.json",
+      "packages/contracts/result.schema.json"
+    ]
+  },
+  {
+    "message": "integracion: ejecuta producto y pasos por el contrato común en la interfaz web",
+    "sha": "5e17e3494412a70b752e1390533fc1ac97f2731f",
+    "files": [
+      "python/operaciones_matrices.py",
+      "js/ejecutar_python.js"
+    ]
+  },
+  {
+    "message": "precision: conserva fracciones grandes en pantalla, Ans y exportación JSON",
+    "sha": "ae0fe41e567c8dde9f48b201854bc9c398ec141e",
+    "files": [
+      "js/app.js",
+      "index.html"
+    ]
+  },
+  {
+    "message": "compatibilidad: completa el arranque por paquetes y retira entradas heredadas de terminal",
+    "sha": "98af548130c479be79ecf703682c7de83dc33d9e",
+    "files": [
+      "packages/core/src/nexolineal/algorithms/calculo.py",
+      "js/ejecutar_python.js",
+      "modulos/modulo_matrices.py",
+      "modulos/modulo_determinantes.py",
+      "modulos/modulo_vectores.py"
+    ]
+  },
+  {
+    "message": "pruebas: protege contratos, exactitud, dominios, compatibilidad e imports del paquete",
+    "sha": "c599c254905705f2bcb779f30191e34e1d023df3",
+    "files": [
+      "tests/test_fase02.py",
+      "packages/core/src/nexolineal/parsing/numbers.py",
+      "packages/core/src/nexolineal/application/service.py"
+    ]
+  },
+  {
+    "message": "auditoria: incorpora 288 sistemas independientes y referencias de paridad nativa-web",
+    "sha": "2e6fda9675ced5724d03beb3f71c0d7c67b13b71",
+    "files": [
+      ".github/scripts/auditoria_matematica.py",
+      ".github/scripts/contratos_nativos.py",
+      "js/ejecutar_python.js"
+    ]
+  },
+  {
+    "message": "ci: verifica paquete, auditoría independiente y regresiones gráficas de la fase 02",
+    "sha": "790020b4af6dcc8a626e8cfecf5a7be9f8672015",
+    "files": [
+      ".github/scripts/verificar_interfaz.cjs",
+      ".github/workflows/verificacion.yml"
+    ]
+  },
+  {
+    "message": "precision: conserva también el literal decimal en las expresiones simbólicas",
+    "sha": "53709d108a39a144f63faa48ac15f1c8d23fdf19",
+    "files": [
+      "packages/core/src/nexolineal/algorithms/calculo.py",
+      "tests/test_fase02.py"
+    ]
+  },
+  {
+    "message": "documentacion: actualiza el uso gráfico y la preparación del núcleo Python",
+    "sha": "cec531444127a9166a50d11ccd0160a1af1f3f08",
+    "files": [
+      "README.md",
+      "GUIA_DE_USO.md"
+    ]
+  },
+  {
+    "message": "pruebas: migra validación y consulta de teoremas al retirar la entrada de terminal",
+    "sha": "d7f0ba66b03d54d5564b82da258c1fb8c1bfb309",
+    "files": [
+      "pruebas.py"
+    ]
+  },
+  {
+    "message": "validacion: limita exponentes y representación, y define estados comunes de resultados",
+    "sha": "4f8a5545f6dbcbaae9505767a2cd21cdac58caf0",
+    "files": [
+      "packages/core/src/nexolineal/parsing/numbers.py",
+      "packages/core/src/nexolineal/domain/models.py",
+      "packages/contracts/result.schema.json",
+      "tests/test_fase02.py"
+    ]
+  },
+  {
+    "message": "ci: ejecuta la auditoría como módulo de pruebas con imports normales",
+    "sha": "4cc6a3e5e4255d5fe8d33f75f852cca3eea48649",
+    "files": [
+      "tests/__init__.py",
+      "tests/auditoria_matematica.py",
+      ".github/scripts/auditoria_matematica.py",
+      ".github/workflows/verificacion.yml",
+      "README.md"
+    ]
+  },
+  {
+    "message": "correccion: comprueba el exponente antes de construir una fracción de gran tamaño",
+    "sha": "5e0ac55b0564f46526200269faec365afbe8710e",
+    "files": [
+      "packages/core/src/nexolineal/parsing/numbers.py"
+    ]
+  },
+  {
+    "message": "documentacion: describe arquitectura, contratos y correcciones de precisión y dominio",
+    "sha": "23ca0fedba90133aacdcd87557e3371c32839d9e",
+    "files": [
+      "docs/fase02/arquitectura.md",
+      "docs/fase02/contrato.md",
+      "docs/fase02/correcciones.md"
+    ]
+  }
+]
