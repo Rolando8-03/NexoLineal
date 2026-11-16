@@ -7,6 +7,8 @@ on:
       - 'js/**'
       - 'css/**'
       - 'index.html'
+      - 'docs/fase01/inventario.json'
+      - 'docs/fase01/cierre.md'
       - '.github/scripts/**'
       - '.github/workflows/verificacion.yml'
   workflow_dispatch:
@@ -43,6 +45,8 @@ jobs:
           git log --format='%H %aI %an %s' > evidencia-ci/commits.txt
           python --version > evidencia-ci/versiones.txt
           node --version >> evidencia-ci/versiones.txt
+      - name: Verificar origen y recursos
+        run: python .github/scripts/verificar_origen.py
       - name: Instalar navegador de pruebas
         run: |
           npm install --prefix "$RUNNER_TEMP/nexo-browser" playwright
