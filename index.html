@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexoLineal · Matemáticas</title>
+  <meta name="description" content="Calculadora educativa de sistemas, vectores, matrices, derivadas, integrales y aritmética.">
+  <link rel="icon" href="assets/icono.ico">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            nexo: {
+              950: '#07111f',
+              900: '#0b1728',
+              850: '#101f35',
+              800: '#142944',
+              700: '#1f426c',
+              600: '#1769c2',
+              500: '#2196f3',
+              400: '#54b5ff',
+              gold: '#ffc107'
+            }
+          },
+          boxShadow: {
+            nexo: '0 18px 50px rgba(0,0,0,.35)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+
+  <!-- Ajustes visuales pequeños que Tailwind no cubre cómodamente -->
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="min-h-full bg-nexo-950 text-slate-100 antialiased">
+
+  <!-- Pantalla de carga -->
+  <div id="contenedor-carga" class="fixed inset-0 z-[100] flex items-center justify-center bg-nexo-950 transition-opacity duration-500">
+    <div class="w-[min(92vw,420px)] rounded-3xl border border-slate-800 bg-nexo-900 p-8 shadow-nexo">
+      <div class="flex items-center gap-4">
+        <img src="assets/icono.ico" alt="NexoLineal" class="h-14 w-14 rounded-2xl shadow-lg">
+        <div>
+          <p class="text-lg font-bold text-white">NexoLineal</p>
+          <p id="texto-carga" class="text-sm text-slate-400">Inicializando Python…</p>
+        </div>
+      </div>
+      <div class="mt-6 h-2 overflow-hidden rounded-full bg-slate-800">
+        <div id="barra-carga" class="h-full w-0 rounded-full bg-gradient-to-r from-blue-600 via-sky-400 to-cyan-300 transition-all duration-500"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra superior: solo icono + navegación -->
+  <header class="sticky top-0 z-50 border-b border-slate-800/90 bg-nexo-950/95 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-[1760px] items-center justify-between gap-4 px-3 py-3 sm:px-5 lg:px-6 2xl:px-8">
+      <button type="button" data-nav="sistemas" class="flex shrink-0 items-center gap-3 rounded-2xl p-1 pr-3 transition hover:bg-slate-800/70" aria-label="Ir a sistemas lineales">
+        <img src="assets/icono.ico" alt="NexoLineal" class="h-11 w-11 rounded-xl">
+        <span class="hidden text-lg font-black tracking-tight text-white sm:inline">NexoLineal</span>
+      </button>
+
+      <nav class="flex min-w-0 items-center gap-1 overflow-x-auto rounded-2xl border border-slate-800 bg-nexo-900 p-1.5 shadow-lg" aria-label="Menú principal">
+        <button type="button" data-nav="sistemas" data-icon="sistemas" class="nav-btn nav-activo">Sistemas lineales</button>
+        <button type="button" data-nav="vectores" data-icon="vectores" class="nav-btn">Vectores</button>
+        <button type="button" data-nav="matrices" data-icon="matrices" class="nav-btn">Matrices</button>
+        <button type="button" data-nav="calculo" data-icon="calculo" class="nav-btn">Cálculo</button>
+        <button type="button" data-nav="basica" data-icon="basica" class="nav-btn">Calculadora</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-[1760px] px-3 py-6 sm:px-5 lg:px-6 2xl:px-8">
+
+    <!-- SISTEMAS LINEALES -->
+    <section id="vista-sistemas" data-vista class="space-y-6">
+      <div id="sistema-configuracion" class="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_360px]">
+
+        <!-- Ingreso del sistema -->
+        <article class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Sistemas lineales</p>
+              <h1 class="mt-1 text-2xl font-black text-white">Resolver sistema</h1>
+            </div>
+            <div class="flex gap-3">
+              <label class="block">
+                <span class="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">Ecuaciones</span>
+                <select id="sel-ecuaciones" class="select-nexo"></select>
+              </label>
+              <label class="block">
+                <span class="mb-1 block text-[11px] font-bold uppercase tracking-wider text-slate-500">Variables</span>
+                <select id="sel-variables" class="select-nexo"></select>
+              </label>
+            </div>
+          </div>
+
+          <div class="mt-6 rounded-2xl border border-slate-800 bg-slate-950/40 p-4 sm:p-5">
+            <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <span class="text-sm font-bold text-slate-200">Matriz aumentada [A | b]</span>
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="btn-ejemplo-sistema" type="button" class="btn-secundario text-xs">Cargar ejemplo</button>
+                <button id="btn-limpiar-sistema" type="button" class="btn-secundario text-xs">Limpiar</button>
+                <button id="btn-resolver-sistema" type="button" class="btn-primario text-xs">Resolver sistema</button>
+              </div>
+            </div>
+            <div id="sistema-grid" class="overflow-x-auto pb-2"></div>
+          </div>
+        </article>
+
+        <!-- Historial -->
+        <aside class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Memoria</p>
+              <h2 class="mt-1 text-lg font-extrabold text-white">Historial</h2>
+            </div>
+            <button id="btn-ver-historial" type="button" class="btn-icono" data-icon="historial" title="Ver historial completo" aria-label="Ver historial completo"></button>
+          </div>
+          <div id="historial-lista" class="mt-5 space-y-3"></div>
+          <button id="btn-borrar-historial" type="button" class="mt-4 hidden w-full rounded-xl border border-rose-500/25 bg-rose-500/5 px-3 py-2 text-xs font-bold text-rose-300 transition hover:bg-rose-500/10">Borrar historial</button>
+        </aside>
+      </div>
+
+      <!-- Resultado / resumen -->
+       <!-- Teoremas del módulo de sistemas de ecuaciones -->
+<details
+  class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo"
+>
+  <!-- Al pulsar este título se abre o cierra el contenido -->
+  <summary class="cursor-pointer font-bold text-sky-400">
+    Ver teoremas clave de Sistemas lineales
+  </summary>
+
+  <div class="mt-4 space-y-3 text-sm text-slate-300">
+    <p>
+      <strong>Sistemas equivalentes:</strong>
+      intercambiar filas, multiplicar una fila por un número
+      distinto de cero y sumar a una fila un múltiplo de otra
+      conservan las soluciones del sistema.
+    </p>
+
+    <p>
+      <strong>Rango:</strong>
+      es el número de pivotes de la matriz escalonada.
+    </p>
+
+    <p>
+      <strong>Solución única:</strong>
+      existe cuando el rango de A y el rango de la matriz
+      aumentada [A | b] son iguales al número de incógnitas.
+    </p>
+
+    <p>
+      <strong>Infinitas soluciones:</strong>
+      existen cuando ambos rangos son iguales, pero menores
+      que el número de incógnitas. Hay variables libres.
+    </p>
+
+    <p>
+      <strong>Sin solución:</strong>
+      ocurre cuando el rango de A es menor que el rango de
+      [A | b]. Aparece una contradicción, como 0 = 5.
+    </p>
+
+    <p>
+      <strong>Sistema homogéneo:</strong>
+      Ax = 0 siempre tiene la solución trivial x = 0.
+      Si existen variables libres, también tiene soluciones
+      no triviales.
+    </p>
+  </div>
+</details>
+      <section id="resultado-sistema" class="hidden space-y-5"></section>
+
+    </section>
+
+    <!-- VECTORES -->
+    <section id="vista-vectores" data-vista class="hidden space-y-6">
+      <div class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Rⁿ</p>
+            <h1 class="mt-1 text-2xl font-black text-white">Vectores</h1>
+            <p class="mt-2 text-sm text-slate-400">Operaciones con vectores y propiedades de Ax en un solo lugar.</p>
+          </div>
+        </div>
+      </div>
+      <div id="vector-contenido"></div>
+      <!-- Inicio del apartado nuevo del Programa 4 -->
+<article
+  id="programa4-panel"
+  class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6"
+>
+  <p class="text-xs font-bold uppercase tracking-wider text-sky-400">
+    Programa 4
+  </p>
+
+  <h2 class="mt-2 text-xl font-black text-white">
+    Independencia lineal
+  </h2>
+
+  <p class="mt-2 text-sm text-slate-400">
+    Escribe un vector por línea y separa sus componentes con espacios.
+    Se aceptan enteros, decimales y fracciones como 1/2.
+  </p>
+
+  <!-- Datos del conjunto: k vectores de dimensión n -->
+  <div class="mt-5 flex flex-wrap gap-4">
+    <label>
+      <span class="mb-2 block text-sm font-bold">
+        Cantidad de vectores (k)
+      </span>
+      <input
+        id="p4-k"
+        type="number"
+        min="1"
+        max="6"
+        step="1"
+        value="2"
+        class="input-nexo w-32"
+      >
+    </label>
+
+    <label>
+      <span class="mb-2 block text-sm font-bold">
+        Dimensión (n)
+      </span>
+      <input
+        id="p4-n"
+        type="number"
+        min="1"
+        max="6"
+        step="1"
+        value="2"
+        class="input-nexo w-32"
+      >
+    </label>
+  </div>
+
+  <!-- Cada línea del cuadro representa un vector -->
+  <label for="p4-vectores" class="mt-5 mb-2 block text-sm font-bold">
+    Vectores
+  </label>
+
+  <textarea
+    id="p4-vectores"
+    rows="5"
+    class="input-nexo w-full font-mono"
+    placeholder="1 0&#10;0 1"
+    spellcheck="false"
+  ></textarea>
+
+  <!-- Botones de cálculo y ejemplos -->
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button id="p4-analizar" type="button" class="btn-primario">
+      Analizar independencia
+    </button>
+
+    <button id="p4-ejemplo-li" type="button" class="btn-secundario">
+      Ejemplo L.I.
+    </button>
+
+    <button id="p4-ejemplo-ld" type="button" class="btn-secundario">
+      Ejemplo L.D.
+    </button>
+  </div>
+
+  <!-- Resumen teórico desplegable -->
+  <details class="mt-5 rounded-xl border border-slate-700 p-4">
+    <summary class="cursor-pointer font-bold text-sky-400">
+      Ver teoremas clave
+    </summary>
+
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-300">
+      <li>
+        Los vectores son L.I. si Ax = 0 solo tiene la solución trivial.
+      </li>
+      <li>
+        Son L.D. si Ax = 0 tiene una solución no trivial.
+      </li>
+      <li>
+        Variables libres = cantidad de vectores − número de pivotes.
+      </li>
+      <li>
+        Si hay más vectores que dimensiones, el conjunto es L.D.
+      </li>
+      <li>
+        Un conjunto que contiene el vector cero es L.D.
+      </li>
+    </ul>
+  </details>
+
+  <!-- JavaScript colocará aquí el resultado de Python -->
+  <div id="p4-resultado" class="mt-5 space-y-4" aria-live="polite"></div>
+</article>
+<!-- Fin del apartado nuevo del Programa 4 -->
+    </section>
+
+    <section id="vista-calculo" data-vista class="hidden space-y-5">
+      <div class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+        <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Cálculo</p>
+        <h1 class="mt-1 text-2xl font-black text-white">Derivadas e integrales</h1>
+        <p class="mt-2 text-sm text-slate-400">Escribe una función de x. Usa * para multiplicar, ^ para potencias, y sin(x), cos(x), exp(x), ln(x) o sqrt(x).</p>
+        <div class="mt-5 grid gap-4 md:grid-cols-[minmax(0,1fr)_240px]">
+          <label><span class="mb-2 block text-sm font-bold">f(x)</span><input id="calculo-expresion" class="input-nexo w-full font-mono" value="x^2 + 3*x" autocomplete="off" spellcheck="false"></label>
+          <label><span class="mb-2 block text-sm font-bold">Operación</span><select id="calculo-operacion" class="select-nexo w-full"><option value="derivar">Derivar</option><option value="integrar">Integral indefinida</option><option value="definida">Integral definida</option></select></label>
+        </div>
+        <div id="calculo-valor" class="mt-4"><label class="block max-w-xs"><span class="mb-2 block text-sm font-bold">Evaluar derivada en x (opcional)</span><input id="calculo-punto" class="input-nexo w-full" placeholder="Ejemplo: 2"></label></div>
+        <div id="calculo-limites" class="mt-4 hidden flex-wrap gap-4"><label><span class="mb-2 block text-sm font-bold">Límite inferior</span><input id="calculo-inferior" class="input-nexo w-32" value="0"></label><label><span class="mb-2 block text-sm font-bold">Límite superior</span><input id="calculo-superior" class="input-nexo w-32" value="1"></label></div>
+        <button id="calculo-resolver" type="button" class="btn-primario mt-5">Resolver</button>
+      </div>
+      <div id="calculo-resultado" class="hidden rounded-3xl border border-sky-500/20 bg-nexo-900 p-5 shadow-nexo sm:p-6" aria-live="polite"></div>
+    </section>
+
+    <section id="vista-basica" data-vista class="hidden space-y-5">
+      <div class="mx-auto max-w-xl rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+        <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Calculadora</p>
+        <h1 class="mt-1 text-2xl font-black text-white">Operaciones básicas</h1>
+        <label for="basica-expresion" class="mt-5 block text-sm font-bold">Expresión</label>
+        <input id="basica-expresion" class="input-nexo mt-2 w-full text-right font-mono text-xl" placeholder="Ejemplo: (8+2)/5" autocomplete="off" spellcheck="false" aria-label="Expresión matemática">
+        <div id="basica-teclas" class="mt-4 grid grid-cols-4 gap-2"></div>
+        <div class="mt-4 flex items-center justify-between gap-3"><label class="text-sm text-slate-300"><input id="basica-grados" type="checkbox" class="mr-2">Trigonometría en grados</label><button id="basica-calcular" type="button" class="btn-primario">Calcular</button></div>
+        <div id="basica-resultado" class="mt-5 min-h-12 rounded-xl border border-slate-800 bg-slate-950/35 p-3 text-right font-mono text-xl text-sky-200" aria-live="polite">0</div>
+        <p class="mt-3 text-xs text-slate-400">+, −, ×, ÷, potencias (^), %, raíces, factorial, paréntesis, trigonometría, logaritmos, π, e y Ans. El botón % divide entre 100; escribe factorial(5) para 5!.</p>
+      </div>
+    </section>
+
+    <!-- MATRICES -->
+    <section id="vista-matrices" data-vista class="hidden space-y-6">
+      <div class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo sm:p-6">
+        <div class="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[.18em] text-sky-400">Álgebra matricial</p>
+            <h1 class="mt-1 text-2xl font-black text-white">Matrices</h1>
+            <p class="mt-2 text-sm text-slate-400">Ingresa cada matriz una sola vez: NexoLineal la conserva para operaciones, análisis y propiedades.</p>
+          </div>
+          <div class="subnav" data-subnav="matrices">
+            <button type="button" data-matriz-tab="operaciones" class="subnav-btn subnav-activo">Operaciones</button>
+            <button type="button" data-matriz-tab="programa5" class="subnav-btn">Determinantes, inversa y LU</button>
+            <button type="button" data-matriz-tab="analisis" class="subnav-btn">Análisis de A</button>
+            <button type="button" data-matriz-tab="propiedades" class="subnav-btn">Propiedades</button>
+          </div>
+        </div>
+      </div>
+      <div id="matriz-contenido"></div>
+      <!-- Consulta de propiedades y teoremas de matrices -->
+<details
+  class="rounded-3xl border border-slate-800 bg-nexo-900 p-5 shadow-nexo"
+>
+  <!-- Este título permite desplegar y ocultar la explicación -->
+  <summary class="cursor-pointer font-bold text-sky-400">
+    Ver teoremas clave de Matrices
+  </summary>
+
+  <div class="mt-4 space-y-3 text-sm text-slate-300">
+    <p>
+      <strong>Suma y resta:</strong>
+      las matrices deben tener la misma cantidad de filas
+      y columnas. Se operan los elementos de igual posición.
+    </p>
+
+    <p>
+      <strong>Multiplicación por un escalar:</strong>
+      cada elemento de la matriz se multiplica por ese número.
+    </p>
+
+    <p>
+      <strong>Producto de matrices:</strong>
+      AB está definido cuando el número de columnas de A
+      coincide con el número de filas de B.
+      Si A es m × n y B es n × p, el resultado es m × p.
+    </p>
+
+    <p>
+      <strong>Orden del producto:</strong>
+      en general, AB no es igual a BA.
+      Incluso puede existir AB y no estar definido BA.
+    </p>
+
+    <p>
+      <strong>Propiedad asociativa:</strong>
+      (AB)C = A(BC), cuando las dimensiones son compatibles.
+    </p>
+
+    <p>
+      <strong>Propiedad distributiva:</strong>
+      A(B + C) = AB + AC, cuando las operaciones están definidas.
+    </p>
+
+    <p>
+      <strong>Transpuesta:</strong>
+      intercambia las filas y las columnas.
+      Se cumple (Aᵀ)ᵀ = A y (AB)ᵀ = BᵀAᵀ.
+    </p>
+
+    <p>
+      <strong>Matriz identidad:</strong>
+      tiene unos en la diagonal principal y ceros en las demás
+      posiciones. AI = IA = A, usando identidades del tamaño adecuado.
+    </p>
+
+    <p>
+      <strong>Matriz inversa:</strong>
+      una matriz cuadrada A tiene inversa si y solo si su rango
+      es igual a su orden. Cumple AA⁻¹ = A⁻¹A = I.
+    </p>
+
+    <p>
+      <strong>Inversa por Gauss-Jordan:</strong>
+      si A es invertible, la reducción de [A | I]
+      produce [I | A⁻¹].
+    </p>
+  </div>
+</details>
+    </section>
+
+  </main>
+
+  <script src="js/ejecutar_python.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/programa5.js"></script>
+</body>
+</html>
