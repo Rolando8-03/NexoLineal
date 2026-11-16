@@ -1,9 +1,13 @@
 name: Verificación de la línea de partida
 on:
   push:
-    branches: [main]
+    branches: [main, fase-02-nucleo]
     paths:
-      - '**.py'
+      - '**/*.py'
+      - '*.py'
+      - 'packages/**'
+      - 'tests/**'
+      - 'docs/fase02/**'
       - 'js/**'
       - 'css/**'
       - 'index.html'
@@ -30,10 +34,23 @@ jobs:
           node-version: '22'
       - name: Preparar evidencias
         run: mkdir -p evidencia-ci
+      - name: Instalar núcleo y dependencias de verificación
+        run: |
+          python -m pip install -e packages/core
+          python -m pip install sympy==1.14.0 jsonschema==4.23.0
       - name: Pruebas matemáticas originales
         run: |
           set -o pipefail
           python -B pruebas.py -v 2>&1 | tee evidencia-ci/pruebas-python.log
+      - name: Regresiones del núcleo y contratos
+        run: |
+          set -o pipefail
+          python -B -m unittest discover -s tests -v 2>&1 | tee evidencia-ci/pruebas-fase02.log
+          python -m compileall -q packages/core/src python modulos
+      - name: Referencia matemática independiente
+        run: python .github/scripts/auditoria_matematica.py
+      - name: Preparar referencia del contrato nativo
+        run: python .github/scripts/contratos_nativos.py
       - name: Sintaxis JavaScript
         run: |
           node --check js/app.js
@@ -66,6 +83,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fase-01-evidencias
+          name: nexolineal-evidencias
           path: evidencia-ci/
           retention-days: 30

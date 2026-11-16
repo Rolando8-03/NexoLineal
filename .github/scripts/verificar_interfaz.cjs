@@ -44,6 +44,63 @@ async function main() {
     await page.waitForFunction(() => document.querySelector('#basica-resultado').textContent.trim() === '2');
     report.casos.push({ nombre: 'aritmética', expresion: '(8+2)/5', esperado: '2', observado: await page.locator('#basica-resultado').innerText(), aprobado: true });
     await page.screenshot({ path: path.join(output, 'calculadora.png'), fullPage: true });
+
+    // Racional exacto a través de Ans y de los botones de la calculadora.
+    await page.locator('#basica-expresion').fill('1/3');
+    await page.locator('#basica-calcular').click();
+    await page.waitForFunction(() => document.querySelector('#basica-resultado').textContent.trim() === '1/3');
+    await page.locator('#basica-expresion').fill('Ans*3');
+    await page.locator('#basica-calcular').click();
+    await page.waitForFunction(() => document.querySelector('#basica-resultado').textContent.trim() === '1');
+    report.casos.push({ nombre: 'Ans racional', esperado: '1', aprobado: true });
+
+    await page.locator('nav [data-nav="calculo"]').click();
+    await page.locator('#calculo-expresion').fill('x^2');
+    await page.locator('#calculo-operacion').selectOption('definida');
+    await page.locator('#calculo-inferior').fill('-1');
+    await page.locator('#calculo-superior').fill('1');
+    await page.locator('#calculo-resolver').click();
+    await page.locator('#calculo-resultado').waitFor({ state: 'visible' });
+    const exactText = await page.locator('#calculo-resultado').innerText();
+    assert.match(exactText, /2\/3/);
+    assert.match(exactText, /exacto/);
+    report.casos.push({ nombre: 'integral racional exacta', esperado: '2/3', aprobado: true });
+    for (const expression of ['1/x+0', '2*(1/x)']) {
+      await page.locator('#calculo-expresion').fill(expression);
+      await page.locator('#calculo-resolver').click();
+      await page.locator('.swal2-popup').waitFor({ state: 'visible' });
+      assert.match(await page.locator('.swal2-popup').innerText(), /singularidad|dominio/i);
+      await page.locator('.swal2-confirm').click();
+      report.casos.push({ nombre: 'singularidad ' + expression, aprobado: true });
+    }
+
+    await page.locator('nav [data-nav="matrices"]').click();
+    for (const name of ['A', 'B']) {
+      await page.locator('[data-m-dim="' + name + ',f"]').selectOption('1');
+      await page.locator('[data-m-dim="' + name + ',c"]').selectOption('1');
+    }
+    await page.locator('[data-m-cell="A,0,0"]').fill('9007199254740993/2');
+    await page.locator('[data-m-cell="B,0,0"]').fill('1');
+    await page.locator('#btn-mat-todo').click();
+    await page.locator('#btn-exportar-producto').waitFor({ state: 'visible' });
+    const formulas = await page.locator('#matriz-contenido .katex-mathml annotation').allTextContents();
+    assert.ok(formulas.some(text => text.includes('9007199254740993')));
+    const downloading = page.waitForEvent('download');
+    await page.locator('#btn-exportar-producto').click();
+    const download = await downloading;
+    const exported = JSON.parse(fs.readFileSync(await download.path(), 'utf8'));
+    assert.equal(exported.result.matrix[0][0], '9007199254740993/2');
+    fs.writeFileSync(path.join(output, 'producto-exportado.json'), JSON.stringify(exported, null, 2));
+    await page.screenshot({ path: path.join(output, 'fraccion-grande.png'), fullPage: true });
+    report.casos.push({ nombre: 'fracción grande en pantalla y exportación', esperado: '9007199254740993/2', aprobado: true });
+
+    const nativeCases = JSON.parse(fs.readFileSync(path.join(output, 'contratos-nativos.json'), 'utf8'));
+    for (const test of nativeCases) {
+      const web = await page.evaluate(request => ejecutarContrato(request), test.solicitud);
+      assert.deepEqual(web, test.respuesta);
+      report.casos.push({ nombre: 'paridad ' + test.solicitud.operation_id + ' ' + web.status, aprobado: true });
+    }
+
     assert.deepEqual(errors, []);
     report.aprobado = true;
     console.log(JSON.stringify(report));
