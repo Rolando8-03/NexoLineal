@@ -21,6 +21,11 @@ const report = { approved: false, cases: [], errors: [] };
       const host = new URL(route.request().url()).hostname;
       return host === "127.0.0.1" ? route.continue() : route.abort();
     });
+    let failFirstManifest = true;
+    await context.route("**/runtime/core-manifest.json", route => {
+      if (failFirstManifest) { failFirstManifest = false; return route.fulfill({ status: 503, body: "Prueba de recuperación" }); }
+      return route.continue();
+    });
     const page = await context.newPage();
     page.on("pageerror", error => report.errors.push(error.message));
     let served = false;
@@ -30,6 +35,9 @@ const report = { approved: false, cases: [], errors: [] };
     }
     assert.ok(served);
     await page.locator("#calcular").waitFor({ state: "visible" });
+    await page.locator("#reintentar-motor").waitFor({ state: "visible", timeout: 180000 });
+    await page.locator("#reintentar-motor").click();
+    report.cases.push({ name: "recuperación tras fallo al cargar el motor", passed: true });
     await page.waitForFunction(() => !document.querySelector("#calcular").disabled, null, { timeout: 180000 });
     await page.locator("#calcular").click();
     await page.waitForFunction(() => document.querySelector("#resultado").dataset.status === "ok");
@@ -71,8 +79,8 @@ const report = { approved: false, cases: [], errors: [] };
       report.cases.push({ name: cases[i].request.operation_id, response: responses[i], passed: true });
     }
 
-    const row = Array(30).fill("1/" + "9".repeat(180)).join(" ");
-    const matrix = Array(30).fill(row).join("\n");
+    const row = Array(60).fill("1/" + "9".repeat(180)).join(" ");
+    const matrix = Array(60).fill(row).join("\n");
     await page.locator("#matriz-a").fill(matrix);
     await page.locator("#matriz-b").fill(matrix);
     await page.locator("#calcular").click();

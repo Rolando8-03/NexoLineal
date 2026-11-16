@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   web:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +44,7 @@ jobs:
           VITE_TARGET: web
         run: |
           npm ci
+          npm audit --audit-level=low
           npm run build
       - name: Instalar navegador de verificación
         run: |
@@ -103,7 +104,7 @@ jobs:
       - name: Empaquetar ejecutable gráfico
         shell: pwsh
         run: |
-          pyinstaller --noconsole --onefile --name NexoLineal-Prototipo --add-data "apps/frontend/dist;ui" --collect-submodules nexolineal --hidden-import apps.windows.smoke --paths . apps/windows/main.py
+          pyinstaller --noconsole --onefile --name NexoLineal-Prototipo --add-data "apps/frontend/dist;ui" --collect-submodules nexolineal --hidden-import apps.windows.main --hidden-import apps.windows.smoke --paths . apps/windows/entrypoint.py
           if ($LASTEXITCODE -ne 0) { throw 'Falló empaquetado' }
           python -c "import pefile; p=pefile.PE('dist/NexoLineal-Prototipo.exe'); assert p.OPTIONAL_HEADER.Subsystem == 2"
       - name: Ejecutar aplicación empaquetada
@@ -111,7 +112,14 @@ jobs:
         run: |
           $env:NEXO_FIXTURES = "$pwd/tests/fixtures/platform_contracts.json"
           $env:NEXO_EVIDENCE = "$pwd/evidencia-fase03/windows-exe.json"
-          $process = Start-Process -FilePath "$pwd/dist/NexoLineal-Prototipo.exe" -ArgumentList '--self-test' -Wait -PassThru
+          $process = Start-Process -FilePath "$pwd/dist/NexoLineal-Prototipo.exe" -ArgumentList '--self-test' -PassThru
+          if (-not $process.WaitForExit(180000)) {
+            Get-ChildItem evidencia-fase03 | Format-Table
+            if (Test-Path evidencia-fase03/windows-exe.json.error.log) { Get-Content evidencia-fase03/windows-exe.json.error.log }
+            Stop-Process -Id $process.Id -Force
+            throw 'El ejecutable excedió tres minutos'
+          }
+          if (Test-Path evidencia-fase03/windows-exe.json.error.log) { Get-Content evidencia-fase03/windows-exe.json.error.log }
           if ($process.ExitCode -ne 0) { throw 'Falló ejecutable gráfico' }
           if (-not (Test-Path $env:NEXO_EVIDENCE)) { throw 'Falta evidencia del ejecutable' }
       - uses: actions/upload-artifact@v4
@@ -123,7 +131,7 @@ jobs:
             dist/NexoLineal-Prototipo.exe
           retention-days: 30
   android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -184,7 +192,7 @@ jobs:
           retention-days: 30
   paridad:
     needs: [web, windows, android]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

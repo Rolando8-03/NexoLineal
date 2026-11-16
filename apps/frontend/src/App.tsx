@@ -54,10 +54,14 @@ export function App() {
   const [selectedStep, setSelectedStep] = useState(0);
   const running = useRef(false);
   const alive = useRef(true);
+  async function initialize() {
+    setError(""); setReady(false);
+    try { await engine.initialize(); if (alive.current) setReady(true); }
+    catch (reason) { if (alive.current) setError(reason instanceof Error ? reason.message : String(reason)); }
+  }
   useEffect(() => {
     alive.current = true;
-    void engine.initialize().then(() => { if (alive.current) setReady(true); })
-      .catch(reason => { if (alive.current) setError(String(reason.message || reason)); });
+    void initialize();
     return () => { alive.current = false; engine.dispose(); };
   }, [engine]);
 
@@ -142,10 +146,10 @@ export function App() {
               <label htmlFor="expresion">{operation === "calculadora.evaluar" ? "Expresión" : "Función de x"}</label>
               <input id="expresion" value={expression} disabled={busy} onChange={event => { setExpression(event.target.value); setResult(null); }} autoComplete="off" />
               {operation === "calculo.definida" && <div className="limits">
-                <div><label htmlFor="inferior">Desde</label><input id="inferior" value={lower} disabled={busy} onChange={event => setLower(event.target.value)} /></div>
-                <div><label htmlFor="superior">Hasta</label><input id="superior" value={upper} disabled={busy} onChange={event => setUpper(event.target.value)} /></div>
+                <div><label htmlFor="inferior">Desde</label><input id="inferior" value={lower} disabled={busy} onChange={event => { setLower(event.target.value); setResult(null); }} /></div>
+                <div><label htmlFor="superior">Hasta</label><input id="superior" value={upper} disabled={busy} onChange={event => { setUpper(event.target.value); setResult(null); }} /></div>
               </div>}
-              {operation === "calculo.derivar" && <><label htmlFor="punto">Evaluar en x · opcional</label><input id="punto" value={point} disabled={busy} onChange={event => setPoint(event.target.value)} /></>}
+              {operation === "calculo.derivar" && <><label htmlFor="punto">Evaluar en x · opcional</label><input id="punto" value={point} disabled={busy} onChange={event => { setPoint(event.target.value); setResult(null); }} /></>}
               <p className="help">Usá * para multiplicar y ^ para potencias. También sin, cos, exp, ln y sqrt.</p>
             </>}
             <div className="actions">
@@ -159,7 +163,8 @@ export function App() {
           <div className="panel-heading"><h2 id="resultado-titulo">Resultado</h2>
             {successful && import.meta.env.VITE_TARGET === "web" && <button id="exportar" type="button" className="secondary" onClick={exportResult}>Exportar JSON</button>}
           </div>
-          {error && <p className="error" role="alert">{error}</p>}
+          {error && <><p className="error" role="alert">{error}</p>
+            {!ready && <button id="reintentar-motor" type="button" className="secondary" onClick={() => void initialize()}>Reintentar</button>}</>}
           {result && !successful && <p className={result.status === "cancelled" ? "help" : "error"} role={result.status === "cancelled" ? "status" : "alert"}>{result.error?.message}</p>}
           {!result && !error && <p className="empty">{busy ? "Podés seguir navegando mientras calculamos." : "El resultado y su procedimiento aparecerán aquí."}</p>}
           {successful && value && <>

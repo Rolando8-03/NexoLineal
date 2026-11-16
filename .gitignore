@@ -11,3 +11,11 @@ build/
 dist/
 *.egg-info/
 evidencia-ci/
+evidencia-fase03/
+apps/frontend/public/runtime/
+apps/frontend/public/icono.ico
+apps/android/.gradle/
+apps/android/local.properties
+apps/android/app/src/main/assets/
+apps/android/app/src/androidTest/assets/
+*.spec

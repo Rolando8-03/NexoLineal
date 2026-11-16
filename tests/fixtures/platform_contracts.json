@@ -60,5 +60,29 @@
       "inferior": "-1",
       "superior": "1"
     }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculadora.evaluar",
+    "input": {
+      "expresion": "9007199254740993/2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculo.definida",
+    "input": {
+      "expresion": "x^2",
+      "inferior": "-1",
+      "superior": "1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculo.derivar",
+    "input": {
+      "expresion": "x^2",
+      "punto": "3"
+    }
   }
 ]

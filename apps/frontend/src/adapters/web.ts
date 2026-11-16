@@ -18,7 +18,7 @@ export class WebEngine implements Engine {
         if (worker !== this.worker) return;
         const message = event.data;
         if (message.type === "ready") { this.rejectInitialization = null; resolve(); return; }
-        if (message.type === "failure" && !message.id) { reject(new Error(message.error)); return; }
+        if (message.type === "failure" && !message.id) { this.fail(new Error(message.error)); return; }
         const pending = this.pending.get(message.id);
         if (!pending) return;
         if (message.type === "progress") { pending.progress?.(message.progress); return; }
@@ -28,13 +28,21 @@ export class WebEngine implements Engine {
       };
       worker.onerror = event => {
         const error = new Error(event.message || "No se pudo cargar el motor.");
-        reject(error);
-        for (const pending of this.pending.values()) pending.reject(error);
-        this.pending.clear();
+        this.fail(error);
       };
       worker.postMessage({ type: "initialize", baseURL: new URL(".", location.href).href });
     });
     return this.initialization;
+  }
+
+  private fail(error: Error): void {
+    this.worker?.terminate();
+    this.worker = null;
+    this.rejectInitialization?.(error);
+    this.rejectInitialization = null;
+    this.initialization = null;
+    for (const pending of this.pending.values()) pending.reject(error);
+    this.pending.clear();
   }
 
   async execute(problem: Problem, onProgress?: (value: number) => void): Promise<CalculationResult> {
