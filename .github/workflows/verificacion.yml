@@ -1,0 +1,67 @@
+name: Verificación de la línea de partida
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - 'js/**'
+      - 'css/**'
+      - 'index.html'
+      - '.github/scripts/**'
+      - '.github/workflows/verificacion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preparar evidencias
+        run: mkdir -p evidencia-ci
+      - name: Pruebas matemáticas originales
+        run: |
+          set -o pipefail
+          python -B pruebas.py -v 2>&1 | tee evidencia-ci/pruebas-python.log
+      - name: Sintaxis JavaScript
+        run: |
+          node --check js/app.js
+          node --check js/ejecutar_python.js
+          node --check js/programa5.js
+      - name: Integridad Git y versiones de ejecución
+        run: |
+          git fsck --full
+          git log --format='%H %aI %an %s' > evidencia-ci/commits.txt
+          python --version > evidencia-ci/versiones.txt
+          node --version >> evidencia-ci/versiones.txt
+      - name: Instalar navegador de pruebas
+        run: |
+          npm install --prefix "$RUNNER_TEMP/nexo-browser" playwright
+          node "$RUNNER_TEMP/nexo-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          npm list --prefix "$RUNNER_TEMP/nexo-browser" --json > evidencia-ci/dependencias-navegador.json
+      - name: Recorrido gráfico de la calculadora
+        run: |
+          python -m http.server 8080 --bind 127.0.0.1 > evidencia-ci/servidor.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for intento in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8080/ > /dev/null; then break; fi
+            sleep 1
+          done
+          NODE_PATH="$RUNNER_TEMP/nexo-browser/node_modules" node .github/scripts/verificar_interfaz.cjs
+      - name: Conservar resultados y capturas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fase-01-evidencias
+          path: evidencia-ci/
+          retention-days: 30
