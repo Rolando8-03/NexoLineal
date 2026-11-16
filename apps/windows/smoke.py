@@ -48,7 +48,7 @@ def run(window):
         report["cases"].append({"name": "interfaz y cambio de presentación", "passed": True})
 
         fixtures = Path(os.environ["NEXO_FIXTURES"])
-        for i, problem in enumerate(json.loads(fixtures.read_text())):
+        for i, problem in enumerate(json.loads(fixtures.read_text(encoding="utf-8"))):
             result = bridge(window, problem, "fixture-" + str(i))
             assert result == execute(problem)
             report["cases"].append({"name": problem["operation_id"], "response": result, "passed": True})
@@ -71,6 +71,6 @@ def run(window):
         report["error"] = repr(error)
     finally:
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(report, ensure_ascii=False, indent=2))
+        output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         print("NEXO_WINDOWS_REPORT=" + json.dumps(report, ensure_ascii=False), flush=True)
         window.destroy()

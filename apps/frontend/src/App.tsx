@@ -43,7 +43,7 @@ export function App() {
   const [operation, setOperation] = useState<Operation>("matrices.producto");
   const [A, setA] = useState("1/2 2");
   const [B, setB] = useState("2\n3");
-  const [expression, setExpression] = useState("x^2");
+  const [expression, setExpression] = useState("(8+2)/5");
   const [lower, setLower] = useState("-1");
   const [upper, setUpper] = useState("1");
   const [point, setPoint] = useState("");

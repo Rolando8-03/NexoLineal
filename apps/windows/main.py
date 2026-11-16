@@ -49,7 +49,7 @@ def main():
         from apps.windows.smoke import run
         webview.start(run, (window,), gui="edgechromium", http_server=True)
         report = Path(os.environ.get("NEXO_EVIDENCE", "evidencia-windows.json"))
-        if not report.is_file() or not json.loads(report.read_text())["approved"]:
+        if not report.is_file() or not json.loads(report.read_text(encoding="utf-8"))["approved"]:
             raise SystemExit(1)
     else:
         webview.start(gui="edgechromium", http_server=True)
