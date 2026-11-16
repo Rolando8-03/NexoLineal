@@ -21,6 +21,11 @@ def _validate(problem):
     unknown = set(problem.input) - set(spec["required"]) - set(spec["optional"])
     if missing or unknown:
         raise InputError("Datos faltantes o desconocidos para la operación.")
+    if problem.operation_id != "matrices.producto":
+        if not isinstance(problem.input["expresion"], str):
+            raise InputError("La expresión debe ser texto.")
+        if "grados" in problem.input and type(problem.input["grados"]) is not bool:
+            raise InputError("grados debe ser booleano.")
     if set(problem.options) - {"include_steps"}:
         raise InputError("Opción no reconocida.")
     if "include_steps" in problem.options and type(problem.options["include_steps"]) is not bool:

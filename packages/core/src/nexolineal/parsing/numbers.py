@@ -9,8 +9,11 @@ def parse_number(value):
         raise InputError("Escribe un número.")
     if isinstance(value, Fraction):
         return value
-    if isinstance(value, float) and not math.isfinite(value):
-        raise InputError("El número debe ser finito.")
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise InputError("El número debe ser finito.")
+        if value.is_integer() and abs(value) > 2**53-1:
+            raise InputError("Envía los enteros grandes como texto para conservar su exactitud.")
     if isinstance(value, Decimal) and not value.is_finite():
         raise InputError("El decimal debe ser finito.")
     text = str(value).strip().replace(",", ".")
