@@ -24,7 +24,7 @@ def identidad(orden):
         raise ValueError("El orden debe ser un entero positivo.")
     return [[Fraction(i == j) for j in range(orden)] for i in range(orden)]
 
-def multiplicar_con_pasos(A, B):
+def multiplicar_con_pasos(A, B, checkpoint=None, on_progress=None):
     """Fila por columna. Los pasos guardan los mismos sumandos usados al calcular."""
     A, B = parse_matrix(A), parse_matrix(B)
     if len(A[0]) != len(B):
@@ -35,12 +35,16 @@ def multiplicar_con_pasos(A, B):
     for i, row in enumerate(A):
         output = []
         for j in range(len(B[0])):
+            if checkpoint is not None:
+                checkpoint()
             terms = [{"a": a, "b": B[k][j], "producto": a * B[k][j]}
                      for k, a in enumerate(row)]
             total = sum((term["producto"] for term in terms), Fraction(0))
             output.append(total)
             steps.append({"fila": i, "columna": j, "terminos": terms, "resultado": total})
         result.append(output)
+        if on_progress is not None:
+            on_progress((i + 1) * 100 // len(A))
     return result, steps
 
 def producto(A, B):

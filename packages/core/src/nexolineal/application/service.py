@@ -1,6 +1,6 @@
 """Catálogo y ejecución de operaciones del contrato 1.0."""
 from ..domain.models import (
-    Problem, Step, CalculationResult, InputError, DomainError, ResourceLimitError, ConvergenceError,
+    Problem, Step, CalculationResult, InputError, DomainError, ResourceLimitError, ConvergenceError, CancelledError,
 )
 from ..parsing.numbers import parse_matrix
 from ..algorithms.matrices import multiplicar_con_pasos
@@ -31,11 +31,11 @@ def _validate(problem):
     if "include_steps" in problem.options and type(problem.options["include_steps"]) is not bool:
         raise InputError("include_steps debe ser booleano.")
 
-def _product(problem):
+def _product(problem, checkpoint=None, on_progress=None):
     A, B = parse_matrix(problem.input["A"]), parse_matrix(problem.input["B"])
     if len(A)*len(B)*len(B[0]) > 250000:
         raise ResourceLimitError("El producto supera 250000 términos.")
-    matrix, raw_steps = multiplicar_con_pasos(A, B)
+    matrix, raw_steps = multiplicar_con_pasos(A, B, checkpoint, on_progress)
     steps = [
         Step(i, "producto_fila_columna", "Producto de la fila por la columna.",
              data, "c_ij = sum_k(a_ik*b_kj)")
@@ -53,15 +53,19 @@ def _product(problem):
                   "method": "fila_columna", "source": "algorithms.matrices"},
     )
 
-def execute(data):
+def execute(data, *, is_cancelled=None, on_progress=None):
     """Recibe una solicitud JSON y siempre devuelve el sobre público del contrato."""
     operation, inputs = "", {}
+    def checkpoint():
+        if is_cancelled is not None and is_cancelled():
+            raise CancelledError("Cálculo cancelado.")
     try:
         problem = Problem.from_dict(data)
         operation, inputs = problem.operation_id, problem.input
         _validate(problem)
+        checkpoint()
         if operation == "matrices.producto":
-            return _product(problem).to_dict()
+            return _product(problem, checkpoint, on_progress).to_dict()
         payload = dict(inputs)
         if operation == "calculadora.evaluar":
             payload["accion"] = "basica"
@@ -69,12 +73,15 @@ def execute(data):
             payload["accion"] = "calculo"
             payload["operacion"] = "definida" if operation == "calculo.definida" else "derivar"
         result = ejecutar_calculo(payload)
+        checkpoint()
         exact = result.get("exactitud") == "exacta"
         return CalculationResult(
             operation, inputs, "ok", result,
             metadata={"exact": exact, "number_format": "text",
                       "precision_bits": result.get("precision_bits"), "index_base": 0},
         ).to_dict()
+    except CancelledError as error:
+        return _error(operation, inputs, "cancelled", "cancelled", str(error))
     except ConvergenceError as error:
         return _error(operation, inputs, "non_convergent", "convergence", str(error))
     except ResourceLimitError as error:

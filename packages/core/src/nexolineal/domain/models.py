@@ -10,6 +10,9 @@ class InputError(ValueError):
 class DomainError(ValueError):
     """La operación no está definida sobre los datos solicitados."""
 
+class CancelledError(ValueError):
+    """El solicitante canceló el cálculo antes de completarlo."""
+
 class ConvergenceError(ValueError):
     """El método agotó su refinamiento sin alcanzar la precisión solicitada."""
 
