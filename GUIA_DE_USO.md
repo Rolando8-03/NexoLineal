@@ -60,7 +60,6 @@ El modelo se plantea antes de introducir A y b. La calculadora resuelve las ecua
 - `python/operaciones_matrices.py`: operaciones y propiedades de la interfaz previa.
 - `modulos/modulo_matrices.py`: producto, cofactores, Sarrus, reducción triangular, Gauss-Jordan para inversa, adjunta y verificador.
 - `modulos/factorizacion.py`: Cramer, LU y resolución de sistemas.
-- `modulos/consola.py`: solicita datos y muestra resultados. Los cálculos no dependen de esta interfaz.
 - `teoremas/resumen_teoremas.py`: propiedades teóricas que aparecen en pantalla.
 
 Fuentes de requisitos: guías Programa 1, 2, 3, 4 y 5 y presentaciones S1–S8 de la carpeta de Álgebra Lineal facilitada por el estudiante. Los algoritmos nuevos son implementaciones propias en Python estándar de esos métodos.
