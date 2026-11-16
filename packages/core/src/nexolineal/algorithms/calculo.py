@@ -7,7 +7,7 @@ import ast
 import math
 from fractions import Fraction
 from ..parsing.numbers import parse_number
-from ..domain.models import DomainError
+from ..domain.models import DomainError, ResourceLimitError, ConvergenceError
 from .domains import validar_dominio
 
 FUNCIONES = {'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sqrt', 'ln', 'log', 'exp', 'abs', 'factorial'}
@@ -61,7 +61,7 @@ def _evaluar(n, x=0, ans=0, grados=False):
         elif isinstance(n.op, ast.Div): y = a / b
         else:
             if abs(b) > 100 or abs(a) > 1e7:
-                raise ValueError('Potencia demasiado grande.')
+                raise ResourceLimitError('Potencia demasiado grande.')
             y = a ** b
     else:
         a = evaluar(n.args[0], x, ans, grados)
@@ -88,7 +88,7 @@ def evaluar(n, x=0, ans=0, grados=False):
     """Convierte los fallos aritméticos en errores explícitos de dominio."""
     try:
         return _evaluar(n, x, ans, grados)
-    except DomainError:
+    except (DomainError, ResourceLimitError, ConvergenceError):
         raise
     except (ValueError, ZeroDivisionError, OverflowError) as error:
         raise DomainError(str(error)) from None
@@ -231,7 +231,7 @@ def integral_numerica(n, a, b):
         flm, frm = f(lm), f(rm)
         iz = simpson(l, m, fl, flm, fm); de = simpson(m, r, fm, frm, fr)
         if nivel == 0:
-            raise ValueError('No se logró la precisión numérica cerca de una discontinuidad.')
+            raise ConvergenceError('No se logró la precisión numérica con el presupuesto de refinamiento.')
         if abs(iz+de-base) <= 15*tol: return iz+de+(iz+de-base)/15
         return subdividir(l,m,fl,flm,fm,iz,tol/2,nivel-1)+subdividir(m,r,fm,frm,fr,de,tol/2,nivel-1)
     signo = 1 if b >= a else -1

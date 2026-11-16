@@ -26,7 +26,7 @@ assert resultado["result"]["matrix"] == [["7"]]
 
 La respuesta contiene schema_version, operation_id, input, status, result, steps, verification, warnings, metadata y error. Un fallo conserva el sobre y devuelve error.code y error.message.
 
-Los estados admitidos por el esquema incluyen ok, invalid_input, domain_error, limit_reached, singular, inconsistent, infinite, not_applicable, cancelled, non_convergent e internal_error. El catálogo de esta fase produce los primeros cuatro. Los otros estados quedan definidos para incorporar los recorridos correspondientes.
+Los estados admitidos por el esquema incluyen ok, invalid_input, domain_error, limit_reached, singular, inconsistent, infinite, not_applicable, cancelled, non_convergent e internal_error. El catálogo de esta fase produce ok, invalid_input, domain_error, limit_reached y non_convergent. Los otros estados quedan definidos para incorporar los recorridos correspondientes.
 
 ## Números, pasos y comprobaciones
 

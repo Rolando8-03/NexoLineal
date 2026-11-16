@@ -1,6 +1,6 @@
 """Catálogo y ejecución de operaciones del contrato 1.0."""
 from ..domain.models import (
-    Problem, Step, CalculationResult, InputError, DomainError, ResourceLimitError,
+    Problem, Step, CalculationResult, InputError, DomainError, ResourceLimitError, ConvergenceError,
 )
 from ..parsing.numbers import parse_matrix
 from ..algorithms.matrices import multiplicar_con_pasos
@@ -75,6 +75,8 @@ def execute(data):
             metadata={"exact": exact, "number_format": "text",
                       "precision_bits": result.get("precision_bits"), "index_base": 0},
         ).to_dict()
+    except ConvergenceError as error:
+        return _error(operation, inputs, "non_convergent", "convergence", str(error))
     except ResourceLimitError as error:
         return _error(operation, inputs, "limit_reached", "resource_limit", str(error))
     except (DomainError, ZeroDivisionError, OverflowError) as error:

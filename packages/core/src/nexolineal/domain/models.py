@@ -10,6 +10,9 @@ class InputError(ValueError):
 class DomainError(ValueError):
     """La operación no está definida sobre los datos solicitados."""
 
+class ConvergenceError(ValueError):
+    """El método agotó su refinamiento sin alcanzar la precisión solicitada."""
+
 class ResourceLimitError(ValueError):
     """La solicitud excede el presupuesto de cálculo admitido."""
 

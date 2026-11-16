@@ -87,6 +87,20 @@ class Contracts(unittest.TestCase):
         result = execute(request("matrices.producto", {"A": [["1e10000000"]], "B": [["1"]]}))
         self.assertEqual(result["status"], "limit_reached")
 
+    def test_non_convergence_preserves_error_contract(self):
+        from unittest.mock import patch
+        from nexolineal.domain.models import ConvergenceError
+        with patch("nexolineal.application.service.ejecutar_calculo",
+                   side_effect=ConvergenceError("Presupuesto de refinamiento agotado")):
+            result = execute(request("calculo.definida", {"expresion":"sqrt(x)", "inferior":"0", "superior":"1"}))
+        self.assertEqual(result["status"], "non_convergent")
+        self.assertIsNone(result["result"])
+        self.assertEqual(result["error"]["code"], "convergence")
+
+    def test_arithmetic_resource_status(self):
+        result = execute(request("calculadora.evaluar", {"expresion": "2^101"}))
+        self.assertEqual(result["status"], "limit_reached")
+
     def test_legacy_adapter_contract(self):
         result = ejecutar_matrices({"A": "1/2 2", "B": "2\n3"})
         self.assertEqual(result["producto_AB"], [["7"]])
