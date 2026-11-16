@@ -151,6 +151,8 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
       - name: Compilar interfaz y preparar Python incluido
         run: |
           python -m pip install -e packages/core
@@ -178,10 +180,12 @@ jobs:
           script: |
             adb shell svc wifi disable
             adb shell svc data disable
-            apps/android/gradlew -p apps/android connectedDebugAndroidTest --stacktrace
+            adb install -r apps/android/app/build/outputs/apk/debug/app-debug.apk
+            adb install -r apps/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            adb shell am instrument -w org.nexolineal.app.test/androidx.test.runner.AndroidJUnitRunner > evidencia-fase03/instrumentacion-android.log
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.json > evidencia-fase03/android.json
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.png > evidencia-fase03/android.png
-            python -c "from pathlib import Path; print('NEXO_ANDROID_REPORT='+Path('evidencia-fase03/android.json').read_text())"
+            python -c "from pathlib import Path; import json; p=Path('evidencia-fase03/android.json'); r=json.loads(p.read_text()); assert r['approved']; print('NEXO_ANDROID_REPORT='+json.dumps(r,ensure_ascii=False))"
       - name: Comprobar contenido y tamaño del APK
         run: |
           python -c "from pathlib import Path; from zipfile import ZipFile; p=Path('apps/android/app/build/outputs/apk/debug/app-debug.apk'); z=ZipFile(p); a=['arm64-v8a','x86_64']; assert all('lib/'+abi+'/libpython3.12.so' in z.namelist() for abi in a); print({'apk_bytes':p.stat().st_size,'abis':a})"

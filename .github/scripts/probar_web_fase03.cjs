@@ -79,6 +79,50 @@ const report = { approved: false, cases: [], errors: [] };
       report.cases.push({ name: cases[i].request.operation_id, response: responses[i], passed: true });
     }
 
+
+    // Recorridos de los formularios, además de la comparación directa del Worker.
+    for (const item of cases) {
+      const request = item.request;
+      await page.locator("#operacion").selectOption(request.operation_id);
+      if (request.operation_id === "matrices.producto") {
+        await page.locator("#matriz-a").fill(request.input.A.map(row => row.join(" ")).join("\n"));
+        await page.locator("#matriz-b").fill(request.input.B.map(row => row.join(" ")).join("\n"));
+      } else {
+        await page.locator("#expresion").fill(request.input.expresion);
+        if (request.operation_id === "calculo.definida") {
+          await page.locator("#inferior").fill(request.input.inferior);
+          await page.locator("#superior").fill(request.input.superior);
+        }
+        if (request.operation_id === "calculo.derivar") await page.locator("#punto").fill(request.input.punto || "");
+      }
+      await page.locator("#calcular").click();
+      await page.waitForFunction(status => document.querySelector("#resultado").dataset.status === status, item.expected.status);
+      if (item.expected.status === "ok") {
+        const pendingDownload = page.waitForEvent("download");
+        await page.locator("#exportar").click();
+        const result = JSON.parse(fs.readFileSync(await (await pendingDownload).path(), "utf8"));
+        assert.deepEqual(result.result, item.expected.result);
+        if (request.operation_id === "matrices.producto" && result.result.matrix[0][0].includes("9007199254740993")) {
+          assert.match(await page.locator("#resultado .katex-mathml annotation").first().innerText(), /9007199254740993/);
+        }
+      } else {
+        assert.ok((await page.getByRole("alert").innerText()).includes(item.expected.error.message));
+      }
+    }
+    report.cases.push({ name: "siete ejercicios por sus formularios y fracción grande en pantalla", passed: true });
+    await page.locator("#operacion").selectOption("matrices.producto");
+    await page.locator("#matriz-a").fill("1 2\n3 4");
+    await page.locator("#matriz-b").fill("1 0\n0 1");
+    await page.locator("#calcular").click();
+    await page.waitForFunction(() => document.querySelector("#resultado").dataset.status === "ok");
+    await page.locator(".steps summary").click();
+    await page.locator("#paso").selectOption("2");
+    await page.locator("#modo-explorador").click();
+    assert.equal(await page.locator("#paso").inputValue(), "2");
+    await page.locator("#modo-serio").click();
+    assert.equal(await page.locator("#paso").inputValue(), "2");
+    report.cases.push({ name: "cambio de presentación conserva el paso seleccionado", passed: true });
+
     const row = Array(60).fill("1/" + "9".repeat(180)).join(" ");
     const matrix = Array(60).fill(row).join("\n");
     await page.locator("#matriz-a").fill(matrix);

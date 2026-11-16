@@ -32,7 +32,7 @@ function stepTex(step: Step): string {
 function dimensions(text: string): string {
   const rows = text.split(/[;\n]/).filter(row => row.trim());
   const columns = rows.map(row => row.trim().split(/\s+/).length);
-  return rows.length ? rows.length + " × " + Math.max(...columns) : "Sin datos";
+  return rows.length ? rows.length + " × " + columns.reduce((maximum, count) => Math.max(maximum, count), 0) : "Sin datos";
 }
 
 export function App() {

@@ -8,6 +8,11 @@ import faulthandler
 
 if __name__ == "__main__":
     diagnostic = Path(os.environ.get("NEXO_EVIDENCE", "nexolineal-error"))
+    def thread_failed(arguments):
+        diagnostic.with_name(diagnostic.name + ".error.log").write_text(
+            "".join(traceback.format_exception(arguments.exc_type, arguments.exc_value, arguments.exc_traceback)),
+            encoding="utf-8")
+    threading.excepthook = thread_failed
     trace = None
     if "--self-test" in sys.argv:
         trace = diagnostic.with_name(diagnostic.name + ".threads.log").open("w", encoding="utf-8")

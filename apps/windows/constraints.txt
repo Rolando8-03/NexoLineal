@@ -1,0 +1,13 @@
+# Árbol Windows observado y fijado para los prototipos.
+altgraph==0.17.5
+bottle==0.13.4
+cffi==2.1.1
+clr_loader==0.3.1
+pefile==2024.8.26
+proxy_tools==0.1.0
+pycparser==3.12
+pyinstaller-hooks-contrib==2026.10
+pythonnet==3.2.1
+pywin32-ctypes==0.2.3
+setuptools==84.2.1
+typing_extensions==4.16.0

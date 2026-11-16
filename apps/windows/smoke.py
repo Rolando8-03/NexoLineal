@@ -72,5 +72,9 @@ def run(window):
     finally:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-        print("NEXO_WINDOWS_REPORT=" + json.dumps(report, ensure_ascii=False), flush=True)
-        window.destroy()
+        try:
+            # PyInstaller --noconsole no proporciona los flujos de terminal.
+            if not getattr(sys, "frozen", False):
+                print("NEXO_WINDOWS_REPORT=" + json.dumps(report, ensure_ascii=False), flush=True)
+        finally:
+            window.destroy()
