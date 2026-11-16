@@ -94,6 +94,16 @@ async function main() {
     await page.screenshot({ path: path.join(output, 'fraccion-grande.png'), fullPage: true });
     report.casos.push({ nombre: 'fracción grande en pantalla y exportación', esperado: '9007199254740993/2', aprobado: true });
 
+    const unsafeMessage = await page.evaluate(async () => {
+      try {
+        await ejecutarContrato({ schema_version: "1.0", operation_id: "matrices.producto",
+          input: { A: [[9007199254740993]], B: [["1"]] } });
+        return "";
+      } catch (error) { return error.message; }
+    });
+    assert.match(unsafeMessage, /texto.*exactitud/);
+    report.casos.push({ nombre: "entrada numérica insegura requiere texto", aprobado: true });
+
     const nativeCases = JSON.parse(fs.readFileSync(path.join(output, 'contratos-nativos.json'), 'utf8'));
     for (const test of nativeCases) {
       const web = await page.evaluate(request => ejecutarContrato(request), test.solicitud);

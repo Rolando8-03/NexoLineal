@@ -32,5 +32,205 @@
       },
       "additionalProperties": false
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "operation_id": {
+            "const": "matrices.producto"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "type": "object",
+            "required": [
+              "A",
+              "B"
+            ],
+            "properties": {
+              "A": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1000
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "B": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1000
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation_id": {
+            "const": "calculadora.evaluar"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "type": "object",
+            "required": [
+              "expresion"
+            ],
+            "properties": {
+              "expresion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 350
+              },
+              "ans": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  }
+                ]
+              },
+              "grados": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation_id": {
+            "const": "calculo.definida"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "type": "object",
+            "required": [
+              "expresion",
+              "inferior",
+              "superior"
+            ],
+            "properties": {
+              "expresion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 350
+              },
+              "inferior": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "superior": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation_id": {
+            "const": "calculo.derivar"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "type": "object",
+            "required": [
+              "expresion"
+            ],
+            "properties": {
+              "expresion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 350
+              },
+              "punto": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  ]
 }

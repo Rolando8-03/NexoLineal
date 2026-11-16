@@ -205,7 +205,14 @@ function verificarPython() {
 function ejecutarJSON(codigoPython, datos, variable = "_datos_js") {
   verificarPython();
 
-  pyodide.globals.set(variable, JSON.stringify(datos));
+  const entradaJSON = JSON.stringify(datos, (_clave, valor) => {
+    if (typeof valor === "number" && (!Number.isFinite(valor) ||
+        (Number.isInteger(valor) && !Number.isSafeInteger(valor)))) {
+      throw new Error("Envía el número como texto para conservar su exactitud.");
+    }
+    return valor;
+  });
+  pyodide.globals.set(variable, entradaJSON);
 
   // Agrega la sangría necesaria para el bloque try de Python.
   const codigoIndentado = codigoPython
