@@ -93,7 +93,7 @@ def convert(data, ctx):
         ctx.emit(
             "digito_base",
             "Multiplicar el residuo por la base destino.",
-            {"posicion": len(fraction), "digito": DIGITS[digit], "residuo": remainder},
+            {"posicion": len(fraction), "digito": DIGITS[digit], "residuo": F(remainder)},
         )
     if remainder in seen and remainder:
         repeat_at = seen[remainder]

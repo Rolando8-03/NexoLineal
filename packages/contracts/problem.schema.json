@@ -3478,18 +3478,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "punto": {
                 "anyOf": [
@@ -3558,18 +3548,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "inferior": {
                 "anyOf": [
@@ -3670,18 +3650,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "inferior": {
                 "anyOf": [
@@ -3780,18 +3750,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "inicial": {
                 "anyOf": [
@@ -3808,18 +3768,8 @@
                 ]
               },
               "derivada": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "tolerancia_x": {
                 "anyOf": [
@@ -3891,18 +3841,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "anterior": {
                 "anyOf": [
@@ -4553,18 +4493,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               }
             },
             "additionalProperties": false
@@ -4591,18 +4521,8 @@
             ],
             "properties": {
               "expresion": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1000
-                  },
-                  {
-                    "type": "integer",
-                    "minimum": -9007199254740991,
-                    "maximum": 9007199254740991
-                  }
-                ]
+                "type": "string",
+                "maxLength": 350
               },
               "inferior": {
                 "anyOf": [

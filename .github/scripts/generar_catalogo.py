@@ -56,7 +56,9 @@ def generated():
                     else family if kind == "vectors" else number
                 )
             )
-            if kind in ("text", "set"):
+            if kind == "expression":
+                value = {"type": "string", "maxLength": 350}
+            elif kind in ("text", "set"):
                 value = (
                     {"type": "string"}
                     if kind == "text"

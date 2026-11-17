@@ -165,6 +165,7 @@ class NumericalContracts(unittest.TestCase):
         self.assertIn("tabla", out["result"])
 
     def test_newton_explicit_and_unsupported_derivatives(self):
+        self.assertEqual(root("newton", derivada=False)["status"], "invalid_input")
         self.assertEqual(root("newton", derivada="2*x")["status"], "ok")
         self.assertEqual(
             root("newton", expresion="abs(x)-1")["status"], "invalid_input"
@@ -296,6 +297,20 @@ class NumericalContracts(unittest.TestCase):
             ],
             "invalid_input",
         )
+
+    def test_large_conversion_remainders_are_exact_text(self):
+        out = call(
+            "conversiones.bases",
+            numero="0.12345678901234567",
+            base_origen="10",
+            base_destino="2",
+            precision="3",
+        )
+        self.assertEqual(out["status"], "ok")
+        self.assertTrue(
+            all(isinstance(step["data"]["residuo"], str) for step in out["steps"])
+        )
+        self.assertEqual(out["steps"][0]["data"]["residuo"], "24691357802469134")
 
     def test_sets_universe_empty_duplicates_and_cartesian(self):
         out = call("conjuntos.operar", A="a\na\nb", B="b\nc")["result"]

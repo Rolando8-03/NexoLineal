@@ -31,6 +31,8 @@ def _validate(problem):
     spec = CATALOG.get(problem.operation_id)
     if spec is not None:
         for field in spec.fields:
+            if field["kind"] in ("expression","text") and field["name"] in problem.input and not isinstance(problem.input[field["name"]],str):
+                raise InputError("El campo " + field["name"] + " debe ser texto.")
             if field["kind"] == "select" and field["name"] in problem.input:
                 if problem.input[field["name"]] not in field["choices"]:
                     raise InputError("Valor no permitido para " + field["name"] + ".")
