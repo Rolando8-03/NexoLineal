@@ -80,6 +80,17 @@ class PlatformTest {
             assertEquals("\"explorador\"", js("document.querySelector('.app').dataset.mode"))
             cases.put(JSONObject().put("name", "interfaz offline y cambio de presentación").put("passed", true))
 
+            // Además de los contratos directos se prueba la entrada real del usuario.
+            js("const e=document.querySelector('#operacion');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'sistemas.resolver');e.dispatchEvent(new Event('change',{bubbles:true}));")
+            waitFor("!!document.querySelector('#dato-b')")
+            js("for(const [id,value] of [['matriz-a','1 2 3;2 4 6'],['dato-b','1 2']]){const e=document.getElementById(id);const p=e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(p,'value').set.call(e,value);e.dispatchEvent(new Event('input',{bubbles:true}));}")
+            js("document.querySelector('#calcular').click()")
+            waitFor("document.querySelector('#resultado').dataset.status === 'infinite'")
+            js("document.querySelector('#modo-serio').click()")
+            assertEquals("\"infinite\"", js("document.querySelector('#resultado').dataset.status"))
+            assertEquals("\"1 2 3;2 4 6\"", js("document.querySelector('#matriz-a').value"))
+            cases.put(JSONObject().put("name", "sistema rectangular desde formulario en ambos modos").put("passed", true))
+
             val fixtures = JSONArray(instrumentation.context.assets.open("platform-cases.json").bufferedReader().use { it.readText() })
             for (i in 0 until fixtures.length()) {
                 val test = fixtures.getJSONObject(i)

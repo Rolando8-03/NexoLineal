@@ -1,11 +1,13 @@
-name: Plataformas fase 03
+name: NexoLineal multiplataforma
 on:
   push:
-    branches: [main, fase-03-plataformas]
+    branches: [main, fase-03-plataformas, fase-04-algebra]
     paths:
       - 'apps/**'
       - 'packages/core/**'
-      - 'tests/test_fase03.py'
+      - 'tests/**'
+      - 'packages/contracts/**'
+      - '.github/scripts/generar_catalogo.py'
       - 'tests/fixtures/platform_contracts.json'
       - '.github/scripts/*fase03*'
       - '.github/scripts/casos_plataformas.py'
@@ -35,7 +37,9 @@ jobs:
           python -m pip install -e packages/core sympy==1.14.0 jsonschema==4.23.0
           python -B pruebas.py -v
           python -B -m unittest discover -s tests -v
+          python .github/scripts/generar_catalogo.py --check
           python -m tests.auditoria_matematica
+          python -m tests.auditoria_fase04
           python .github/scripts/casos_plataformas.py
       - name: Compilar web con Python local
         working-directory: apps/frontend
@@ -57,6 +61,7 @@ jobs:
           name: fase03-web
           path: |
             evidencia-fase03/
+            evidencia-fase04/
             apps/frontend/dist/
           retention-days: 30
   windows:

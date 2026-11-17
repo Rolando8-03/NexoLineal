@@ -1,8 +1,8 @@
 name: Núcleo y cobertura fase 04
 on:
   push:
-    branches: [fase-04-algebra]
-    paths: ['packages/**', 'python/**', 'modulos/**', 'teoremas/**', 'tests/**', '.github/workflows/fase04.yml']
+    branches: [main, fase-04-algebra]
+    paths: ['packages/**', 'python/**', 'modulos/**', 'teoremas/**', 'tests/**', '.github/workflows/fase04.yml', '.github/scripts/generar_catalogo.py']
   workflow_dispatch:
 permissions:
   contents: read
@@ -24,5 +24,13 @@ jobs:
         run: |
           python -B pruebas.py -v
           python -B -m unittest discover -s tests -v
+          python .github/scripts/generar_catalogo.py --check
           python -m tests.auditoria_matematica
+          python -m tests.auditoria_fase04
           python -m compileall -q packages/core/src python modulos teoremas
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fase04-auditoria
+          path: evidencia-fase04/
+          retention-days: 30

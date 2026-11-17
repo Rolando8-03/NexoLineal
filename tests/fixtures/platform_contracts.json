@@ -84,5 +84,838 @@
       "expresion": "x^2",
       "punto": "3"
     }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "2 1\n1 -1",
+      "b": "5 1",
+      "metodo": "gauss_jordan"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.cramer",
+    "input": {
+      "A": "2 1\n1 -1",
+      "b": "5 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.inversa",
+    "input": {
+      "A": "2 1\n1 -1",
+      "b": "5 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.lu",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.plu",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.suma",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.resta",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.escalar",
+    "input": {
+      "A": "2 1\n1 -1",
+      "k": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.transpuesta",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.analizar",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.ref",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.rref",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.traza",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.potencia",
+    "input": {
+      "A": "2 1\n1 -1",
+      "exponente": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.elemental",
+    "input": {
+      "A": "2 1\n1 -1",
+      "eje": "fila",
+      "accion": "intercambiar",
+      "indice": "0",
+      "otro": "1",
+      "k": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.propiedades",
+    "input": {
+      "A": "2 1\n1 -1",
+      "k": "2",
+      "d": "3"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.particionar",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.suma_bloques",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.producto_bloques",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "determinantes.calcular",
+    "input": {
+      "A": "2 1\n1 -1",
+      "metodo": "reduccion",
+      "eje": "fila",
+      "indice": "0"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "determinantes.cofactores",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.inversa",
+    "input": {
+      "A": "2 1\n1 -1",
+      "metodo": "gauss_jordan"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.suma",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.resta",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.producto_punto",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.producto_cruz",
+    "input": {
+      "u": "1 2 3",
+      "v": "4 5 6"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.escalar",
+    "input": {
+      "u": "1 2",
+      "k": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.norma",
+    "input": {
+      "u": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.analizar",
+    "input": {
+      "vectores": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.generado",
+    "input": {
+      "vectores": "1 0\n0 1",
+      "v": "3 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.fundamentales",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.base",
+    "input": {
+      "vectores": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.suma",
+    "input": {
+      "U": "1 0\n0 1",
+      "V": "1 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.interseccion",
+    "input": {
+      "U": "1 0\n0 1",
+      "V": "1 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.coordenadas",
+    "input": {
+      "base": "1 0\n0 1",
+      "v": "3 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.cambio_base",
+    "input": {
+      "base_origen": "1 0\n0 1",
+      "base_destino": "1 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.analizar",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.desde_imagenes",
+    "input": {
+      "base_dominio": "1 0\n0 1",
+      "imagenes": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.componer",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.representar",
+    "input": {
+      "A": "2 1\n1 -1",
+      "base_dominio": "1 0\n0 1",
+      "base_codominio": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": [
+        [
+          "0",
+          "1",
+          "2"
+        ],
+        [
+          "0",
+          "2",
+          "4"
+        ]
+      ],
+      "b": [
+        "3",
+        "6"
+      ],
+      "metodo": "gauss"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": [
+        [
+          "1",
+          "2"
+        ],
+        [
+          "2",
+          "4"
+        ]
+      ],
+      "b": [
+        "3",
+        "7"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "0"
+        ]
+      ],
+      "b": [
+        "0",
+        "0"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": [
+        [
+          "9007199254740993",
+          "0"
+        ],
+        [
+          "0",
+          "2"
+        ]
+      ],
+      "b": [
+        "1",
+        "1"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.inversa",
+    "input": {
+      "A": [
+        [
+          "3/2"
+        ]
+      ],
+      "metodo": "adjugata"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.inversa",
+    "input": {
+      "A": [
+        [
+          "1",
+          "2"
+        ],
+        [
+          "2",
+          "4"
+        ]
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "determinantes.calcular",
+    "input": {
+      "A": [
+        [
+          "1",
+          "2"
+        ],
+        [
+          "3",
+          "4"
+        ]
+      ],
+      "metodo": "sarrus"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "determinantes.calcular",
+    "input": {
+      "A": [
+        [
+          "1",
+          "2",
+          "3"
+        ],
+        [
+          "0",
+          "4",
+          "5"
+        ],
+        [
+          "1",
+          "0",
+          "6"
+        ]
+      ],
+      "metodo": "cofactores",
+      "eje": "columna",
+      "indice": 1
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.potencia",
+    "input": {
+      "A": [
+        [
+          "2",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ]
+      ],
+      "exponente": "-2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.producto_bloques",
+    "input": {
+      "A": [
+        [
+          "1",
+          "2",
+          "3"
+        ],
+        [
+          "4",
+          "5",
+          "6"
+        ]
+      ],
+      "B": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "cortes_filas": [
+        1
+      ],
+      "cortes_internos": [
+        1,
+        2
+      ],
+      "cortes_columnas": [
+        1
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.lu",
+    "input": {
+      "A": [
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0"
+        ]
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.plu",
+    "input": {
+      "A": [
+        [
+          "3",
+          "3",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "2"
+        ],
+        [
+          "2",
+          "4",
+          "4"
+        ]
+      ],
+      "b": [
+        "1",
+        "2",
+        "3"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.plu",
+    "input": {
+      "A": [
+        [
+          "0",
+          "1"
+        ],
+        [
+          "0",
+          "2"
+        ]
+      ],
+      "b": [
+        "0",
+        "1"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.plu",
+    "input": {
+      "A": [
+        [
+          "0",
+          "1",
+          "2"
+        ],
+        [
+          "0",
+          "2",
+          "4"
+        ]
+      ],
+      "b": [
+        "1",
+        "2"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.analizar",
+    "input": {
+      "vectores": [],
+      "dimension_ambiente": 3
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.generado",
+    "input": {
+      "vectores": [],
+      "v": [
+        "1",
+        "0"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.norma",
+    "input": {
+      "u": [
+        "1",
+        "1"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.base",
+    "input": {
+      "vectores": [],
+      "objetivo": [],
+      "dimension_ambiente": 3
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.base",
+    "input": {
+      "vectores": [
+        [
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1",
+          "0"
+        ]
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.interseccion",
+    "input": {
+      "U": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "2",
+          "0"
+        ]
+      ],
+      "V": [
+        [
+          "0",
+          "1"
+        ]
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.coordenadas",
+    "input": {
+      "base": [
+        [
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "0",
+          "1",
+          "1"
+        ]
+      ],
+      "v": [
+        "2",
+        "3",
+        "5"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.coordenadas",
+    "input": {
+      "base": [
+        [
+          "1",
+          "0",
+          "1"
+        ],
+        [
+          "0",
+          "1",
+          "1"
+        ]
+      ],
+      "v": [
+        "2",
+        "3",
+        "6"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.cambio_base",
+    "input": {
+      "base_origen": [],
+      "base_destino": [],
+      "dimension_ambiente": 2,
+      "v": [
+        "0",
+        "0"
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.cambio_base",
+    "input": {
+      "base_origen": [
+        [
+          "1",
+          "0"
+        ]
+      ],
+      "base_destino": [
+        [
+          "0",
+          "1"
+        ]
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.desde_imagenes",
+    "input": {
+      "base_dominio": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "imagenes": [
+        [
+          "1",
+          "2",
+          "3"
+        ],
+        [
+          "2",
+          "4",
+          "5"
+        ]
+      ]
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.representar",
+    "input": {
+      "A": [
+        [
+          "1",
+          "2"
+        ],
+        [
+          "3",
+          "4"
+        ]
+      ],
+      "base_dominio": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "base_codominio": [
+        [
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "-1"
+        ]
+      ]
+    }
   }
 ]
