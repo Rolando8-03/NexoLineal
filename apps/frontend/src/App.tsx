@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type FormEvent,
@@ -42,23 +43,16 @@ type Modal =
   | { kind: "json"; text: string; result?: boolean }
   | { kind: "new" }
   | null;
-let navFocusTimer: ReturnType<typeof setTimeout> | undefined;
-function focusMain() {
-  clearTimeout(navFocusTimer);
-  navFocusTimer = setTimeout(() => {
-    if (document.activeElement?.matches("input,textarea,select")) return;
-    [...document.querySelectorAll<HTMLElement>("main h1,#operacion-titulo")]
-      .find((el) => el.offsetParent !== null)
-      ?.focus();
-  }, 0);
-}
 export function App() {
   const [engine] = useState(createEngine),
     [project, setProject] = useState(emptyProject),
     [operations, setOperations] = useState<OperationSpec[]>([]);
+  const [startup, setStartup] = useState("engine");
   const [ready, setReady] = useState(false),
     [hydrated, setHydrated] = useState(false),
     [blocked, setBlocked] = useState(false);
+  const [navToken, setNavToken] = useState(0);
+  const navFocusRequested = useRef(false);
   const [route, setRoute] = useState<Route>("inicio"),
     [menu, setMenu] = useState(false),
     [query, setQuery] = useState("");
@@ -96,10 +90,11 @@ export function App() {
     update((p) => ({ ...p, active: { ...p.active, ...patch } }));
   }
   function navigate(next: Route) {
+    navFocusRequested.current = true;
     setRoute(next);
     setMenu(false);
     setQuery("");
-    focusMain();
+    setNavToken((n) => n + 1);
   }
   function change(name: string, value: string) {
     if (running.current || !spec) return;
@@ -248,7 +243,9 @@ export function App() {
     setError("");
     setReady(false);
     try {
+      setStartup("engine");
       await engine.initialize();
+      setStartup("catalog");
       const response = await engine.execute({
         schema_version: "1.0",
         operation_id: "catalogo.operaciones",
@@ -262,6 +259,7 @@ export function App() {
       const ops = response.result.operations as OperationSpec[];
       if (!alive.current) return;
       setOperations(ops);
+      setStartup("load-project");
       let restored = emptyProject();
       try {
         const raw = await loadState();
@@ -294,6 +292,7 @@ export function App() {
       setProject(restored);
       setHydrated(true);
       if (restored.active.resumeResult) {
+        setStartup("restore-result");
         running.current = true;
         setBusy(true);
         const s = ops.find((o) => o.id === restored.active.operation)!;
@@ -318,7 +317,10 @@ export function App() {
           setBusy(false);
         }
       }
-      if (alive.current) setReady(true);
+      if (alive.current) {
+        setStartup("ready");
+        setReady(true);
+      }
     } catch (e) {
       if (alive.current) setError((e as Error).message);
     } finally {
@@ -354,7 +356,7 @@ export function App() {
     function key(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        clearTimeout(navFocusTimer);
+        navFocusRequested.current = false;
         document.getElementById("buscar-operaciones")?.focus();
       }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
@@ -370,6 +372,14 @@ export function App() {
     document.addEventListener("keydown", key);
     return () => document.removeEventListener("keydown", key);
   }, [menu, query, blocked]);
+  useLayoutEffect(() => {
+    if (navFocusRequested.current) {
+      navFocusRequested.current = false;
+      [...document.querySelectorAll<HTMLElement>("main h1,#operacion-titulo")]
+        .find((el) => el.offsetParent !== null)
+        ?.focus();
+    }
+  }, [navToken]);
   useEffect(() => {
     if (menu)
       nav.current?.querySelector<HTMLElement>("a[href],button")?.focus();
@@ -629,6 +639,7 @@ export function App() {
       className={"app " + mode + " theme-" + theme}
       data-mode={mode}
       data-theme={theme}
+      data-startup={startup}
     >
       <a className="skip-link" href="#main-content">
         Saltar al contenido

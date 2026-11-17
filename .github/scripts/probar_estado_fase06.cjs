@@ -180,17 +180,101 @@ check(() =>
   assert.throws(() => p.addHistory(full, { ...base.history[0], id: "h101" })),
 );
 check(() => assert.equal(full.history.length, 100));
-const report = {
-  approved: true,
-  checks,
-  operations: ops.length,
-  format: "NexoLineal.Project",
-  version: 1,
-};
-fs.mkdirSync("evidencia-fase06", { recursive: true });
-fs.writeFileSync(
-  "evidencia-fase06/estado.json",
-  JSON.stringify(report, null, 2),
-);
-console.log(JSON.stringify(report));
-fs.rmSync(dir, { recursive: true, force: true });
+// Prueba el adaptador real con un proxy como Capacitor: cualquier «then» sería nativo.
+async function nativeAdapters() {
+  let thenReads = 0;
+  let saved = null;
+  const proxy = new Proxy(
+    {},
+    {
+      get(_target, key) {
+        if (key === "then") {
+          thenReads++;
+          return () => {};
+        }
+        return async (data) => {
+          if (key === "load_state") return { content: saved };
+          if (key === "save_state") {
+            saved = data.content;
+            return {};
+          }
+          if (key === "export_project") return { cancelled: false };
+          if (key === "import_project") return { content: saved };
+          throw new Error("Método inesperado: " + String(key));
+        };
+      },
+    },
+  );
+  globalThis.__nexoNative = { registerPlugin: () => proxy };
+  globalThis.window = { pywebview: { api: proxy } };
+  for (const target of ["android", "windows"]) {
+    let source = fs
+      .readFileSync("apps/frontend/src/workspace/storage.ts", "utf8")
+      .replace("import.meta.env.VITE_TARGET", JSON.stringify(target))
+      .replace(
+        'import("@capacitor/core")',
+        "Promise.resolve(globalThis.__nexoNative)",
+      );
+    const file = path.join(dir, "storage-" + target + ".js");
+    fs.writeFileSync(
+      file,
+      ts.transpileModule(source, {
+        compilerOptions: {
+          target: ts.ScriptTarget.ES2022,
+          module: ts.ModuleKind.CommonJS,
+        },
+      }).outputText,
+    );
+    const storage = require(file);
+    let timer;
+    const deadline = new Promise((_, reject) => {
+      timer = setTimeout(
+        () => reject(new Error("El proxy nativo quedó pendiente: " + target)),
+        1500,
+      );
+    });
+    try {
+      await Promise.race([
+        (async () => {
+          await storage.saveState("proyecto-" + target);
+          check(() => assert.equal(saved, "proyecto-" + target));
+          const restored = await storage.loadState();
+          check(() => assert.equal(restored, saved));
+          const exported = await storage.exportFile(saved);
+          check(() => assert.equal(exported, true));
+          const imported = await storage.importNativeFile();
+          check(() => assert.equal(imported, saved));
+          check(() => assert.equal(thenReads, 0));
+        })(),
+        deadline,
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  delete globalThis.__nexoNative;
+  delete globalThis.window;
+}
+async function main() {
+  await nativeAdapters();
+  const report = {
+    approved: true,
+    checks,
+    operations: ops.length,
+    format: "NexoLineal.Project",
+    version: 1,
+    native_adapters: ["android-proxy", "windows-proxy"],
+  };
+  fs.mkdirSync("evidencia-fase06", { recursive: true });
+  fs.writeFileSync(
+    "evidencia-fase06/estado.json",
+    JSON.stringify(report, null, 2),
+  );
+  console.log(JSON.stringify(report));
+}
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(() => fs.rmSync(dir, { recursive: true, force: true }));

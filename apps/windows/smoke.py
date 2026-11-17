@@ -20,7 +20,15 @@ def wait(window, expression, timeout=90):
         except Exception:
             pass
         time.sleep(0.1)
-    raise AssertionError("Tiempo agotado esperando " + expression)
+    try:
+        snapshot = window.evaluate_js(
+            "JSON.stringify({stage:document.querySelector('.app')?.dataset.startup,error:document.querySelector('#resultado')?.innerText,save:document.querySelector('#estado-guardado')?.textContent,body:document.body.innerText.slice(0,5000)})"
+        )
+    except Exception as error:
+        snapshot = repr(error)
+    raise AssertionError(
+        "Tiempo agotado esperando " + expression + ". Estado: " + str(snapshot)
+    )
 
 
 def bridge(window, problem, request_id):

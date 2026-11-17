@@ -8,15 +8,25 @@ interface NativeFiles {
   export_project(data: { content: string }): Promise<{ cancelled?: boolean }>;
   import_project(): Promise<{ content?: string; cancelled?: boolean }>;
 }
+// El proxy de Capacitor fabrica un método para cualquier propiedad, incluso «then».
+// Devolverlo desde async lo convertiría en un thenable y dejaría la carga pendiente.
+function bindFiles(api: NativeFiles): NativeFiles {
+  return {
+    load_state: () => api.load_state(),
+    save_state: (data) => api.save_state(data),
+    export_project: (data) => api.export_project(data),
+    import_project: () => api.import_project(),
+  };
+}
 async function native(): Promise<NativeFiles> {
   if (target === "android") {
     const { registerPlugin } = await import("@capacitor/core");
-    return registerPlugin<NativeFiles>("NexoEngine");
+    return bindFiles(registerPlugin<NativeFiles>("NexoEngine"));
   }
   for (let i = 0; i < 200; i++) {
     const api = (window as unknown as { pywebview?: { api?: NativeFiles } })
       .pywebview?.api;
-    if (api) return api;
+    if (api) return bindFiles(api);
     await new Promise((r) => setTimeout(r, 50));
   }
   throw new Error(

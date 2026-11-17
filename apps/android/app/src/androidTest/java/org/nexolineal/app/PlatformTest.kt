@@ -42,7 +42,8 @@ class PlatformTest {
             if (value != "null" && value != "false" && value != "\"\"") return value
             SystemClock.sleep(100)
         }
-        throw AssertionError("Tiempo agotado esperando $script")
+        val snapshot = js("JSON.stringify({stage:document.querySelector('.app')?.dataset.startup,error:document.querySelector('#resultado')?.innerText,save:document.querySelector('#estado-guardado')?.textContent,body:document.body.innerText.slice(0,5000)})")
+        throw AssertionError("Tiempo agotado esperando $script. Estado: $snapshot")
     }
 
     private fun canonical(value: Any?): Any? = when (value) {
