@@ -1,6 +1,6 @@
 # NexoLineal
 
-Calculadora educativa con motor matemático en Python e interfaz web. La fase 05 añade métodos numéricos y herramientas a la interfaz compartida para web, Windows y Android, conectada al mismo núcleo Python y al contrato JSON 1.0.
+Calculadora educativa con motor matemático en Python e interfaz compartida para web, Windows y Android. La versión 0.6.0 integra menú principal, presentaciones Serio y Explorador, objetos reutilizables, historial y proyectos portables, conectados al mismo núcleo Python y al contrato JSON 1.0.
 
 ## Prototipos de los tres destinos
 
@@ -26,6 +26,16 @@ python -m http.server 8000
 ```
 
 Abrir http://localhost:8000 en el navegador. La versión actual carga Pyodide, Tailwind, SweetAlert2 y KaTeX desde sus CDN. El motor del navegador recibe los mismos archivos Python del paquete.
+
+## Experiencia de fase 06
+
+Diez destinos del menú, búsqueda matemática y formularios que piden los operandos necesarios. Pegar una matriz infiere sus dimensiones y conserva la diferencia entre una celda vacía y cero. Las matrices, vectores, bases y funciones se guardan para usarlos en otra operación sin transcribirlos.
+
+Serio y Explorador ofrecen las mismas 56 operaciones, procedimientos, comprobaciones y tablas. Claro/Oscuro es una preferencia independiente; cambiar de presentación conserva el ejercicio, el resultado y el paso activo. El modo Explorador incluye ilustraciones y animación decorativa que respeta la preferencia de movimiento reducido.
+
+Historial con búsqueda, favoritos, editar y repetir; guardado local y proyectos JSON versión 1 con entradas exactas. Se verificó cerrar/reabrir en Chromium, Windows desde Python y EXE, y Android offline. Los archivos importados se validan y los resultados se recalculan con Python.
+
+[Menú y recorridos](docs/fase06/experiencia.md) · [Proyectos y soporte por plataforma](docs/fase06/proyectos.md) · [Pruebas](docs/fase06/verificacion.md) · [Cierre y descargas 0.6.0](docs/fase06/cierre.md)
 
 ## Cobertura de fase 05
 
@@ -58,6 +68,7 @@ Los valores racionales se transportan como texto. Una integral polinómica de x�
 | apps/frontend | Interfaz compartida React y adaptadores de ejecución |
 | apps/windows | Ventana nativa y empaquetado gráfico |
 | apps/android | APK con Python incluido y prueba instrumentada |
+| docs/fase06 | Menú, modos, accesibilidad, proyectos y evidencias de continuidad |
 | docs/fase05 | Métodos numéricos, precisión, cobertura y evidencias |
 | docs/fase04 | Cobertura, convenciones, límites y evidencia de álgebra lineal |
 | docs/fase03 | Arquitectura, compilación, compatibilidad y evidencias |
@@ -83,7 +94,7 @@ python .github/scripts/generar_catalogo.py --check
 
 SymPy se usa como referencia independiente en pruebas. Los algoritmos de producción conservan sus implementaciones explícitas en Python.
 
-El workflow de plataformas compara 113 contratos completos y la integridad del paquete Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline.
+El workflow de plataformas compara 113 contratos completos y la integridad de los 46 archivos Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline. Además exige 50 comprobaciones del formato/validación y puentes nativos, 19 recorridos de experiencia, siete análisis axe sin violaciones en las escenas probadas y reapertura de proyectos en los tres destinos. La batería Python suma 131 pruebas unittest; la interfaz anterior conserva 11 recorridos.
 
 El workflow de verificación ejecuta los casos originales, las regresiones nuevas, 288 sistemas independientes, una auditoría adicional de 2376 solicitudes con 12633 comprobaciones, 339 solicitudes nuevas con 6473 comprobaciones numéricas y recorridos gráficos en Chromium. Los informes y capturas se conservan como nexolineal-evidencias en Actions.
 
