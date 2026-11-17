@@ -5,10 +5,13 @@ import os
 import sys
 import webview
 from nexolineal.platforms.jobs import JobPool
+from .project_io import ProjectStore, validate_content, MAX_BYTES
 
 class NativeAPI:
     def __init__(self):
         self._pool = JobPool()
+        self._store = ProjectStore()
+        self._window = None
 
     def _id(self, data):
         if not isinstance(data, dict):
@@ -27,6 +30,28 @@ class NativeAPI:
     def progress(self, data):
         return self._pool.progress(self._id(data))
 
+    def load_state(self):
+        return {"content":self._store.load()}
+
+    def save_state(self,data):
+        self._store.save(data.get("content"))
+        return {"saved":True}
+
+    def export_project(self,data):
+        content=validate_content(data.get("content"))
+        paths=self._window.create_file_dialog(webview.FileDialog.SAVE,save_filename="NexoLineal-proyecto.json",file_types=("Proyecto JSON (*.json)",))
+        if not paths:return {"cancelled":True}
+        destination=Path(paths if isinstance(paths,str) else paths[0])
+        destination.write_text(content,encoding="utf-8")
+        return {"cancelled":False}
+
+    def import_project(self):
+        paths=self._window.create_file_dialog(webview.FileDialog.OPEN,allow_multiple=False,file_types=("Proyecto JSON (*.json)",))
+        if not paths:return {"cancelled":True}
+        source=Path(paths if isinstance(paths,str) else paths[0])
+        if source.stat().st_size>MAX_BYTES:raise ValueError("El archivo supera 2 MiB.")
+        return {"cancelled":False,"content":validate_content(source.read_text(encoding="utf-8"))}
+
     def close(self):
         self._pool.cancel_all()
 
@@ -44,6 +69,7 @@ def main():
         "NexoLineal", url=str(interface), js_api=api,
         width=1220, height=900, min_size=(390, 620)
     )
+    api._window = window
     window.events.closed += api.close
     if "--self-test" in sys.argv:
         from apps.windows.smoke import run
