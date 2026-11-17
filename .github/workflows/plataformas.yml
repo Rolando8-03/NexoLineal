@@ -1,7 +1,7 @@
 name: NexoLineal multiplataforma
 on:
   push:
-    branches: [main, fase-03-plataformas, fase-04-algebra]
+    branches: [main, fase-03-plataformas, fase-04-algebra, fase-05-numericos]
     paths:
       - 'apps/**'
       - 'packages/core/**'
@@ -40,6 +40,7 @@ jobs:
           python .github/scripts/generar_catalogo.py --check
           python -m tests.auditoria_matematica
           python -m tests.auditoria_fase04
+          python -m tests.auditoria_fase05
           python .github/scripts/casos_plataformas.py
       - name: Compilar web con Python local
         working-directory: apps/frontend
@@ -62,6 +63,7 @@ jobs:
           path: |
             evidencia-fase03/
             evidencia-fase04/
+            evidencia-fase05/
             apps/frontend/dist/
           retention-days: 30
   windows:

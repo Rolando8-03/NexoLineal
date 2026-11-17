@@ -155,7 +155,7 @@ const report = { approved: false, cases: [], errors: [] };
     // Los formularios se construyen con el mismo catálogo obtenido del motor.
     const uiCases = JSON.parse(
       fs.readFileSync(
-        path.join(root, "tests/fixtures/fase04_defaults.json"),
+        path.join(root, "tests/fixtures/fase05_defaults.json"),
         "utf8",
       ),
     );
@@ -219,10 +219,45 @@ const report = { approved: false, cases: [], errors: [] };
       }
     }
     report.cases.push({
-      name: "44 formularios en Serio y Explorador",
+      name: uiCases.length + " formularios en Serio y Explorador",
       passed: true,
       operations: uiCases.length,
       modes: 2,
+    });
+
+    await page.locator("#operacion").selectOption("raices.biseccion");
+    await page.locator("#calcular").click();
+    await page.waitForFunction(
+      () => document.querySelector("#resultado").dataset.status === "ok",
+    );
+    await page.locator(".table-pagination button").last().click();
+    assert.match(
+      await page.locator(".table-pagination").innerText(),
+      /11[–-]20/,
+    );
+    await page.locator("#modo-serio").click();
+    assert.match(
+      await page.locator(".table-pagination").innerText(),
+      /11[–-]20/,
+    );
+    assert.equal(await page.locator("#expresion").inputValue(), "x^2-2");
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert.ok(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    );
+    await page.locator(".iteration-table").scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(output, "numerica-movil.png") });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.screenshot({ path: path.join(output, "numerica-serio.png") });
+    await page.locator("#modo-explorador").click();
+    await page.screenshot({
+      path: path.join(output, "numerica-explorador.png"),
+    });
+    report.cases.push({
+      name: "tabla numérica paginada, modo conservado y móvil sin desbordamiento",
+      passed: true,
     });
 
     await page.locator("#operacion").selectOption("matrices.producto");

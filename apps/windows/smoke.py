@@ -48,7 +48,7 @@ def run(window):
         report["cases"].append({"name": "interfaz y cambio de presentación", "passed": True})
 
         # Un sistema rectangular atraviesa el formulario React y el motor nativo.
-        window.evaluate_js("const e=document.querySelector('#operacion');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'sistemas.resolver');e.dispatchEvent(new Event('change',{bubbles:true}));")
+        window.evaluate_js("(()=>{const e=document.querySelector('#operacion');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'sistemas.resolver');e.dispatchEvent(new Event('change',{bubbles:true}));})();")
         wait(window, "!!document.querySelector('#dato-b')")
         window.evaluate_js("for(const [id,value] of [['matriz-a','1 2 3;2 4 6'],['dato-b','1 2']]){const e=document.getElementById(id);const p=e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(p,'value').set.call(e,value);e.dispatchEvent(new Event('input',{bubbles:true}));}")
         window.evaluate_js("document.querySelector('#calcular').click()")
@@ -57,6 +57,15 @@ def run(window):
         assert window.evaluate_js("document.querySelector('#resultado').dataset.status") == "infinite"
         assert window.evaluate_js("document.querySelector('#matriz-a').value") == "1 2 3;2 4 6"
         report["cases"].append({"name": "sistema rectangular desde formulario en ambos modos", "passed": True})
+
+        window.evaluate_js("(()=>{const e=document.querySelector('#operacion');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'raices.biseccion');e.dispatchEvent(new Event('change',{bubbles:true}));})();")
+        wait(window, "!!document.querySelector('#dato-tolerancia_x')")
+        window.evaluate_js("document.querySelector('#calcular').click()")
+        wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
+        assert window.evaluate_js("!!document.querySelector('.iteration-table table')")
+        window.evaluate_js("document.querySelector('#modo-explorador').click()")
+        assert window.evaluate_js("document.querySelector('#resultado').dataset.status") == "ok"
+        report["cases"].append({"name": "bisección desde formulario nativo con tabla y cambio de modo", "passed": True})
 
         fixtures = Path(os.environ["NEXO_FIXTURES"])
         for i, problem in enumerate(json.loads(fixtures.read_text(encoding="utf-8"))):

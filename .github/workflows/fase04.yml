@@ -1,13 +1,13 @@
-name: Núcleo y cobertura fase 04
+name: Núcleo matemático
 on:
   push:
-    branches: [main, fase-04-algebra]
+    branches: [main, fase-04-algebra, fase-05-numericos]
     paths: ['packages/**', 'python/**', 'modulos/**', 'teoremas/**', 'tests/**', '.github/workflows/fase04.yml', '.github/scripts/generar_catalogo.py']
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: nucleo-fase04-${{ github.ref }}
+  group: nucleo-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verificar:
@@ -27,10 +27,13 @@ jobs:
           python .github/scripts/generar_catalogo.py --check
           python -m tests.auditoria_matematica
           python -m tests.auditoria_fase04
+          python -m tests.auditoria_fase05
           python -m compileall -q packages/core/src python modulos teoremas
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: fase04-auditoria
-          path: evidencia-fase04/
+          name: nexo-auditoria
+          path: |
+            evidencia-fase04/
+            evidencia-fase05/
           retention-days: 30
