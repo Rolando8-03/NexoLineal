@@ -173,6 +173,17 @@ async function download(selector, name) {
       "Los ejes espaciales deben conservar la perpendicularidad visible.",
     );
     pass("Proyección ortogonal disponible y representada");
+    await choose("vectores.generado", {
+      "dato-vectores": "1 1;1 -1",
+      "dato-v": "3 1",
+    });
+    await calculate();
+    assert.equal(
+      await page
+        .locator('[data-series="Reconstrucción del objetivo"] polyline')
+        .count(),
+      1,
+    );
     await choose("transformaciones.analizar", { "matriz-a": "1 2;0 -1" });
     await calculate();
     assert.equal(

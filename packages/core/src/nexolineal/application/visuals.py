@@ -190,14 +190,21 @@ def vector_plot(response, ctx):
     for name in ("vector", "proyeccion", "componente_ortogonal"):
         if isinstance(result.get(name), list):
             values.append((name.replace("_", " "), point(result[name])))
-    if not values and "vectores" in data:
+    rows = []
+    if "vectores" in data:
         raw = data["vectores"]
         rows = (
-            [r.split() for r in raw.replace(";", "\n").splitlines() if r.strip()]
+            (
+                []
+                if raw.strip() == "[]"
+                else [
+                    r.split() for r in raw.replace(";", "\n").splitlines() if r.strip()
+                ]
+            )
             if isinstance(raw, str)
             else raw
         )
-        values = [(f"v{i+1}", point(v)) for i, v in enumerate(rows)]
+        values.extend((f"v{i+1}", point(v)) for i, v in enumerate(rows))
     if (
         not values
         or len(values[0][1]) not in (2, 3)
@@ -220,6 +227,33 @@ def vector_plot(response, ctx):
                 [u, [a + b for a, b in zip(u, v)]],
                 "line",
                 "regla del paralelogramo, u+v",
+            )
+        )
+    if result.get("coeficientes") is not None and rows:
+        cursor = zero[:]
+        for i, (raw, coefficient) in enumerate(zip(rows, result["coeficientes"])):
+            ctx.tick(dim)
+            delta = [F(coefficient) * x for x in point(raw)]
+            following = point([x + d for x, d in zip(cursor, delta)])
+            items.append(
+                series(
+                    f"{coefficient}·v{i+1}",
+                    [cursor, following],
+                    "vector",
+                    "coeficiente calculado por Python y vector generador",
+                )
+            )
+            cursor = following
+        if cursor != point(result["reconstruccion"]):
+            raise ValueError(
+                "La reconstrucción geométrica no coincide con el resultado; se conserva la alternativa textual."
+            )
+        items.append(
+            series(
+                "Reconstrucción del objetivo",
+                [zero, point(result["reconstruccion"])],
+                "vector",
+                "resultado.reconstruccion",
             )
         )
     if "proyeccion" in result:

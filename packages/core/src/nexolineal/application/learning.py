@@ -207,7 +207,7 @@ APPLICATIONS = [
         ],
         "sistemas.resolver",
         {"A": "1 1;1 -1", "b": "30 10"},
-        ILA + "systems-of-linear-equations.html",
+        ILA + "systems-of-eqns.html",
     ),
     application(
         "quimica",
@@ -262,7 +262,7 @@ APPLICATIONS = [
         ],
         "sistemas.resolver",
         {"A": "2 1;1 2", "b": "40 50"},
-        ILA + "systems-of-linear-equations.html",
+        ILA + "systems-of-eqns.html",
     ),
     application(
         "poblaciones",

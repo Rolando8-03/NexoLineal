@@ -129,6 +129,15 @@ class GeometryTests(unittest.TestCase):
         self.assertTrue(r["verification"]["passed"])
         self.assertEqual(r["metadata"]["visualization"]["dimension"], 3)
 
+    def test_general_combination_uses_coefficients_and_reconstructs_target(self):
+        r = run("vectores.generado", {"vectores": "1 1;1 -1", "v": "3 1"})
+        self.assertTrue(r["result"]["pertenece"])
+        items = r["metadata"]["visualization"]["series"]
+        first = next(item for item in items if item["label"] == "2·v1")
+        second = next(item for item in items if item["label"] == "1·v2")
+        self.assertEqual(first["points"], [["0", "0"], ["2", "2"]])
+        self.assertEqual(second["points"], [["2", "2"], ["3", "1"]])
+
     def test_projection_on_zero_is_not_applicable(self):
         self.assertEqual(
             run("vectores.proyeccion", {"u": "2 3", "v": "0 0"})["status"],

@@ -79,6 +79,15 @@ def audit():
             require(p == expected)
             require((U - p).dot(V) == 0)
             require(r["verification"]["passed"])
+    for trial in range(40):
+        a, b = rng.randrange(-5, 6), rng.randrange(-5, 6)
+        r = run("vectores.generado", {"vectores": "1 1;1 -1", "v": [a + b, a - b]})
+        items = r["metadata"]["visualization"]["series"]
+        require(r["result"]["coeficientes"] == [str(a), str(b)])
+        final = next(
+            item for item in items if item["label"] == "Reconstrucción del objetivo"
+        )
+        require(list(map(F, final["points"][-1])) == [a + b, a - b])
     for trial in range(100):
         A = [[rng.randrange(-3, 4) for _ in range(2)] for _ in range(2)]
         r = run("transformaciones.analizar", {"A": A})
@@ -121,6 +130,7 @@ def audit():
         "checks": checks,
         "systems": 240,
         "projections": 160,
+        "combinations": 40,
         "transformations": 100,
         "root_examples": 8,
         "applications": 5,

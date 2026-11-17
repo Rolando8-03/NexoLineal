@@ -1536,5 +1536,16 @@
     "options": {
       "include_visualization": true
     }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.generado",
+    "input": {
+      "vectores": "1 1;1 -1",
+      "v": "3 1"
+    },
+    "options": {
+      "include_visualization": true
+    }
   }
 ]
