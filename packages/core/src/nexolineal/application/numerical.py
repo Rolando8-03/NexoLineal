@@ -1,6 +1,6 @@
 """Fachada del contrato numérico: una ejecución alimenta tablas y resultado."""
 
-from decimal import localcontext
+from decimal import localcontext, Underflow
 from ..algorithms.numerical.functions import Function, PRECISION
 from ..algorithms.numerical.roots import roots
 from ..algorithms.numerical.iterative import iterative
@@ -27,6 +27,7 @@ def execute_numerical(problem, ctx):
     exact = False
     with localcontext() as arithmetic:
         arithmetic.prec = PRECISION
+        arithmetic.traps[Underflow] = True
         if op.startswith("raices."):
             result, status, warnings = roots(op.split(".")[1], data, ctx)
         elif op.startswith("iterativos."):

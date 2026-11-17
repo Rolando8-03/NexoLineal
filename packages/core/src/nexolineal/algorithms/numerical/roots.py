@@ -50,10 +50,22 @@ def roots(method, data, ctx):
             motivo_parada=reason, iteraciones=len(table), convergencia=status == "ok"
         )
         if x is not None:
-            result.update(aproximacion=x, residual=abs(fx), valor_funcion=fx)
+            text = format(decimal(x), ".14g")
+            rounding = abs(F(x) - F(text))
+            bound = result.get("cota_garantizada")
+            result.update(
+                aproximacion=x,
+                aproximacion_decimal=text,
+                cifras_decimal_presentacion=14,
+                error_redondeo_decimal=rounding,
+                cota_decimal=bound + rounding if bound is not None else None,
+                residual=abs(fx),
+                valor_funcion=fx,
+            )
         return result, status, warnings
 
     def emit(row):
+        row["x_decimal"] = format(decimal(row["x"]), ".14g")
         table.append(row)
         ctx.emit(
             "iteracion_raiz",

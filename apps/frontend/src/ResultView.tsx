@@ -34,6 +34,12 @@ function matrixTex(matrix: string[][]): string {
 }
 const labels: Record<string, string> = {
   matrix: "Matriz resultado",
+  iteracion: "Iteración",
+  x_decimal: "xₖ (decimal redondeado)",
+  fx: "f(xₖ)",
+  aproximacion_decimal: "Aproximación decimal (14 cifras, redondeada)",
+  aproximacion: "Aproximación utilizada por el método",
+  cota_decimal: "Cota que incluye el redondeo del decimal mostrado",
   aproximacion: "Aproximación obtenida",
   convergencia: "¿Se satisfizo el criterio?",
   motivo_parada: "Motivo de parada",
@@ -235,6 +241,7 @@ export function DataView({
 }
 export function ResultView({ value }: { value: Record<string, unknown> }) {
   const first = [
+    "aproximacion_decimal",
     "aproximacion",
     "convergencia",
     "motivo_parada",
@@ -300,7 +307,7 @@ function NumericalTable({ rows }: { rows: Record<string, unknown>[] }) {
   const candidates = [
     "iteracion",
     "subintervalos",
-    "x",
+    "x_decimal",
     "vector",
     "fx",
     "norma_residual",

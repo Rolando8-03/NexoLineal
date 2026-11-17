@@ -1,4 +1,5 @@
 """Catálogo y ejecución de operaciones del contrato 1.0."""
+from decimal import DecimalException
 from ..domain.models import (
     Problem, Step, CalculationResult, InputError, DomainError, ResourceLimitError, ConvergenceError, CancelledError,
 )
@@ -107,6 +108,8 @@ def execute(data, *, is_cancelled=None, on_progress=None):
     except LinearFailure as error:
         return CalculationResult(operation,inputs,error.status,error.details,
                                  metadata={"index_base":0},error={"code":error.status,"message":str(error)}).to_dict()
+    except DecimalException as error:
+        return _error(operation,inputs,"domain_error","decimal_range",str(error))
     except ArithmeticError as error:
         # Las excepciones aritméticas de dominio se mantienen en su categoría.
         if isinstance(error, (ZeroDivisionError, OverflowError)):
