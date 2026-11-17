@@ -2,7 +2,7 @@ name: Distribución fase 08
 on:
   push:
     branches: [main, fase-08-distribucion]
-    paths: ['apps/**', 'packages/core/**', 'tests/**', '.github/scripts/*fase08*', '.github/workflows/distribucion.yml']
+    paths: ['apps/**', 'packages/core/**', 'tests/**', '.github/scripts/*fase08*', '.github/workflows/distribucion.yml', '.github/workflows/plataformas.yml', '.github/workflows/static.yml']
   workflow_dispatch:
 permissions:
   contents: read

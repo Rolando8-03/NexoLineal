@@ -2,7 +2,7 @@ name: Publicar NexoLineal web
 on:
   push:
     branches: [main]
-    paths: ['apps/frontend/**', 'packages/core/**', '.github/workflows/static.yml']
+    paths: ['apps/**', 'packages/core/**', '.github/workflows/static.yml', '.github/workflows/distribucion.yml', '.github/workflows/plataformas.yml']
   workflow_dispatch:
 permissions:
   contents: read
