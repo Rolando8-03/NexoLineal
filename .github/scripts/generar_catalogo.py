@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 from nexolineal.application.catalog import CATALOG
+from nexolineal.application.numerical_catalog import NUMERICAL_IDS
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -55,7 +56,22 @@ def generated():
                     else family if kind == "vectors" else number
                 )
             )
-            if kind == "select":
+            if kind in ("text", "set"):
+                value = (
+                    {"type": "string"}
+                    if kind == "text"
+                    else {
+                        "anyOf": [
+                            {"type": "string"},
+                            {
+                                "type": "array",
+                                "maxItems": 100,
+                                "items": {"type": "string", "maxLength": 100},
+                            },
+                        ]
+                    }
+                )
+            elif kind == "select":
                 value = {"enum": field["choices"]}
             elif kind in ("integer", "index"):
                 value = {
@@ -114,7 +130,10 @@ def generated():
     ]
     return {
         "packages/contracts/problem.schema.json": schema,
-        "tests/fixtures/fase04_defaults.json": examples,
+        "tests/fixtures/fase04_defaults.json": [
+            p for p in examples if p["operation_id"] not in NUMERICAL_IDS
+        ],
+        "tests/fixtures/fase05_defaults.json": examples,
         "packages/core/python-files.json": manifest,
     }
 

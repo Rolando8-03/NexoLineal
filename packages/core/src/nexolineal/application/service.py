@@ -7,6 +7,8 @@ from ..algorithms.matrices import multiplicar_con_pasos
 from ..algorithms.calculo import ejecutar_calculo
 from .catalog import CATALOG
 from .linear import execute_linear
+from .numerical import execute_numerical
+from .numerical_catalog import NUMERICAL_IDS
 from ..algorithms.linear.context import Context, LinearFailure
 
 OPERATIONS = {key: {"required":spec.required,"optional":spec.optional} for key,spec in CATALOG.items()}
@@ -71,7 +73,11 @@ def execute(data, *, is_cancelled=None, on_progress=None):
         checkpoint()
         if operation == "catalogo.operaciones":
             return CalculationResult(operation,inputs,"ok",{"operations":[spec.to_dict() for spec in CATALOG.values()]},
-                                     metadata={"index_base":0,"catalog_version":"0.4.0"}).to_dict()
+                                     metadata={"index_base":0,"catalog_version":"0.5.0"}).to_dict()
+        if operation in NUMERICAL_IDS:
+            result = execute_numerical(problem, Context(checkpoint, on_progress))
+            checkpoint()
+            return result.to_dict()
         if operation not in ("matrices.producto","calculadora.evaluar","calculo.definida","calculo.derivar"):
             result = execute_linear(problem, Context(checkpoint, on_progress))
             checkpoint()

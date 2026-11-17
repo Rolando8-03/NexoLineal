@@ -94,7 +94,7 @@ class CalculationResult:
     def __post_init__(self):
         allowed = {"ok", "invalid_input", "domain_error", "limit_reached", "singular",
                    "inconsistent", "infinite", "not_applicable", "cancelled",
-                   "non_convergent", "internal_error"}
+                   "non_convergent", "internal_error", "iteration_limit", "stagnated", "breakdown", "cycle_detected"}
         if self.status not in allowed:
             raise InputError("Estado de cálculo no reconocido.")
 

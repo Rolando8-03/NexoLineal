@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from .catalog_data import OPERATION_DATA
+from .numerical_catalog import NUMERICAL_DATA
 
 
 @dataclass(frozen=True)
@@ -32,5 +33,5 @@ class OperationSpec:
 
 CATALOG = {
     item["id"]: OperationSpec(**{**item, "fields": tuple(item["fields"])})
-    for item in OPERATION_DATA
+    for item in OPERATION_DATA + NUMERICAL_DATA
 }

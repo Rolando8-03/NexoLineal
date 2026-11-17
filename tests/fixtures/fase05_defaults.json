@@ -1,0 +1,477 @@
+[
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.producto",
+    "input": {
+      "A": "1/2 2",
+      "B": "2\n3"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "2 1\n1 -1",
+      "b": "5 1",
+      "metodo": "gauss_jordan"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.cramer",
+    "input": {
+      "A": "2 1\n1 -1",
+      "b": "5 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.inversa",
+    "input": {
+      "A": "2 1\n1 -1",
+      "b": "5 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.lu",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "factorizacion.plu",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.suma",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.resta",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.escalar",
+    "input": {
+      "A": "2 1\n1 -1",
+      "k": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.transpuesta",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.analizar",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.ref",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.rref",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.traza",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.potencia",
+    "input": {
+      "A": "2 1\n1 -1",
+      "exponente": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.elemental",
+    "input": {
+      "A": "2 1\n1 -1",
+      "eje": "fila",
+      "accion": "intercambiar",
+      "indice": "0",
+      "otro": "1",
+      "k": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.propiedades",
+    "input": {
+      "A": "2 1\n1 -1",
+      "k": "2",
+      "d": "3"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.particionar",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.suma_bloques",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.producto_bloques",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "determinantes.calcular",
+    "input": {
+      "A": "2 1\n1 -1",
+      "metodo": "reduccion",
+      "eje": "fila",
+      "indice": "0"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "determinantes.cofactores",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.inversa",
+    "input": {
+      "A": "2 1\n1 -1",
+      "metodo": "gauss_jordan"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.suma",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.resta",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.producto_punto",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.producto_cruz",
+    "input": {
+      "u": "1 2 3",
+      "v": "4 5 6"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.escalar",
+    "input": {
+      "u": "1 2",
+      "k": "2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.norma",
+    "input": {
+      "u": "3 4"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.analizar",
+    "input": {
+      "vectores": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.generado",
+    "input": {
+      "vectores": "1 0\n0 1",
+      "v": "3 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.fundamentales",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.base",
+    "input": {
+      "vectores": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.suma",
+    "input": {
+      "U": "1 0\n0 1",
+      "V": "1 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.interseccion",
+    "input": {
+      "U": "1 0\n0 1",
+      "V": "1 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.coordenadas",
+    "input": {
+      "base": "1 0\n0 1",
+      "v": "3 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "espacios.cambio_base",
+    "input": {
+      "base_origen": "1 0\n0 1",
+      "base_destino": "1 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.analizar",
+    "input": {
+      "A": "2 1\n1 -1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.desde_imagenes",
+    "input": {
+      "base_dominio": "1 0\n0 1",
+      "imagenes": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.componer",
+    "input": {
+      "A": "2 1\n1 -1",
+      "B": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.representar",
+    "input": {
+      "A": "2 1\n1 -1",
+      "base_dominio": "1 0\n0 1",
+      "base_codominio": "1 0\n0 1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculadora.evaluar",
+    "input": {
+      "expresion": "(8+2)/5",
+      "grados": false
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculo.definida",
+    "input": {
+      "expresion": "x^2",
+      "inferior": "-1",
+      "superior": "1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculo.derivar",
+    "input": {
+      "expresion": "x^2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "funciones.evaluar",
+    "input": {
+      "expresion": "x^2-2",
+      "punto": "1"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.biseccion",
+    "input": {
+      "expresion": "x^2-2",
+      "inferior": "1",
+      "superior": "2",
+      "tolerancia_x": "1e-8",
+      "tolerancia_f": "1e-8",
+      "max_iteraciones": "100",
+      "criterio": "cota"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.falsa_posicion",
+    "input": {
+      "expresion": "x^2-2",
+      "inferior": "1",
+      "superior": "2",
+      "tolerancia_x": "1e-8",
+      "tolerancia_f": "1e-8",
+      "max_iteraciones": "100",
+      "criterio": "residual_y_paso"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.newton",
+    "input": {
+      "expresion": "x^2-2",
+      "inicial": "1.5",
+      "tolerancia_x": "1e-8",
+      "tolerancia_f": "1e-8",
+      "max_iteraciones": "100",
+      "criterio": "residual_y_paso"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.secante",
+    "input": {
+      "expresion": "x^2-2",
+      "anterior": "1",
+      "inicial": "1.5",
+      "tolerancia_x": "1e-8",
+      "tolerancia_f": "1e-8",
+      "max_iteraciones": "100",
+      "criterio": "residual_y_paso"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "iterativos.jacobi",
+    "input": {
+      "A": "4 1\n2 3",
+      "b": "1 2",
+      "norma": "infinito",
+      "tolerancia_absoluta": "1e-8",
+      "tolerancia_relativa": "1e-8",
+      "max_iteraciones": "100"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "iterativos.gauss_seidel",
+    "input": {
+      "A": "4 1\n2 3",
+      "b": "1 2",
+      "norma": "infinito",
+      "tolerancia_absoluta": "1e-8",
+      "tolerancia_relativa": "1e-8",
+      "max_iteraciones": "100"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "errores.calcular",
+    "input": {
+      "aproximado": "22/7",
+      "referencia": "3.1416"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "conversiones.bases",
+    "input": {
+      "numero": "10.625",
+      "base_origen": "10",
+      "base_destino": "2",
+      "precision": "16"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "conjuntos.operar",
+    "input": {
+      "operacion": "union",
+      "A": "a\nb",
+      "B": "b\nc"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculo.primitiva",
+    "input": {
+      "expresion": "x^2"
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "calculo.numerica",
+    "input": {
+      "expresion": "x^4",
+      "inferior": "0",
+      "superior": "1",
+      "tolerancia": "1e-8",
+      "max_subintervalos": "1024"
+    }
+  }
+]

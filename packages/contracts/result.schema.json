@@ -37,7 +37,11 @@
         "not_applicable",
         "cancelled",
         "non_convergent",
-        "internal_error"
+        "internal_error",
+        "iteration_limit",
+        "stagnated",
+        "breakdown",
+        "cycle_detected"
       ]
     },
     "result": {},
