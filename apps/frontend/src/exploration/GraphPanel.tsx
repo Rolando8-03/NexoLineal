@@ -1,3 +1,4 @@
+import { coordinate } from "./geometry";
 import { useState } from "react";
 import { Dialog } from "../workspace/Dialog";
 import { DataView } from "../ResultView";
@@ -10,7 +11,7 @@ function project(
   azimuth: number,
   elevation: number,
 ): number[] {
-  const [x, y, z = 0] = p.map(Number);
+  const [x, y, z = 0] = p.map(coordinate);
   if (dimension === 2) return [x, y];
   const a = (azimuth * Math.PI) / 180,
     e = (elevation * Math.PI) / 180;
@@ -51,7 +52,7 @@ export function GraphPanel({
     .filter(
       (p) =>
         p.length === scene.dimension &&
-        p.every((v) => Number.isFinite(Number(v))),
+        p.every((v) => Number.isFinite(coordinate(v))),
     );
   const projected = points.map((p) =>
     project(p, scene.dimension, azimuth, elevation),
@@ -59,8 +60,8 @@ export function GraphPanel({
   const bounds =
     scene.range?.length === scene.dimension && scene.dimension === 2
       ? [
-          [Number(scene.range[0][0]), Number(scene.range[1][0])],
-          [Number(scene.range[0][1]), Number(scene.range[1][1])],
+          [coordinate(scene.range[0][0]), coordinate(scene.range[1][0])],
+          [coordinate(scene.range[0][1]), coordinate(scene.range[1][1])],
         ]
       : projected;
   let minX = Math.min(0, ...bounds.map((p) => p[0])),
@@ -71,7 +72,8 @@ export function GraphPanel({
     spanY = Math.max(1e-12, maxY - minY);
   if (scene.kind !== "roots" && scene.kind !== "residual") {
     const span = Math.max(1, spanX, spanY);
-    spanX = span;
+    // 650 y 300 son los tamaños útiles: la misma unidad ocupa los mismos píxeles.
+    spanX = span * (650 / 300);
     spanY = span;
   }
   const centerX = (minX + maxX) / 2,
@@ -86,7 +88,7 @@ export function GraphPanel({
   const origin = xy(Array(scene.dimension).fill(0));
   const axisExtent = Math.max(
     1,
-    ...points.flat().map((v) => Math.abs(Number(v))),
+    ...points.flat().map((v) => Math.abs(coordinate(v))),
   );
   const labels = [...new Set(items.map((s) => s.label))];
   const color = (s: PlotSeries) =>

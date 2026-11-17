@@ -62,6 +62,7 @@ jobs:
           node .github/scripts/probar_estado_fase06.cjs
           node .github/scripts/probar_web_fase03.cjs
           node .github/scripts/probar_experiencia_fase06.cjs
+          node .github/scripts/probar_datos_fase07.cjs
           node .github/scripts/probar_visualizacion_fase07.cjs
       - uses: actions/upload-artifact@v4
         if: always()

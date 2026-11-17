@@ -16,7 +16,7 @@ export function Formula({ tex }: { tex: string }) {
     <div
       className="formula"
       tabIndex={0}
-      role="region"
+      role="group"
       aria-label="Fórmula matemática desplazable"
       dangerouslySetInnerHTML={{
         __html: katex.renderToString(tex, {

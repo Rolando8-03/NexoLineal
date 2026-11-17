@@ -720,7 +720,7 @@ export function App() {
         <div className="sidebar-footer">
           <span className="local-dot" />
           Tu trabajo se guarda en este dispositivo.
-          <small>NexoLineal · 0.6.0</small>
+          <small>NexoLineal · 0.7.0</small>
         </div>
       </aside>
       {menu && (

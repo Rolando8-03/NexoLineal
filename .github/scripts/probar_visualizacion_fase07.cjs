@@ -148,10 +148,30 @@ async function download(selector, name) {
       "ampliar-grafica",
     );
     pass("Planos 3D, cámara, ampliación, Escape y retorno del foco");
-    await choose("vectores.proyeccion", { "dato-u": "2 3", "dato-v": "1 0" });
+    await choose("vectores.proyeccion", { "dato-u": "2 3", "dato-v": "1 2" });
     await calculate();
     assert.ok(await page.locator('[data-series="proyeccion"]').count());
     assert.match(await page.locator("#resultado").innerText(), /ortogonal/i);
+    const perpendicular = await page.evaluate(() => {
+      const ends = (label) =>
+        document
+          .querySelector(`[data-series="${label}"] polyline`)
+          .getAttribute("points")
+          .split(" ")
+          .map((p) => p.split(",").map(Number));
+      const p = ends("proyeccion"),
+        d = ends("componente ortogonal");
+      const a = p[1].map((x, i) => x - p[0][i]),
+        b = d[1].map((x, i) => x - d[0][i]);
+      return (
+        Math.abs(a[0] * b[0] + a[1] * b[1]) /
+        (Math.hypot(...a) * Math.hypot(...b))
+      );
+    });
+    assert.ok(
+      perpendicular < 1e-10,
+      "Los ejes espaciales deben conservar la perpendicularidad visible.",
+    );
     pass("Proyección ortogonal disponible y representada");
     await choose("transformaciones.analizar", { "matriz-a": "1 2;0 -1" });
     await calculate();
@@ -168,6 +188,16 @@ async function download(selector, name) {
       assert.equal(
         await page.locator(".graph-content").getAttribute("data-graph-kind"),
         "roots",
+      );
+      assert.ok(
+        await page
+          .locator(".math-graph polyline")
+          .evaluateAll((nodes) =>
+            nodes.every(
+              (n) => !/(NaN|Infinity)/.test(n.getAttribute("points")),
+            ),
+          ),
+        "Todas las coordenadas racionales se dibujan como números finitos.",
       );
       const row = (await page.locator(".select-iteration").nth(1).count())
         ? 1
@@ -297,7 +327,11 @@ async function download(selector, name) {
     ).metadata.visualization;
     assert.ok(discontinuous.sampling_gaps > 0);
     for (const s of discontinuous.series) {
-      const xs = s.points.map((p) => Number(p[0]));
+      const xs = s.points.map((p) => {
+        const [a, b] = String(p[0]).split("/").map(Number);
+        return b === undefined ? a : a / b;
+      });
+      assert.ok(xs.every(Number.isFinite));
       assert.ok(!(Math.min(...xs) < 0 && Math.max(...xs) > 0));
     }
     pass(

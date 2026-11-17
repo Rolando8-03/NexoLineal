@@ -81,6 +81,14 @@ audit_files = [
 ]
 assert len(audit_files) == 1
 visual_audit = json.loads(audit_files[0].read_text(encoding="utf-8"))
+data_files = [
+    p
+    for p in (root / "fase03-web").rglob("datos.json")
+    if "evidencia-fase07" in p.parts
+]
+assert len(data_files) == 1
+visual_data = json.loads(data_files[0].read_text(encoding="utf-8"))
+assert visual_data["approved"]
 assert visual_audit["approved"]
 summary = {
     "approved": True,
@@ -94,6 +102,7 @@ summary = {
         "accessibility_violations": 0,
         "audit_checks": visual_audit["checks"],
         "native_pdf_csv": True,
+        "data_checks": visual_data["checks"],
     },
     "workspace": {
         "web_reopened": True,
@@ -117,6 +126,7 @@ print(
             "reopened": reopened,
             "visualization_ui": visual_ui,
             "visualization_audit": visual_audit,
+            "visualization_data": visual_data,
             "workspace_ui": ui,
             "project_codec": codec,
             "core_manifest": manifests[0],
