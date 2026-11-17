@@ -1,0 +1,28 @@
+name: Núcleo y cobertura fase 04
+on:
+  push:
+    branches: [fase-04-algebra]
+    paths: ['packages/**', 'python/**', 'modulos/**', 'teoremas/**', 'tests/**', '.github/workflows/fase04.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: nucleo-fase04-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verificar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar núcleo y referencias independientes
+        run: python -m pip install -e packages/core sympy==1.14.0 jsonschema==4.23.0
+      - name: Regresiones y contratos
+        run: |
+          python -B pruebas.py -v
+          python -B -m unittest discover -s tests -v
+          python -m tests.auditoria_matematica
+          python -m compileall -q packages/core/src python modulos teoremas

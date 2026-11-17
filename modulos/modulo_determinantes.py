@@ -4,12 +4,7 @@ Autores: Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez,
 Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre (Grupo 4).
 """
 
-from python.operaciones_matrices import analizar_determinante, _serializar
-from modulos.modulo_matrices import matriz_exacta, determinante, determinante_cofactores, sarrus
-
-
-def ejecutar_determinante_interfaz(datos):
-    """Recibe A como texto o filas; devuelve su determinante serializado para la ventana."""
-    return _serializar(analizar_determinante(matriz_exacta(datos.get("A", ""))))
-
-
+# Compatibilidad con la interfaz anterior; el código ejecutable reside en el núcleo.
+from nexolineal.algorithms.legacy import modulo_determinantes as _implementacion
+__all__ = [name for name in vars(_implementacion) if not name.startswith("__")]
+globals().update({name: getattr(_implementacion, name) for name in __all__})
