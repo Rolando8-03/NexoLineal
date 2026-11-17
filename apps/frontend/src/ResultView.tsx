@@ -40,7 +40,6 @@ const labels: Record<string, string> = {
   aproximacion_decimal: "Aproximación decimal (14 cifras, redondeada)",
   aproximacion: "Aproximación utilizada por el método",
   cota_decimal: "Cota que incluye el redondeo del decimal mostrado",
-  aproximacion: "Aproximación obtenida",
   convergencia: "¿Se satisfizo el criterio?",
   motivo_parada: "Motivo de parada",
   residual: "Residual (distinto del error verdadero)",
