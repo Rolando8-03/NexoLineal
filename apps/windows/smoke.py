@@ -92,12 +92,17 @@ def run(window):
 
             memory = Memory()
             memory.cb = ctypes.sizeof(memory)
-            if ctypes.windll.psapi.GetProcessMemoryInfo(
-                ctypes.windll.kernel32.GetCurrentProcess(),
-                ctypes.byref(memory),
-                memory.cb,
-            ):
-                report["distribution"]["working_set_bytes"] = memory.WorkingSetSize
+            get_memory = ctypes.windll.psapi.GetProcessMemoryInfo
+            get_memory.argtypes = [
+                wintypes.HANDLE,
+                ctypes.POINTER(Memory),
+                wintypes.DWORD,
+            ]
+            get_memory.restype = wintypes.BOOL
+            if not get_memory(wintypes.HANDLE(-1), ctypes.byref(memory), memory.cb):
+                raise ctypes.WinError()
+            report["distribution"]["working_set_bytes"] = memory.WorkingSetSize
+            assert memory.WorkingSetSize > 0
         if os.environ.get("NEXO_CROSS_PROJECT"):
             wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
             assert "7" in window.evaluate_js(

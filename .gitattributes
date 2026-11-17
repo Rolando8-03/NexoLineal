@@ -4,3 +4,4 @@ apps/android/gradlew.bat text eol=crlf
 *.jar binary
 *.ico binary
 *.png binary
+tests/fixtures/fase08-project.json text eol=lf
