@@ -18,6 +18,18 @@ for (const name of ["project", "validation", "navigation", "webStore"])
       },
     ).outputText,
   );
+fs.writeFileSync(
+  path.join(dir, "nativeBridge.js"),
+  ts.transpileModule(
+    fs.readFileSync("apps/frontend/src/nativeBridge.ts", "utf8"),
+    {
+      compilerOptions: {
+        target: ts.ScriptTarget.ES2022,
+        module: ts.ModuleKind.CommonJS,
+      },
+    },
+  ).outputText,
+);
 const p = require(path.join(dir, "project.js")),
   v = require(path.join(dir, "validation.js")),
   n = require(path.join(dir, "navigation.js"));
@@ -215,6 +227,7 @@ async function nativeAdapters() {
   for (const target of ["android", "windows"]) {
     let source = fs
       .readFileSync("apps/frontend/src/workspace/storage.ts", "utf8")
+      .replace('"../nativeBridge"', '"./nativeBridge"')
       .replace("import.meta.env.VITE_TARGET", JSON.stringify(target))
       .replace(
         'import("@capacitor/core")',

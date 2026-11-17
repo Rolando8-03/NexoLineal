@@ -1,3 +1,4 @@
+import { waitForWindowsMethods } from "../nativeBridge";
 import { loadWebState, saveWebState } from "./webStore";
 /** Persistencia local por destino; nunca sube problemas a un servicio externo. */
 import { MAX_BYTES } from "./project";
@@ -28,15 +29,14 @@ async function native(): Promise<NativeFiles> {
     const { registerPlugin } = await import("@capacitor/core");
     return bindFiles(registerPlugin<NativeFiles>("NexoEngine"));
   }
-  for (let i = 0; i < 200; i++) {
-    const api = (window as unknown as { pywebview?: { api?: NativeFiles } })
-      .pywebview?.api;
-    if (api) return bindFiles(api);
-    await new Promise((r) => setTimeout(r, 50));
-  }
-  throw new Error(
-    "No se pudo conectar con el almacenamiento de la aplicación.",
-  );
+  const { api } = await waitForWindowsMethods<NativeFiles>([
+    "load_state",
+    "save_state",
+    "export_project",
+    "import_project",
+    "export_document",
+  ]);
+  return bindFiles(api);
 }
 export const storageName =
   target === "web"

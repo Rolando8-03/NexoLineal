@@ -25,7 +25,7 @@ jobs:
       - run: |
           npm install --prefix /tmp/nexo-playwright playwright@1.56.1
           /tmp/nexo-playwright/node_modules/.bin/playwright install --with-deps chromium
-      - run: node .github/scripts/probar_distribucion_fase08.cjs
+      - run: node .github/scripts/probar_puente_fase08.cjs && node .github/scripts/probar_distribucion_fase08.cjs
         env: {NODE_PATH: /tmp/nexo-playwright/node_modules}
       - run: python .github/scripts/sellar_distribucion_fase08.py web
       - uses: actions/upload-artifact@v4

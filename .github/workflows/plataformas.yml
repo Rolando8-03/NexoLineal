@@ -59,6 +59,7 @@ jobs:
         env:
           NODE_PATH: /tmp/nexo-playwright/node_modules
         run: |
+          node .github/scripts/probar_puente_fase08.cjs
           node .github/scripts/probar_estado_fase06.cjs
           node .github/scripts/probar_web_fase03.cjs
           node .github/scripts/probar_experiencia_fase06.cjs
