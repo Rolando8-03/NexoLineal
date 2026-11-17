@@ -9,7 +9,7 @@ assert "OK (1 test)" in text and "FAILURES" not in text, text
 line = next(
     line
     for line in text.splitlines()
-    if line.startswith("INSTRUMENTATION_STATUS: nexo_distribution=")
+    if "INSTRUMENTATION_STATUS: nexo_distribution=" in line
 )
 r = json.loads(line.split("=", 1)[1])
 assert r["approved"] and r["debuggable"] is False and r["offline"]

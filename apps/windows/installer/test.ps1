@@ -5,6 +5,8 @@ $installDir = Join-Path $env:LOCALAPPDATA 'Programs/NexoLineal'
 $store = Join-Path $env:LOCALAPPDATA 'NexoLineal'
 New-Item -ItemType Directory -Force $store | Out-Null
 $env:NEXO_STATE_FILE = Join-Path $store 'workspace-v1.json'
+Copy-Item (Join-Path $root 'tests/fixtures/fase08-project.json') $env:NEXO_STATE_FILE
+$env:NEXO_CROSS_PROJECT = '1'
 $env:NEXO_FIXTURES = Join-Path $root 'tests/fixtures/platform_contracts.json'
 $env:NEXO_EVIDENCE = Join-Path $root 'evidencia-fase08/windows-instalada.json'
 $log = Join-Path $root 'evidencia-fase08/instalacion.log'
@@ -31,9 +33,13 @@ if ($p.ExitCode -ne 0 -or (Test-Path $exe)) { throw 'Falló desinstalación' }
 if ((Get-FileHash $db).Hash -ne $before) { throw 'La desinstalación alteró el proyecto' }
 $p=Start-Process $installer -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -Wait -PassThru
 if ($p.ExitCode -notin @(0,3010)) { throw 'Falló reinstalación' }
+Remove-Item Env:NEXO_CROSS_PROJECT -ErrorAction SilentlyContinue
 $env:NEXO_EVIDENCE=Join-Path $root 'evidencia-fase08/windows-reinstalada.json'
 Test-Installed @('--self-test','--restore-test')
 $env:PATH=$previousPath
 $reports=@('windows-instalada','windows-reinstalada') | ForEach-Object { Get-Content "evidencia-fase08/$_.json" -Raw | ConvertFrom-Json }
 if ($reports.approved -contains $false) { throw 'Autoprueba instalada rechazada' }
 @{approved=$true;system=[System.Environment]::OSVersion.VersionString;python_on_path=$false;physical_clean_pc=$false;data_retained=$true;webview_missing_branch_tested=$false;notes='Runner Windows con herramientas instaladas; proceso aislado de Python por PATH. No equivale a un PC físico limpio. WebView2 ya presente.'} | ConvertTo-Json | Set-Content -Encoding utf8 evidencia-fase08/windows-instalacion.json
+
+if ($reports.distribution.frozen -contains $false) { throw 'El programa instalado no usa Python incluido' }
+Get-ChildItem evidencia-fase08/*.json | ForEach-Object { Write-Output ('NEXO_DISTRIBUTION_FILE=' + $_.Name); Get-Content $_.FullName -Raw }

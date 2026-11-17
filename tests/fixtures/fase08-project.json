@@ -1,0 +1,38 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "Mi cuaderno de álgebra",
+  "updatedAt": "2026-11-17T15:18:46.251Z",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "matrices.producto",
+    "inputs": {
+      "matrices.producto": {
+        "A": "1/2 2",
+        "B": "2\n3"
+      }
+    },
+    "step": 0,
+    "stepsOpen": false,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": [
+    {
+      "id": "d629c4ca-7486-44d8-b27a-268981ba0c31",
+      "date": "2026-11-17T15:18:46.250Z",
+      "operation": "matrices.producto",
+      "values": {
+        "A": "1/2 2",
+        "B": "2\n3"
+      },
+      "label": "Producto de matrices",
+      "status": "ok",
+      "favorite": false
+    }
+  ]
+}

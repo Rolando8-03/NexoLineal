@@ -113,6 +113,7 @@ async function result() {
     await result();
     pass("Ruta /NexoLineal/ y cálculo con Worker Python");
     const client = await context.newCDPSession(page);
+    await client.send("Performance.enable");
     const installability = await client.send("Page.getInstallabilityErrors");
     report.installability = installability.installabilityErrors;
     assert.deepEqual(report.installability, []);
@@ -146,6 +147,50 @@ async function result() {
       });
     });
     assert.equal(JSON.parse(data).format, "NexoLineal.Project");
+    fs.writeFileSync(path.join(out, "proyecto-web.json"), data);
+    // Una segunda sesión migra el documento portable exportado desde la web.
+    const migration = await context.browser().newContext();
+    await migration.addInitScript((raw) => {
+      if (!localStorage.getItem("nexo08-seeded")) {
+        localStorage.setItem("nexolineal.project.v1", raw);
+        localStorage.setItem("nexo08-seeded", "1");
+      }
+    }, data);
+    const migrated = await migration.newPage();
+    await migrated.goto(url);
+    await migrated.waitForFunction(
+      () =>
+        document.querySelector("#calcular") &&
+        !document.querySelector("#calcular").disabled,
+      null,
+      { timeout: 180000 },
+    );
+    assert.equal(
+      await migrated.evaluate(() =>
+        localStorage.getItem("nexolineal.project.v1"),
+      ),
+      data,
+    );
+    const migratedRaw = await migrated.evaluate(async () => {
+      const db = await new Promise((resolve) => {
+        const r = indexedDB.open("nexolineal.workspace", 1);
+        r.onsuccess = () => resolve(r.result);
+      });
+      return new Promise((resolve) => {
+        const t = db.transaction("projects");
+        const r = t.objectStore("projects").get("active");
+        t.oncomplete = () => {
+          db.close();
+          resolve(r.result);
+        };
+      });
+    });
+    assert.equal(
+      JSON.parse(migratedRaw).active.operation,
+      JSON.parse(data).active.operation,
+    );
+    await migration.close();
+    pass("Migración localStorage a IndexedDB conserva el documento original");
     pass("Proyecto confirmado en IndexedDB");
     // Volver a abrir el proceso de Chromium, antes de desconectar la red.
     await context.close();
@@ -161,9 +206,9 @@ async function result() {
       fullPage: true,
     });
     pass("Cierre del navegador, reapertura, recarga y cálculo sin red");
-    const metrics = await (
-      await context.newCDPSession(page)
-    ).send("Performance.getMetrics");
+    const memorySession = await context.newCDPSession(page);
+    await memorySession.send("Performance.enable");
+    const metrics = await memorySession.send("Performance.getMetrics");
     report.chromium_metrics = metrics.metrics;
     report.chromium_version =
       context.browser()?.version() || "persistent Chromium";
@@ -268,6 +313,7 @@ async function result() {
       path.join(out, "web-distribucion.json"),
       JSON.stringify(report, null, 2),
     );
+    console.log("NEXO_WEB_DISTRIBUTION_REPORT=" + JSON.stringify(report));
     console.log(
       JSON.stringify({
         approved: report.approved,

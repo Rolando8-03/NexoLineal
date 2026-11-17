@@ -98,6 +98,20 @@ def run(window):
                 memory.cb,
             ):
                 report["distribution"]["working_set_bytes"] = memory.WorkingSetSize
+        if os.environ.get("NEXO_CROSS_PROJECT"):
+            wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
+            assert "7" in window.evaluate_js(
+                "document.querySelector('#resultado').innerText"
+            )
+            import hashlib
+
+            original = Path(os.environ["NEXO_STATE_FILE"]).read_bytes()
+            report["cross_project"] = {
+                "sha256": hashlib.sha256(original).hexdigest(),
+                "from": "Chromium IndexedDB export",
+                "to": "Windows SQLite",
+                "recalculated": True,
+            }
         if "--restore-test" in sys.argv:
             wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
             assert (
