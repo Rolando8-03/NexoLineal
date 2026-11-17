@@ -1,10 +1,10 @@
 # NexoLineal
 
-Calculadora educativa con motor matemático en Python e interfaz web. La fase 04 completa la cobertura básica de álgebra lineal sobre una interfaz compartida para web, Windows y Android, conectada al mismo núcleo Python y al contrato JSON 1.0.
+Calculadora educativa con motor matemático en Python e interfaz web. La fase 05 añade métodos numéricos y herramientas a la interfaz compartida para web, Windows y Android, conectada al mismo núcleo Python y al contrato JSON 1.0.
 
 ## Prototipos de los tres destinos
 
-La interfaz compartida ofrece 44 operaciones: 41 de álgebra lineal y tres herramientas de cálculo heredadas. Incluye sistemas rectangulares, matrices y bloques, determinantes, inversas, LU/PLU, vectores, subespacios, bases, coordenadas y transformaciones. Incluye menú principal, entrada mínima y presentaciones Serio y Explorador. Los recursos del nuevo frontend se empaquetan localmente.
+La interfaz compartida ofrece 56 operaciones: álgebra lineal, métodos de raíces, sistemas iterativos, errores, conversiones, conjuntos y cálculo. Incluye sistemas rectangulares, matrices y bloques, determinantes, inversas, LU/PLU, vectores, subespacios, bases, coordenadas y transformaciones. Incluye menú principal, entrada mínima y presentaciones Serio y Explorador. Los recursos del nuevo frontend se empaquetan localmente.
 
 | Destino | Ejecución |
 | --- | --- |
@@ -27,6 +27,10 @@ python -m http.server 8000
 
 Abrir http://localhost:8000 en el navegador. La versión actual carga Pyodide, Tailwind, SweetAlert2 y KaTeX desde sus CDN. El motor del navegador recibe los mismos archivos Python del paquete.
 
+## Cobertura de fase 05
+
+[Catálogo de métodos y herramientas](docs/fase05/cobertura.md) · [Precisión, criterios y límites](docs/fase05/contrato.md) · [Pruebas](docs/fase05/verificacion.md) · [Cierre de fase 05](docs/fase05/cierre.md)
+
 ## Cobertura de fase 04
 
 [Catálogo de las 44 operaciones](docs/fase04/cobertura.md) · [Entradas y convenciones](docs/fase04/contrato.md) · [Arquitectura](docs/fase04/arquitectura.md) · [Verificación](docs/fase04/verificacion.md) · [Cierre de fase 04](docs/fase04/cierre.md)
@@ -34,6 +38,9 @@ Abrir http://localhost:8000 en el navegador. La versión actual carga Pyodide, T
 ## Capacidades actuales
 
 - Sistemas por Gauss y Gauss-Jordan, clasificación, solución general y comprobación.
+- Bisección, falsa posición, Newton y secante con tablas, criterios y motivos de parada.
+- Jacobi y Gauss-Seidel con residuales, normas y advertencias de convergencia.
+- Errores, conversión entre bases y conjuntos finitos; primitivas e integración con precisión editable.
 - Operaciones matriciales, determinantes, inversas, propiedades, Cramer, LU sin permutaciones y PLU con PA=LU.
 - Operaciones vectoriales, generado, dependencia, bases, coordenadas y cambios de base.
 - Espacios columna, fila y núcleo; suma e intersección de subespacios.
@@ -51,6 +58,7 @@ Los valores racionales se transportan como texto. Una integral polinómica de x�
 | apps/frontend | Interfaz compartida React y adaptadores de ejecución |
 | apps/windows | Ventana nativa y empaquetado gráfico |
 | apps/android | APK con Python incluido y prueba instrumentada |
+| docs/fase05 | Métodos numéricos, precisión, cobertura y evidencias |
 | docs/fase04 | Cobertura, convenciones, límites y evidencia de álgebra lineal |
 | docs/fase03 | Arquitectura, compilación, compatibilidad y evidencias |
 | packages/core | Paquete nexolineal-core independiente de la interfaz |
@@ -69,14 +77,15 @@ python -B pruebas.py -v
 python -B -m unittest discover -s tests -v
 python -m tests.auditoria_matematica
 python -m tests.auditoria_fase04
+python -m tests.auditoria_fase05
 python .github/scripts/generar_catalogo.py --check
 ```
 
 SymPy se usa como referencia independiente en pruebas. Los algoritmos de producción conservan sus implementaciones explícitas en Python.
 
-El workflow de plataformas compara 73 contratos completos y la integridad del paquete Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 44 formularios en ambos modos, formularios nativos y el APK offline.
+El workflow de plataformas compara 113 contratos completos y la integridad del paquete Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline.
 
-El workflow de verificación ejecuta los casos originales, las regresiones nuevas, 288 sistemas independientes, una auditoría adicional de 2376 solicitudes con 12633 comprobaciones y recorridos gráficos en Chromium. Los informes y capturas se conservan como nexolineal-evidencias en Actions.
+El workflow de verificación ejecuta los casos originales, las regresiones nuevas, 288 sistemas independientes, una auditoría adicional de 2376 solicitudes con 12633 comprobaciones, 339 solicitudes nuevas con 6473 comprobaciones numéricas y recorridos gráficos en Chromium. Los informes y capturas se conservan como nexolineal-evidencias en Actions.
 
 ## Historial y autoría
 
