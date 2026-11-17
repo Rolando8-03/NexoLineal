@@ -104,6 +104,23 @@ def run(window):
                 raise ctypes.WinError()
             report["distribution"]["working_set_bytes"] = memory.WorkingSetSize
             assert memory.WorkingSetSize > 0
+        measured_at = time.perf_counter()
+        measured = bridge(
+            window,
+            {
+                "schema_version": "1.0",
+                "operation_id": "matrices.producto",
+                "input": {"A": [["1/2", "2"]], "B": [["2"], ["3"]]},
+            },
+            "phase08-timing",
+        )
+        assert measured["result"]["matrix"] == [["7"]]
+        report["distribution"]["calculation_bridge_ms"] = (
+            time.perf_counter() - measured_at
+        ) * 1000
+        report["distribution"][
+            "calculation_note"
+        ] = "Puente JS/Python, prepare y cálculo 1/2*2+2*3=7; incluye sondeo de hasta 100 ms, no es tiempo aislado del algoritmo."
         if os.environ.get("NEXO_CROSS_PROJECT"):
             wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
             assert "7" in window.evaluate_js(
