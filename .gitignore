@@ -26,3 +26,7 @@ evidencia-fase06/
 evidencia-fase07/
 
 apps/frontend/public/licenses/
+
+evidencia-fase08/
+*.jks
+*.keystore

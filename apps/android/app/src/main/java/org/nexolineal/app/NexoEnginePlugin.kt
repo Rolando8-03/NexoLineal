@@ -174,6 +174,11 @@ class NexoEnginePlugin : Plugin() {
         } catch (error: Exception) { call.reject(error.message ?: "No se pudo exportar el documento.") }
     }
 
+    @PluginMethod
+    fun background(call: PluginCall) {
+        activity.runOnUiThread { activity.moveTaskToBack(true); call.resolve() }
+    }
+
     override fun handleOnDestroy() {
         engine().callAttr("cancel_all")
         executor.shutdownNow()
