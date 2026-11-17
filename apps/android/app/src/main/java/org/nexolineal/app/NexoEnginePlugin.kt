@@ -105,7 +105,7 @@ class NexoEnginePlugin : Plugin() {
             val uri = result.data?.data
             if (result.resultCode != Activity.RESULT_OK || uri == null) { call.resolve(JSObject().put("cancelled", true)); return }
             val content = checked(call.getString("content") ?: error("Falta el proyecto."))
-            context.contentResolver.openOutputStream(uri)?.use { it.write(content.toByteArray(Charsets.UTF_8)) }
+            context.contentResolver.openOutputStream(uri, "wt")?.use { it.write(content.toByteArray(Charsets.UTF_8)) }
                 ?: error("No se pudo escribir el archivo elegido.")
             call.resolve(JSObject().put("cancelled", false))
         } catch (error: Exception) { call.reject(error.message ?: "No se pudo exportar el proyecto.") }

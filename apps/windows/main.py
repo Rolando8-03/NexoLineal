@@ -1,4 +1,5 @@
 """Ventana Windows del prototipo. La interfaz llama al Python incluido."""
+
 from pathlib import Path
 import json
 import os
@@ -6,6 +7,7 @@ import sys
 import webview
 from nexolineal.platforms.jobs import JobPool
 from .project_io import ProjectStore, validate_content, MAX_BYTES
+
 
 class NativeAPI:
     def __init__(self):
@@ -31,54 +33,81 @@ class NativeAPI:
         return self._pool.progress(self._id(data))
 
     def load_state(self):
-        return {"content":self._store.load()}
+        return {"content": self._store.load()}
 
-    def save_state(self,data):
+    def save_state(self, data):
         self._store.save(data.get("content"))
-        return {"saved":True}
+        return {"saved": True}
 
-    def export_project(self,data):
-        content=validate_content(data.get("content"))
-        paths=self._window.create_file_dialog(webview.FileDialog.SAVE,save_filename="NexoLineal-proyecto.json",file_types=("Proyecto JSON (*.json)",))
-        if not paths:return {"cancelled":True}
-        destination=Path(paths if isinstance(paths,str) else paths[0])
-        destination.write_text(content,encoding="utf-8")
-        return {"cancelled":False}
+    def export_project(self, data):
+        content = validate_content(data.get("content"))
+        paths = self._window.create_file_dialog(
+            webview.FileDialog.SAVE,
+            save_filename="NexoLineal-proyecto.json",
+            file_types=("Proyecto JSON (*.json)",),
+        )
+        if not paths:
+            return {"cancelled": True}
+        destination = Path(paths if isinstance(paths, str) else paths[0])
+        ProjectStore(destination).save(content)
+        return {"cancelled": False}
 
     def import_project(self):
-        paths=self._window.create_file_dialog(webview.FileDialog.OPEN,allow_multiple=False,file_types=("Proyecto JSON (*.json)",))
-        if not paths:return {"cancelled":True}
-        source=Path(paths if isinstance(paths,str) else paths[0])
-        if source.stat().st_size>MAX_BYTES:raise ValueError("El archivo supera 2 MiB.")
-        return {"cancelled":False,"content":validate_content(source.read_text(encoding="utf-8"))}
+        paths = self._window.create_file_dialog(
+            webview.FileDialog.OPEN,
+            allow_multiple=False,
+            file_types=("Proyecto JSON (*.json)",),
+        )
+        if not paths:
+            return {"cancelled": True}
+        source = Path(paths if isinstance(paths, str) else paths[0])
+        if source.stat().st_size > MAX_BYTES:
+            raise ValueError("El archivo supera 2 MiB.")
+        return {
+            "cancelled": False,
+            "content": validate_content(source.read_text(encoding="utf-8")),
+        }
 
     def close(self):
         self._pool.cancel_all()
+
 
 def interface_path():
     if getattr(sys, "frozen", False):
         return Path(sys._MEIPASS) / "ui" / "index.html"
     return Path(__file__).resolve().parents[1] / "frontend" / "dist" / "index.html"
 
+
 def main():
     interface = interface_path()
     if not interface.is_file():
-        raise RuntimeError("Compilá apps/frontend para Windows antes de iniciar la ventana.")
+        raise RuntimeError(
+            "Compilá apps/frontend para Windows antes de iniciar la ventana."
+        )
     api = NativeAPI()
     window = webview.create_window(
-        "NexoLineal", url=str(interface), js_api=api,
-        width=1220, height=900, min_size=(390, 620)
+        "NexoLineal",
+        url=str(interface),
+        js_api=api,
+        width=1220,
+        height=900,
+        min_size=(390, 620),
     )
     api._window = window
     window.events.closed += api.close
     if "--self-test" in sys.argv:
         from apps.windows.smoke import run
+
         webview.start(run, (window,), gui="edgechromium", http_server=True)
         report = Path(os.environ.get("NEXO_EVIDENCE", "evidencia-windows.json"))
-        if not report.is_file() or not json.loads(report.read_text(encoding="utf-8"))["approved"]:
+        if (
+            not report.is_file()
+            or not json.loads(report.read_text(encoding="utf-8"))["approved"]
+        ):
             raise SystemExit(1)
     else:
         webview.start(gui="edgechromium", http_server=True)
+
 
 if __name__ == "__main__":
     main()

@@ -120,8 +120,56 @@ class PlatformTest {
             val recovered = JSONObject(waitFor("window.__ciRecovery"))
             assertEquals("6", recovered.getJSONObject("result").getJSONArray("matrix").getJSONArray(0).getString(0))
             cases.put(JSONObject().put("name", "cancelación y recuperación").put("passed", true))
+            js("document.querySelector('#tema-oscuro').click();document.querySelector('.steps').open=true;")
+            js("(()=>{const e=document.querySelector('#paso');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'2');e.dispatchEvent(new Event('change',{bubbles:true}));})();")
+            js("document.querySelector('#expresion').closest('.input-field').querySelector('.save-input').click()")
+            waitFor("!!document.querySelector('#object-name')")
+            js("(()=>{const e=document.querySelector('#object-name');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,'Función persistente');e.dispatchEvent(new Event('input',{bubbles:true}));})();")
+            js("document.querySelector('#confirmar-objeto').click()")
+            waitFor("!document.querySelector('dialog')")
+            js("document.querySelector('nav button[data-route=historial]').click()")
+            waitFor("!!document.querySelector('#project-name')")
+            js("(()=>{const e=document.querySelector('#project-name');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,'Continuidad fase 06');e.dispatchEvent(new Event('input',{bubbles:true}));})();")
+            js("document.querySelector('.favorite-button').click()")
+            js("document.querySelector('#abrir-json').click()")
+            waitFor("!!document.querySelector('#project-json')")
+            val portable = JSONObject(JSONArray("["+js("document.querySelector('#project-json').value")+"]").getString(0))
+            assertEquals("NexoLineal.Project",portable.getString("format"))
+            assertEquals(1,portable.getInt("version"))
+            assertEquals(2,portable.getJSONObject("active").getInt("step"))
+            js("document.querySelector('#importar-json').click()")
+            waitFor("!document.querySelector('dialog') && document.querySelector('#resultado').dataset.status === 'ok'")
+            val savedFile = File(context.filesDir, "workspace-v1.json")
+            val saveDeadline = SystemClock.elapsedRealtime()+20000
+            var confirmed = false
+            while (SystemClock.elapsedRealtime()<saveDeadline) {
+                try {
+                    val data = JSONObject(savedFile.readText())
+                    confirmed = data.getString("name")=="Continuidad fase 06" && data.getJSONObject("active").getInt("step")==2 && data.getJSONArray("objects").length()==1 && data.getJSONArray("history").getJSONObject(0).getBoolean("favorite")
+                    if (confirmed) break
+                } catch (_: Exception) { }
+                SystemClock.sleep(100)
+            }
+            assertTrue("Debe confirmarse el archivo antes de cerrar",confirmed)
+            val historySize = JSONObject(savedFile.readText()).getJSONArray("history").length()
+            scenario.close()
+            scenario = ActivityScenario.launch(MainActivity::class.java)
+            waitFor("document.querySelector('#calcular') && !document.querySelector('#calcular').disabled")
+            waitFor("document.querySelector('#resultado').dataset.status === 'ok'")
+            assertEquals("\"raices.biseccion\"",js("document.querySelector('#operacion').value"))
+            assertEquals("\"2\"",js("document.querySelector('#paso').value"))
+            assertEquals("\"explorador\"",js("document.querySelector('.app').dataset.mode"))
+            assertEquals("\"oscuro\"",js("document.querySelector('.app').dataset.theme"))
+            val reopened = JSONObject(savedFile.readText())
+            assertEquals(historySize,reopened.getJSONArray("history").length())
+            assertEquals("Función persistente",reopened.getJSONArray("objects").getJSONObject(0).getString("name"))
+            report.put("persistence",JSONObject().put("saved",true).put("reopened",true).put("adapter","archivo atomico privado"))
+            cases.put(JSONObject().put("name","objetos, favorito, tema y paso tras cerrar y reabrir la aplicación").put("passed",true))
             report.put("approved", true)
             UiDevice.getInstance(instrumentation).takeScreenshot(File(context.filesDir, "fase03-android.png"))
+        } catch (error: Throwable) {
+            report.put("error",error.stackTraceToString())
+            throw error
         } finally {
             report.put("cases", cases)
             File(context.filesDir, "fase03-android.json").writeText(report.toString(2))

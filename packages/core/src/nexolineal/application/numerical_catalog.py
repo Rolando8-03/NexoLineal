@@ -2,7 +2,14 @@
 
 
 def field(
-    name, label, kind="scalar", default="", required=False, choices=None, when=None, required_when=None
+    name,
+    label,
+    kind="scalar",
+    default="",
+    required=False,
+    choices=None,
+    when=None,
+    required_when=None,
 ):
     result = dict(name=name, label=label, kind=kind, default=default, required=required)
     if choices:
