@@ -75,7 +75,7 @@ export function FormFields({
         .map((f) => {
           const id = fieldId(f.name),
             text = values[f.name] ?? "",
-            multiline = ["matrix", "vectors"].includes(f.kind);
+            multiline = ["matrix", "vectors", "set"].includes(f.kind);
           return (
             <div className="input-field" key={f.name}>
               <div className="field-heading">
@@ -85,7 +85,9 @@ export function FormFields({
                     <small> · opcional</small>
                   )}
                 </label>
-                {multiline && <span>{dimensions(text)}</span>}
+                {multiline && f.kind !== "set" && (
+                  <span>{dimensions(text)}</span>
+                )}
               </div>
               {f.kind === "select" || f.kind === "boolean" ? (
                 <select
@@ -122,17 +124,19 @@ export function FormFields({
                 />
               )}
               <p className="help" id={id + "-ayuda"}>
-                {f.kind === "matrix"
-                  ? "Una fila por línea; números separados por espacios. Se admiten decimales y fracciones."
-                  : f.kind === "vectors"
-                    ? "Un vector por fila; componentes separadas por espacios. Usá [] para la familia vacía."
-                    : f.kind === "index"
-                      ? "Numeración desde 1."
-                      : f.kind === "cuts"
-                        ? "Posiciones después de las que se corta. Vacío conserva un único bloque."
-                        : f.kind === "expression"
-                          ? "Usá * para multiplicar, ^ para potencias y funciones como sin, cos, exp o ln."
-                          : ""}
+                {f.kind === "set"
+                  ? "Una etiqueta de texto por línea, sin duplicados. [] representa el conjunto vacío."
+                  : f.kind === "matrix"
+                    ? "Una fila por línea; números separados por espacios. Se admiten decimales y fracciones."
+                    : f.kind === "vectors"
+                      ? "Un vector por fila; componentes separadas por espacios. Usá [] para la familia vacía."
+                      : f.kind === "index"
+                        ? "Numeración desde 1."
+                        : f.kind === "cuts"
+                          ? "Posiciones después de las que se corta. Vacío conserva un único bloque."
+                          : f.kind === "expression"
+                            ? "Usá * para multiplicar, ^ para potencias y funciones como sin, cos, exp o ln."
+                            : ""}
               </p>
             </div>
           );

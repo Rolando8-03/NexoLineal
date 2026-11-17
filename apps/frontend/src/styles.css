@@ -498,3 +498,46 @@ option {
     font-size: 14px;
   }
 }
+
+.table-scroll {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.iteration-table table {
+  border-collapse: collapse;
+  min-width: 100%;
+  font-size: 13px;
+}
+.iteration-table th,
+.iteration-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  min-width: 100px;
+  max-width: 240px;
+}
+.iteration-table caption {
+  padding: 12px;
+  font-weight: 650;
+  text-align: left;
+}
+.iteration-table .formula {
+  max-width: 220px;
+  padding: 0;
+}
+.iteration-table .katex {
+  font-size: 1em;
+}
+.table-pagination {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.iteration-table th {
+  color: var(--muted);
+}

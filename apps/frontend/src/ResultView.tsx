@@ -1,3 +1,4 @@
+import { useState } from "react";
 import katex from "katex";
 import type { Step } from "./contracts";
 
@@ -33,6 +34,14 @@ function matrixTex(matrix: string[][]): string {
 }
 const labels: Record<string, string> = {
   matrix: "Matriz resultado",
+  aproximacion: "Aproximación obtenida",
+  convergencia: "¿Se satisfizo el criterio?",
+  motivo_parada: "Motivo de parada",
+  residual: "Residual (distinto del error verdadero)",
+  error_verdadero: "Error verdadero (requiere referencia)",
+  cota_garantizada: "Cota garantizada, cuando existe",
+  tabla: "Tabla de iteraciones",
+  error_aproximado_absoluto: "Cambio absoluto entre aproximaciones",
   particular: "Solución particular xp",
   direcciones: "Direcciones de la solución",
   familia: "Familia de soluciones",
@@ -132,6 +141,22 @@ export function DataView({
     );
   }
   if (Array.isArray(value)) {
+    if (name === "tabla")
+      return <NumericalTable rows={value as Record<string, unknown>[]} />;
+    if (["conjunto", "universo"].includes(name))
+      return (
+        <p className="expression">
+          {"{ " +
+            value
+              .map((x) =>
+                Array.isArray(x)
+                  ? "(" + x.map(String).join(", ") + ")"
+                  : JSON.stringify(x),
+              )
+              .join(", ") +
+            " }"}
+        </p>
+      );
     if (!value.length)
       return (
         <span className="help">
@@ -210,6 +235,9 @@ export function DataView({
 }
 export function ResultView({ value }: { value: Record<string, unknown> }) {
   const first = [
+    "aproximacion",
+    "convergencia",
+    "motivo_parada",
     "clasificacion",
     "familia",
     "valor",
@@ -262,5 +290,80 @@ export function StepView({ step }: { step: Step }) {
       {step.formula && <Formula tex={step.formula} />}
       <DataView value={step.data} />
     </>
+  );
+}
+
+function NumericalTable({ rows }: { rows: Record<string, unknown>[] }) {
+  const [page, setPage] = useState(0);
+  if (!rows.length)
+    return <p className="help">El criterio se satisfizo antes de iterar.</p>;
+  const candidates = [
+    "iteracion",
+    "subintervalos",
+    "x",
+    "vector",
+    "fx",
+    "norma_residual",
+    "error_aproximado_absoluto",
+    "valor",
+    "estimacion_error_no_garantizada",
+    "cota_garantizada",
+  ];
+  const keys = candidates.filter((k) => rows.some((r) => k in r));
+  const current = Math.min(page, Math.floor((rows.length - 1) / 10));
+  return (
+    <div className="iteration-table">
+      <div
+        className="table-scroll"
+        tabIndex={0}
+        aria-label="Tabla de iteraciones desplazable"
+      >
+        <table>
+          <caption>Iteraciones de la ejecución actual</caption>
+          <thead>
+            <tr>
+              {keys.map((k) => (
+                <th scope="col" key={k}>
+                  {label(k)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.slice(current * 10, current * 10 + 10).map((r, i) => (
+              <tr key={i}>
+                {keys.map((k) => (
+                  <td key={k}>
+                    <DataView value={r[k] ?? null} name={k} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="table-pagination">
+        <button
+          type="button"
+          className="secondary"
+          disabled={current === 0}
+          onClick={() => setPage(current - 1)}
+        >
+          Anterior
+        </button>
+        <span>
+          Filas {current * 10 + 1}–{Math.min(current * 10 + 10, rows.length)} de{" "}
+          {rows.length}
+        </span>
+        <button
+          type="button"
+          className="secondary"
+          disabled={(current + 1) * 10 >= rows.length}
+          onClick={() => setPage(current + 1)}
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
   );
 }

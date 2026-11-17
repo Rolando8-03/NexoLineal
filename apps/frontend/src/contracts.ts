@@ -12,7 +12,9 @@ export interface FieldSpec {
     | "index"
     | "cuts"
     | "select"
-    | "boolean";
+    | "boolean"
+    | "text"
+    | "set";
   default: string;
   required: boolean;
   choices?: string[];
