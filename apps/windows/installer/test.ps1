@@ -42,4 +42,9 @@ if ($reports.approved -contains $false) { throw 'Autoprueba instalada rechazada'
 @{approved=$true;system=[System.Environment]::OSVersion.VersionString;python_on_path=$false;physical_clean_pc=$false;data_retained=$true;webview_missing_branch_tested=$false;notes='Runner Windows con herramientas instaladas; proceso aislado de Python por PATH. No equivale a un PC físico limpio. WebView2 ya presente.'} | ConvertTo-Json | Set-Content -Encoding utf8 evidencia-fase08/windows-instalacion.json
 
 if ($reports.distribution.frozen -contains $false) { throw 'El programa instalado no usa Python incluido' }
-Get-ChildItem evidencia-fase08/*.json | ForEach-Object { Write-Output ('NEXO_DISTRIBUTION_FILE=' + $_.Name); Get-Content $_.FullName -Raw }
+$summary = @{
+ installation=(Get-Content evidencia-fase08/windows-instalacion.json -Raw | ConvertFrom-Json)
+ files=(Get-Content evidencia-fase08/windows-archivos.json -Raw | ConvertFrom-Json)
+ windows=@($reports | ForEach-Object { @{ approved=$_.approved;cases=$_.cases.Count;distribution=$_.distribution;cross_project=$_.cross_project } })
+}
+Write-Output ('NEXO_WINDOWS_DISTRIBUTION_REPORT=' + ($summary | ConvertTo-Json -Depth 10 -Compress))
