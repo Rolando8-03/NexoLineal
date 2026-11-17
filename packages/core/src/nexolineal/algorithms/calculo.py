@@ -126,7 +126,7 @@ def derivar(n):
         if isinstance(n.op, ast.Sub): return f'({du}-{dv})'
         if isinstance(n.op, ast.Mult): return f'({du}*{v}+{u}*{dv})'
         if isinstance(n.op, ast.Div): return f'(({du}*{v}-{u}*{dv})/({v}^2))'
-        if isinstance(n.right, ast.Constant): return f'({v}*({u})^({v}-1)*{du})'
+        if not any(isinstance(item, ast.Name) and item.id == 'x' for item in ast.walk(n.right)): return f'({v}*({u})^({v}-1)*{du})'
         return f'(({u})^({v})*({dv}*ln({u})+({v})*{du}/({u})))'
     u, du = imprimir(n.args[0]), derivar(n.args[0])
     fun = n.func.id
@@ -197,12 +197,12 @@ def integrar(n):
             return f'({integrar(n.left)}){("+" if isinstance(n.op, ast.Add) else "-")}({integrar(n.right)})'
         if isinstance(n.op, ast.Mult):
             for a, b in ((n.left, n.right), (n.right, n.left)):
-                if 'x' in imprimir(a): continue
-                try: return f'({numero(evaluar(a))})*({integrar(b)})'
+                if any(isinstance(item, ast.Name) and item.id == 'x' for item in ast.walk(a)): continue
+                try: return f'({imprimir(a)})*({integrar(b)})'
                 except (ValueError, ZeroDivisionError): pass
         if isinstance(n.op, ast.Div):
             try:
-                if 'x' not in imprimir(n.right): return f'({integrar(n.left)})/({numero(evaluar(n.right))})'
+                if not any(isinstance(item, ast.Name) and item.id == 'x' for item in ast.walk(n.right)): return f'({integrar(n.left)})/({imprimir(n.right)})'
             except (ValueError, ZeroDivisionError): pass
             if isinstance(n.left, ast.Constant) and n.left.value == 1 and imprimir(n.right) == 'x': return 'ln(abs(x))'
     if isinstance(n, ast.Call) and n.func.id in ('sin', 'cos', 'exp'):
@@ -262,7 +262,7 @@ def ejecutar_calculo(datos):
             expresion = "+".join(terminos) if terminos else "0"
         except ValueError:
             expresion = derivar(n)
-        resultado = {"expresion": expresion, "tipo": "derivada"}
+        resultado = {"expresion": expresion, "tipo": "derivada", "exactitud":"exacta", "precision_bits":None}
         if str(datos.get("punto", "")).strip():
             x = evaluar(analizar(datos["punto"]))
             value = evaluar(analizar(expresion, variable=True), x=x)
