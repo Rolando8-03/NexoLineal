@@ -1,3 +1,4 @@
+import { PwaPanel } from "./distribution/PwaPanel";
 import { LearningLibrary } from "./exploration/Learning";
 import type { Theorem, Application } from "./exploration/types";
 import {
@@ -384,6 +385,42 @@ export function App() {
     document.addEventListener("keydown", key);
     return () => document.removeEventListener("keydown", key);
   }, [menu, query, blocked]);
+  useEffect(() => {
+    if (!hydrated || blocked) return;
+    const flush = () => {
+      if (document.visibilityState === "hidden") void persist();
+    };
+    document.addEventListener("visibilitychange", flush);
+    return () => document.removeEventListener("visibilitychange", flush);
+  }, [hydrated, blocked]);
+  useEffect(() => {
+    if (import.meta.env.VITE_TARGET !== "android") return;
+    const back = () => {
+      const dialog = document.querySelector<HTMLDialogElement>("dialog[open]");
+      if (dialog) {
+        dialog.dispatchEvent(new Event("cancel", { cancelable: true }));
+        return;
+      }
+      if (menu) {
+        setMenu(false);
+        return;
+      }
+      if (route !== "inicio") {
+        navigate("inicio");
+        return;
+      }
+      // El guardado se solicita antes de mandar la actividad a segundo plano.
+      void (async () => {
+        if (hydrated && !blocked) await persist();
+        const { registerPlugin } = await import("@capacitor/core");
+        await registerPlugin<{ background(): Promise<void> }>(
+          "NexoEngine",
+        ).background();
+      })();
+    };
+    document.addEventListener("nexo-back", back);
+    return () => document.removeEventListener("nexo-back", back);
+  }, [menu, route, hydrated, blocked]);
   useLayoutEffect(() => {
     if (navFocusRequested.current) {
       navFocusRequested.current = false;
@@ -720,7 +757,7 @@ export function App() {
         <div className="sidebar-footer">
           <span className="local-dot" />
           Tu trabajo se guarda en este dispositivo.
-          <small>NexoLineal · 0.7.0</small>
+          <small>NexoLineal · 0.8.0</small>
         </div>
       </aside>
       {menu && (
@@ -1180,6 +1217,7 @@ export function App() {
             </>
           )}
         </main>
+        <PwaPanel busy={busy} />
         <footer className="app-footer">
           <span>Hecho para explorar, entender y comprobar.</span>
           <span>Un motor Python · Dos formas de aprender</span>

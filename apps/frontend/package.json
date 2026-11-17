@@ -1,11 +1,11 @@
 {
   "name": "nexolineal-frontend",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node scripts/prepare-runtime.mjs && vite --host 127.0.0.1",
-    "build": "node scripts/prepare-runtime.mjs && tsc --noEmit && vite build",
+    "build": "node scripts/prepare-runtime.mjs && tsc --noEmit && vite build && node scripts/prepare-distribution.mjs",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {

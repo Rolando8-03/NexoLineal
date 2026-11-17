@@ -1930,3 +1930,29 @@ dialog:has(.graph-content) {
     width: 100%;
   }
 }
+
+.offline-panel {
+  margin: 0 2rem 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.offline-panel p {
+  margin: 0;
+}
+.offline-panel .help {
+  width: 100%;
+}
+@media (max-width: 600px) {
+  .offline-panel {
+    margin: 0 0.75rem 1rem;
+  }
+  .offline-panel button {
+    width: 100%;
+  }
+}

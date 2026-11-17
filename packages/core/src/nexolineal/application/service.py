@@ -144,7 +144,7 @@ def execute(data, *, is_cancelled=None, on_progress=None):
                     "theorems": THEOREMS,
                     "applications": APPLICATIONS,
                 },
-                metadata={"index_base": 0, "catalog_version": "0.7.0"},
+                metadata={"index_base": 0, "catalog_version": "0.8.0"},
             ).to_dict()
         if operation in NUMERICAL_IDS:
             result = execute_numerical(problem, Context(checkpoint, on_progress))
