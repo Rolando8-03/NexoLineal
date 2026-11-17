@@ -1,20 +1,22 @@
 # NexoLineal
 
-Calculadora educativa con motor matemático en Python e interfaz compartida para web, Windows y Android. La versión 0.7.0 conecta gráficas, procedimientos, tablas, teoría y aplicaciones. Conserva menú principal, presentaciones Serio y Explorador, objetos reutilizables, historial y proyectos portables, con el mismo núcleo Python y contrato JSON 1.0.
+Calculadora educativa con motor matemático en Python e interfaz compartida para web, Windows y Android. La versión 0.8.0 incorpora descarga web offline, instalador Windows y almacenamiento IndexedDB/SQLite, conservando gráficas, procedimientos, tablas, teoría y aplicaciones. Conserva menú principal, presentaciones Serio y Explorador, objetos reutilizables, historial y proyectos portables, con el mismo núcleo Python y contrato JSON 1.0.
 
-## Prototipos de los tres destinos
+## Usar NexoLineal
 
 La interfaz compartida ofrece 57 operaciones: álgebra lineal, métodos de raíces, sistemas iterativos, errores, conversiones, conjuntos y cálculo. Incluye sistemas rectangulares, matrices y bloques, determinantes, inversas, LU/PLU, vectores, subespacios, bases, coordenadas y transformaciones. Incluye menú principal, entrada mínima y presentaciones Serio y Explorador. Los recursos del nuevo frontend se empaquetan localmente.
 
 | Destino | Ejecución |
 | --- | --- |
-| Web | Python dentro de un Worker de Pyodide |
-| Windows | Ventana WebView2 y ejecutable gráfico con Python incluido |
-| Android | APK de prueba con Python de Chaquopy y puente Capacitor |
+| Web | Python en Worker, instalación PWA y recarga offline tras descarga completa |
+| Windows | Instalador por usuario, WebView2 y ejecutable gráfico con Python incluido |
+| Android | Release no depurable con Python incluido; firma permanente del propietario pendiente |
 
 [Compilación y artefactos](docs/fase03/compilacion.md) · [Arquitectura](docs/fase03/arquitectura.md) · [Compatibilidad](docs/fase03/compatibilidad.md) · [Cierre de fase 03](docs/fase03/cierre.md)
 
-Las compilaciones y los informes se generan en [Actions](https://github.com/Rolando8-03/NexoLineal/actions/workflows/plataformas.yml). El EXE y el APK debug son prototipos de viabilidad. El instalador Windows y las firmas de distribución se desarrollan en fase 08.
+[Abrir la web](https://rolando8-03.github.io/NexoLineal/) · [Instalación y datos](docs/fase08/instalacion.md) · [Distribuciones y verificaciones](docs/fase08/registro.md)
+
+Las compilaciones e informes se generan en [Distribución fase 08](https://github.com/Rolando8-03/NexoLineal/actions/workflows/distribucion.yml). El instalador Windows se comprueba automáticamente. El APK marcado SOLO-VERIFICACION-CI usa una clave efímera y no es la distribución permanente. La firma del propietario y los ensayos físicos pendientes se detallan en [el registro de fase 08](docs/fase08/registro.md).
 
 ## Preparar la interfaz anterior durante la migración
 
@@ -76,6 +78,7 @@ Los valores racionales se transportan como texto. Una integral polinómica de x�
 | apps/frontend | Interfaz compartida React y adaptadores de ejecución |
 | apps/windows | Ventana nativa y empaquetado gráfico |
 | apps/android | APK con Python incluido y prueba instrumentada |
+| docs/fase08 | Instalación, offline, firma, compatibilidad y evidencias de distribución |
 | docs/fase07 | Escenas, teoría, aplicaciones, documentos y banco importable |
 | docs/fase06 | Menú, modos, accesibilidad, proyectos y evidencias de continuidad |
 | docs/fase05 | Métodos numéricos, precisión, cobertura y evidencias |
@@ -104,7 +107,7 @@ python .github/scripts/generar_catalogo.py --check
 
 SymPy se usa como referencia independiente en pruebas. Los algoritmos de producción conservan sus implementaciones explícitas en Python.
 
-El workflow de plataformas compara 136 contratos completos y la integridad de los 48 archivos Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline. Además exige 54 comprobaciones del formato/validación y puentes nativos, 19 recorridos de experiencia, siete análisis axe sin violaciones en las escenas probadas y reapertura de proyectos en los tres destinos. La fase 07 añade 23 comprobaciones de conversión/exportación, 11 recorridos nuevos, cinco escenas axe y 8083 comprobaciones geométricas independientes. La batería Python suma 160 pruebas unittest; la interfaz anterior conserva 11 recorridos.
+El workflow de plataformas compara 136 contratos completos y la integridad de los 48 archivos Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline. Además exige 54 comprobaciones del formato/validación y puentes nativos, 19 recorridos de experiencia, siete análisis axe sin violaciones en las escenas probadas y reapertura de proyectos en los tres destinos. La fase 07 añade 23 comprobaciones de conversión/exportación, 11 recorridos nuevos, cinco escenas axe y 8083 comprobaciones geométricas independientes. La fase 08 añade diez pruebas SQLite y nueve recorridos de distribución web. La batería Python suma 170 pruebas unittest; la interfaz anterior conserva 11 recorridos.
 
 El workflow de verificación ejecuta los casos originales, las regresiones nuevas, 288 sistemas independientes, una auditoría adicional de 2376 solicitudes con 12633 comprobaciones, 339 solicitudes nuevas con 6473 comprobaciones numéricas y recorridos gráficos en Chromium. Los informes y capturas se conservan como nexolineal-evidencias en Actions.
 
