@@ -5,13 +5,12 @@ from ..domain.models import (
 from ..parsing.numbers import parse_matrix
 from ..algorithms.matrices import multiplicar_con_pasos
 from ..algorithms.calculo import ejecutar_calculo
+from .catalog import CATALOG
+from .linear import execute_linear
+from ..algorithms.linear.context import Context, LinearFailure
 
-OPERATIONS = {
-    "matrices.producto": {"required": ("A", "B"), "optional": ()},
-    "calculadora.evaluar": {"required": ("expresion",), "optional": ("ans", "grados")},
-    "calculo.definida": {"required": ("expresion", "inferior", "superior"), "optional": ()},
-    "calculo.derivar": {"required": ("expresion",), "optional": ("punto",)},
-}
+OPERATIONS = {key: {"required":spec.required,"optional":spec.optional} for key,spec in CATALOG.items()}
+OPERATIONS["catalogo.operaciones"] = {"required":(),"optional":()}
 
 def _validate(problem):
     if problem.operation_id not in OPERATIONS:
@@ -21,11 +20,17 @@ def _validate(problem):
     unknown = set(problem.input) - set(spec["required"]) - set(spec["optional"])
     if missing or unknown:
         raise InputError("Datos faltantes o desconocidos para la operación.")
-    if problem.operation_id != "matrices.producto":
+    if problem.operation_id in ("calculadora.evaluar", "calculo.definida", "calculo.derivar"):
         if not isinstance(problem.input["expresion"], str):
             raise InputError("La expresión debe ser texto.")
         if "grados" in problem.input and type(problem.input["grados"]) is not bool:
             raise InputError("grados debe ser booleano.")
+    spec = CATALOG.get(problem.operation_id)
+    if spec is not None:
+        for field in spec.fields:
+            if field["kind"] == "select" and field["name"] in problem.input:
+                if problem.input[field["name"]] not in field["choices"]:
+                    raise InputError("Valor no permitido para " + field["name"] + ".")
     if set(problem.options) - {"include_steps"}:
         raise InputError("Opción no reconocida.")
     if "include_steps" in problem.options and type(problem.options["include_steps"]) is not bool:
@@ -64,6 +69,15 @@ def execute(data, *, is_cancelled=None, on_progress=None):
         operation, inputs = problem.operation_id, problem.input
         _validate(problem)
         checkpoint()
+        if operation == "catalogo.operaciones":
+            return CalculationResult(operation,inputs,"ok",{"operations":[spec.to_dict() for spec in CATALOG.values()]},
+                                     metadata={"index_base":0,"catalog_version":"0.4.0"}).to_dict()
+        if operation not in ("matrices.producto","calculadora.evaluar","calculo.definida","calculo.derivar"):
+            result = execute_linear(problem, Context(checkpoint, on_progress))
+            checkpoint()
+            response = result.to_dict()
+            checkpoint()
+            return response
         if operation == "matrices.producto":
             result = _product(problem, checkpoint, on_progress)
             checkpoint()
@@ -84,6 +98,14 @@ def execute(data, *, is_cancelled=None, on_progress=None):
             metadata={"exact": exact, "number_format": "text",
                       "precision_bits": result.get("precision_bits"), "index_base": 0},
         ).to_dict()
+    except LinearFailure as error:
+        return CalculationResult(operation,inputs,error.status,error.details,
+                                 metadata={"index_base":0},error={"code":error.status,"message":str(error)}).to_dict()
+    except ArithmeticError as error:
+        # Las excepciones aritméticas de dominio se mantienen en su categoría.
+        if isinstance(error, (ZeroDivisionError, OverflowError)):
+            return _error(operation,inputs,"domain_error","domain",str(error))
+        return _error(operation,inputs,"internal_error","verification",str(error))
     except CancelledError as error:
         return _error(operation, inputs, "cancelled", "cancelled", str(error))
     except ConvergenceError as error:
