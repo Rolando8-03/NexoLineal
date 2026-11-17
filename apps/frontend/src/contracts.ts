@@ -32,7 +32,7 @@ export interface Problem {
   schema_version: "1.0";
   operation_id: Operation;
   input: Record<string, unknown>;
-  options?: { include_steps?: boolean };
+  options?: { include_steps?: boolean; include_visualization?: boolean };
 }
 export interface Step {
   id: number;

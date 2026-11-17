@@ -1,3 +1,5 @@
+import { LearningLibrary } from "./exploration/Learning";
+import type { Theorem, Application } from "./exploration/types";
 import {
   useEffect,
   useLayoutEffect,
@@ -47,6 +49,8 @@ export function App() {
   const [engine] = useState(createEngine),
     [project, setProject] = useState(emptyProject),
     [operations, setOperations] = useState<OperationSpec[]>([]);
+  const [theorems, setTheorems] = useState<Theorem[]>([]),
+    [applications, setApplications] = useState<Application[]>([]);
   const [startup, setStartup] = useState("engine");
   const [ready, setReady] = useState(false),
     [hydrated, setHydrated] = useState(false),
@@ -195,7 +199,12 @@ export function App() {
     try {
       const vals = p.active.inputs[s.id] || initialValues(s);
       const response = await engine.execute(
-        { schema_version: "1.0", operation_id: s.id, input: payload(s, vals) },
+        {
+          schema_version: "1.0",
+          operation_id: s.id,
+          input: payload(s, vals),
+          options: { include_visualization: true },
+        },
         (n) => {
           if (alive.current) setProgress(n);
         },
@@ -259,6 +268,8 @@ export function App() {
       const ops = response.result.operations as OperationSpec[];
       if (!alive.current) return;
       setOperations(ops);
+      setTheorems((response.result?.theorems || []) as Theorem[]);
+      setApplications((response.result?.applications || []) as Application[]);
       setStartup("load-project");
       let restored = emptyProject();
       try {
@@ -301,6 +312,7 @@ export function App() {
             schema_version: "1.0",
             operation_id: s.id,
             input: payload(s, restored.active.inputs[s.id] || initialValues(s)),
+            options: { include_visualization: true },
           });
           if (alive.current) {
             setResult(r);
@@ -1048,6 +1060,7 @@ export function App() {
               </h1>
             )}
             <WorkspacePanel
+              theorems={theorems}
               operations={operations}
               spec={spec}
               operation={project.active.operation}
@@ -1111,22 +1124,60 @@ export function App() {
             />
           )}
           {route === "biblioteca" && (
-            <LibraryPanel
-              project={project}
-              operations={operations}
-              busy={busy}
-              choose={choose}
-              reuse={(object) => {
-                setModal({ kind: "reuse", object });
-                setModalError("");
-              }}
-              remove={(object) =>
-                update((p) => ({
-                  ...p,
-                  objects: p.objects.filter((o) => o.id !== object),
-                }))
-              }
-            />
+            <>
+              <LibraryPanel
+                project={project}
+                operations={operations}
+                busy={busy}
+                choose={choose}
+                reuse={(object) => {
+                  setModal({ kind: "reuse", object });
+                  setModalError("");
+                }}
+                remove={(object) =>
+                  update((p) => ({
+                    ...p,
+                    objects: p.objects.filter((o) => o.id !== object),
+                  }))
+                }
+              />
+              <LearningLibrary
+                theorems={theorems}
+                applications={applications}
+                busy={busy || !ready}
+                choose={(prefix) => {
+                  const op = operations.find((o) => o.id.startsWith(prefix));
+                  if (op) choose(op.id);
+                }}
+                load={(app) => {
+                  const spec = operations.find(
+                    (o) => o.id === app.problem.operation_id,
+                  );
+                  if (!spec) return;
+                  const values = {
+                    ...initialValues(spec),
+                    ...Object.fromEntries(
+                      Object.entries(app.problem.input).map(([k, v]) => [
+                        k,
+                        String(v),
+                      ]),
+                    ),
+                  };
+                  void repeat(
+                    {
+                      id: id(),
+                      date: new Date().toISOString(),
+                      operation: spec.id,
+                      values,
+                      label: app.title,
+                      status: "ok",
+                      favorite: false,
+                    },
+                    true,
+                  );
+                }}
+              />
+            </>
           )}
         </main>
         <footer className="app-footer">

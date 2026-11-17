@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { IterationSelection } from "./exploration/selection";
+import { useState, useContext, useEffect } from "react";
 import katex from "katex";
 import type { Step } from "./contracts";
 
@@ -14,6 +15,9 @@ export function Formula({ tex }: { tex: string }) {
   return (
     <div
       className="formula"
+      tabIndex={0}
+      role="region"
+      aria-label="Fórmula matemática desplazable"
       dangerouslySetInnerHTML={{
         __html: katex.renderToString(tex, {
           displayMode: true,
@@ -349,6 +353,11 @@ export function StepView({ step }: { step: Step }) {
 
 function NumericalTable({ rows }: { rows: Record<string, unknown>[] }) {
   const [page, setPage] = useState(0);
+  const selection = useContext(IterationSelection);
+  useEffect(() => {
+    if (selection.selected !== null)
+      setPage(Math.floor(selection.selected / 10));
+  }, [selection.selected]);
   if (!rows.length)
     return <p className="help">El criterio se satisfizo antes de iterar.</p>;
   const candidates = [
@@ -376,6 +385,7 @@ function NumericalTable({ rows }: { rows: Record<string, unknown>[] }) {
           <caption>Iteraciones de la ejecución actual</caption>
           <thead>
             <tr>
+              <th scope="col">Explorar</th>
               {keys.map((k) => (
                 <th scope="col" key={k}>
                   {label(k)}
@@ -385,7 +395,21 @@ function NumericalTable({ rows }: { rows: Record<string, unknown>[] }) {
           </thead>
           <tbody>
             {rows.slice(current * 10, current * 10 + 10).map((r, i) => (
-              <tr key={i}>
+              <tr
+                key={i}
+                data-row-index={current * 10 + i}
+                aria-selected={selection.selected === current * 10 + i}
+              >
+                <td>
+                  <button
+                    type="button"
+                    className="text-button select-iteration"
+                    aria-pressed={selection.selected === current * 10 + i}
+                    onClick={() => selection.select(current * 10 + i)}
+                  >
+                    Ver fila {current * 10 + i + 1}
+                  </button>
+                </td>
                 {keys.map((k) => (
                   <td key={k}>
                     <DataView value={r[k] ?? null} name={k} />

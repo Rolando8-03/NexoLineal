@@ -1731,4 +1731,202 @@ option {
 .iteration-table th {
   color: var(--muted);
 }
-@media(max-width:480px){.hero .astro-art{right:0;margin:0}}
+@media (max-width: 480px) {
+  .hero .astro-art {
+    right: 0;
+    margin: 0;
+  }
+}
+
+/* Las escenas matemáticas comparten colores legibles y controles en ambos modos. */
+.graph-panel {
+  margin: 1.5rem 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1rem;
+  min-width: 0;
+}
+.graph-toolbar,
+.frame-controls,
+.document-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.7rem 0;
+}
+.graph-toolbar label,
+.point-inspector label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+.graph-toolbar input[type="range"],
+.point-inspector input {
+  width: 130px;
+  min-width: 0;
+  accent-color: #2367d1;
+}
+.math-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 65vh;
+  border-radius: 12px;
+  background: #fff;
+  color: #182b45;
+}
+.math-graph text {
+  fill: #182b45;
+  font-size: 13px;
+  font-family: system-ui, sans-serif;
+}
+.plot-background {
+  fill: #f6f9fd;
+  stroke: #8d9bb0;
+  stroke-width: 1;
+}
+.plot-axis {
+  stroke: #52677e;
+  stroke-width: 1;
+}
+.graph-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0;
+  font-size: 0.85rem;
+}
+.graph-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow-wrap: anywhere;
+}
+.graph-legend span {
+  width: 16px;
+  height: 4px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.graph-alternative section {
+  margin-top: 0.8rem;
+  overflow-x: auto;
+}
+.point-inspector output {
+  display: block;
+  font-family: monospace;
+  overflow-wrap: anywhere;
+  margin: 0.5rem 0;
+}
+.active-expression {
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+  padding: 0.6rem;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.graph-unavailable {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+.iteration-table tr[aria-selected="true"] {
+  outline: 2px solid #2367d1;
+  outline-offset: -2px;
+}
+.related-theory {
+  margin: 1rem 0;
+}
+.theorem-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+.theorem-card,
+.application-card,
+.model-result {
+  border: 1px solid var(--line);
+  padding: 1rem;
+  border-radius: 14px;
+  min-width: 0;
+}
+.theorem-card summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+.theorem-card p,
+.theorem-card li,
+.application-card p,
+.application-card li {
+  line-height: 1.65;
+}
+.learning-library {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+.application-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+  gap: 1rem;
+}
+.application-card h4 {
+  font-size: 1.2rem;
+  margin: 0.6rem 0;
+}
+.application-card .primary {
+  margin-top: 1rem;
+}
+.application-card dl div,
+.model-result dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.4rem 0;
+  flex-wrap: wrap;
+}
+.application-card dd,
+.model-result dd {
+  margin: 0;
+  font-weight: 700;
+}
+.learning-library a,
+.theorem-card a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.dialog-heading + .graph-content {
+  max-width: 100%;
+}
+dialog:has(.graph-content) {
+  width: min(1200px, 95vw);
+  max-width: 95vw;
+}
+@media (max-width: 600px) {
+  .graph-panel,
+  .learning-library {
+    padding: 0.75rem;
+  }
+  .frame-controls button {
+    flex: 1;
+  }
+  .frame-controls span {
+    width: 100%;
+    text-align: center;
+  }
+  .document-actions button {
+    width: 100%;
+  }
+}

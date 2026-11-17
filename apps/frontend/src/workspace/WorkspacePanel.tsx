@@ -1,3 +1,10 @@
+import { useState } from "react";
+import { TheoryCards, ModelResult } from "../exploration/Learning";
+import { exportPdf, exportCsv } from "../exploration/exports";
+import type { Theorem } from "../exploration/types";
+import { GraphPanel } from "../exploration/GraphPanel";
+import { IterationSelection } from "../exploration/selection";
+import type { Scene } from "../exploration/types";
 import type { FormEvent } from "react";
 import type { CalculationResult, OperationSpec } from "../contracts";
 import { FormFields } from "../FormFields";
@@ -10,6 +17,7 @@ export interface ResultObject {
   ambient?: number;
 }
 interface Props {
+  theorems: Theorem[];
   operations: OperationSpec[];
   spec?: OperationSpec;
   operation: string;
@@ -34,6 +42,27 @@ interface Props {
   reuse: (field: string, object: SavedObject) => void;
 }
 export function WorkspacePanel(p: Props) {
+  const [exporting, setExporting] = useState(false),
+    [exportNotice, setExportNotice] = useState("");
+  async function document(kind: "pdf" | "csv") {
+    if (!p.result || exporting) return;
+    setExporting(true);
+    setExportNotice("");
+    try {
+      const saved = await (kind === "pdf"
+        ? exportPdf(p.result, p.spec?.title || p.operation)
+        : exportCsv(p.result));
+      setExportNotice(
+        saved ? "Documento exportado." : "Exportación cancelada.",
+      );
+    } catch (e) {
+      setExportNotice((e as Error).message);
+    } finally {
+      setExporting(false);
+    }
+  }
+  const scene = p.result?.metadata.visualization as Scene | undefined;
+  const frame = scene?.frames?.find((f) => f.step === p.active.step);
   const categories = [...new Set(p.operations.map((o) => o.category))];
   return (
     <div className="workspace">
@@ -200,7 +229,26 @@ export function WorkspacePanel(p: Props) {
         ))}
         {p.result?.result && (
           <>
-            <ResultView value={p.result.result} compact />
+            <IterationSelection.Provider
+              value={{
+                selected: frame?.row ?? null,
+                select: (row) => {
+                  const target = scene?.frames?.find((f) => f.row === row);
+                  if (target?.step != null)
+                    p.setActive({ step: target.step, stepsOpen: true });
+                },
+              }}
+            >
+              <ResultView value={p.result.result} compact />
+            </IterationSelection.Provider>
+            {scene && (
+              <GraphPanel
+                key={p.result.operation_id + JSON.stringify(p.result.input)}
+                scene={scene}
+                step={p.active.step}
+                select={(step) => p.setActive({ step, stepsOpen: true })}
+              />
+            )}
             {p.result.metadata.exact === true && (
               <p className="accuracy">Resultado exacto</p>
             )}
@@ -216,6 +264,48 @@ export function WorkspacePanel(p: Props) {
               p.result.verification.description || "Comprobación correcta",
             )}
           </p>
+        )}
+        {p.result && (
+          <div className="document-actions">
+            <button
+              type="button"
+              id="exportar-pdf"
+              className="secondary"
+              disabled={exporting}
+              onClick={() => void document("pdf")}
+            >
+              {exporting
+                ? "Preparando documento…"
+                : "Exportar procedimiento PDF"}
+            </button>
+            {Array.isArray(p.result.result?.tabla) &&
+              p.result.result.tabla.length > 0 && (
+                <button
+                  type="button"
+                  id="exportar-csv"
+                  className="secondary"
+                  disabled={exporting}
+                  onClick={() => void document("csv")}
+                >
+                  Exportar tabla CSV
+                </button>
+              )}
+            <p role="status">{exportNotice}</p>
+          </div>
+        )}
+        {p.result?.metadata.application != null && (
+          <ModelResult
+            value={p.result.metadata.application as Record<string, unknown>}
+          />
+        )}
+        {p.result && (
+          <details className="related-theory">
+            <summary>Teoría relacionada e hipótesis</summary>
+            <TheoryCards
+              theorems={p.theorems}
+              operation={p.result.operation_id}
+            />
+          </details>
         )}
         {!!p.result?.steps.length && (
           <details

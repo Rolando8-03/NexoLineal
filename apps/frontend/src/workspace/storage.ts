@@ -3,6 +3,10 @@ import { MAX_BYTES } from "./project";
 const target = import.meta.env.VITE_TARGET || "web";
 const KEY = "nexolineal.project.v1";
 interface NativeFiles {
+  export_document(data: {
+    kind: string;
+    content: string;
+  }): Promise<{ cancelled?: boolean }>;
   load_state(): Promise<{ content: string | null }>;
   save_state(data: { content: string }): Promise<unknown>;
   export_project(data: { content: string }): Promise<{ cancelled?: boolean }>;
@@ -12,6 +16,7 @@ interface NativeFiles {
 // Devolverlo desde async lo convertiría en un thenable y dejaría la carga pendiente.
 function bindFiles(api: NativeFiles): NativeFiles {
   return {
+    export_document: (data) => api.export_document(data),
     load_state: () => api.load_state(),
     save_state: (data) => api.save_state(data),
     export_project: (data) => api.export_project(data),
@@ -74,4 +79,36 @@ export async function importNativeFile(): Promise<string | null> {
 }
 export function isWeb() {
   return target === "web";
+}
+
+/** Un único formato binario se guarda con el selector propio de cada destino. */
+export async function saveDocument(
+  bytes: Uint8Array,
+  kind: "pdf" | "csv",
+): Promise<boolean> {
+  if (bytes.length > 16 * 1024 * 1024)
+    throw new Error(
+      "El documento supera 16 MiB; exportá el resultado JSON o reducí el procedimiento.",
+    );
+  const name =
+    kind === "pdf" ? "NexoLineal-procedimiento.pdf" : "NexoLineal-tabla.csv";
+  if (target !== "web") {
+    let content = "";
+    for (let i = 0; i < bytes.length; i += 32768)
+      content += String.fromCharCode(...bytes.subarray(i, i + 32768));
+    return !(
+      await (await native()).export_document({ kind, content: btoa(content) })
+    ).cancelled;
+  }
+  const url = URL.createObjectURL(
+    new Blob([bytes as BlobPart], {
+      type: kind === "pdf" ? "application/pdf" : "text/csv;charset=utf-8",
+    }),
+  );
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return true;
 }
