@@ -59,6 +59,45 @@ def run(window):
             window,
             "document.querySelector('#calcular') && !document.querySelector('#calcular').disabled",
         )
+        report["distribution"] = {
+            "frozen": bool(getattr(sys, "frozen", False)),
+            "ready_after_entrypoint_ms": (
+                time.perf_counter()
+                - float(os.environ.get("NEXO_PROCESS_START", time.perf_counter()))
+            )
+            * 1000,
+            "note": "El tiempo comienza después de la extracción de PyInstaller; no es arranque completo del proceso.",
+        }
+        if sys.platform == "win32":
+            import ctypes
+            from ctypes import wintypes
+
+            class Memory(ctypes.Structure):
+                _fields_ = [
+                    ("cb", wintypes.DWORD),
+                    ("PageFaultCount", wintypes.DWORD),
+                ] + [
+                    (name, ctypes.c_size_t)
+                    for name in (
+                        "PeakWorkingSetSize",
+                        "WorkingSetSize",
+                        "QuotaPeakPagedPoolUsage",
+                        "QuotaPagedPoolUsage",
+                        "QuotaPeakNonPagedPoolUsage",
+                        "QuotaNonPagedPoolUsage",
+                        "PagefileUsage",
+                        "PeakPagefileUsage",
+                    )
+                ]
+
+            memory = Memory()
+            memory.cb = ctypes.sizeof(memory)
+            if ctypes.windll.psapi.GetProcessMemoryInfo(
+                ctypes.windll.kernel32.GetCurrentProcess(),
+                ctypes.byref(memory),
+                memory.cb,
+            ):
+                report["distribution"]["working_set_bytes"] = memory.WorkingSetSize
         if "--restore-test" in sys.argv:
             wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
             assert (
