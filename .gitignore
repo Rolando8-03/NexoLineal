@@ -19,3 +19,4 @@ apps/android/local.properties
 apps/android/app/src/main/assets/
 apps/android/app/src/androidTest/assets/
 *.spec
+evidencia-fase04/

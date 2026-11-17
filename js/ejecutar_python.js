@@ -70,6 +70,16 @@ async function inicializarPyodide() {
   try {
     if (texto) texto.classList.remove("text-rose-300");
 
+    // El mismo manifiesto incluye los módulos nuevos y los adaptadores docentes.
+    const manifest = await fetch("packages/core/python-files.json", { cache: "no-store" });
+    if (!manifest.ok) throw new Error("No se encontró el manifiesto del núcleo Python.");
+    const coreFiles = await manifest.json();
+    if (!Array.isArray(coreFiles) || !coreFiles.every(path =>
+      typeof path === "string" && path.startsWith("packages/core/src/nexolineal/") &&
+      path.endsWith(".py") && !path.includes(".."))) {
+      throw new Error("El manifiesto del núcleo no es válido.");
+    }
+    const archivos = Array.from(new Set([...PYTHON_FILES, ...coreFiles]));
     progreso("Cargando Pyodide…", 15);
     pyodide = await loadPyodide();
 
@@ -80,10 +90,10 @@ async function inicializarPyodide() {
       carpetaBase = carpetaBase.slice(0, -1);
     }
 
-    for (let i = 0; i < PYTHON_FILES.length; i++) {
-      const ruta = PYTHON_FILES[i];
+    for (let i = 0; i < archivos.length; i++) {
+      const ruta = archivos[i];
       const porcentaje =
-        25 + Math.round(((i + 1) / PYTHON_FILES.length) * 55);
+        25 + Math.round(((i + 1) / archivos.length) * 55);
 
       progreso(`Leyendo ${ruta}…`, porcentaje);
 
