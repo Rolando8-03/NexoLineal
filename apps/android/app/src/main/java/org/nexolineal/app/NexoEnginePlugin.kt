@@ -152,6 +152,12 @@ class NexoEnginePlugin : Plugin() {
         try {
             documentBytes(call)
             val pdf = call.getString("kind") == "pdf"
+            // Destino de evidencia solo para APK debug iniciado explícitamente por instrumentación.
+            if ((context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0 && activity.intent.getBooleanExtra("nexoExportSelfTest", false)) {
+                File(context.filesDir, if (pdf) "NexoLineal-procedimiento.pdf" else "NexoLineal-tabla.csv").writeBytes(documentBytes(call))
+                call.resolve(JSObject().put("cancelled", false))
+                return
+            }
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE)
                 .setType(if (pdf) "application/pdf" else "text/csv")
                 .putExtra(Intent.EXTRA_TITLE, if (pdf) "NexoLineal-procedimiento.pdf" else "NexoLineal-tabla.csv")

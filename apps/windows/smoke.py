@@ -194,6 +194,93 @@ def run(window):
         window.evaluate_js(
             "(()=>{const e=document.querySelector('#paso');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,'2');e.dispatchEvent(new Event('change',{bubbles:true}));})();"
         )
+        wait(
+            window, "document.querySelector('.graph-content').dataset.frameRow === '2'"
+        )
+        assert (
+            window.evaluate_js(
+                "document.querySelector('tr[aria-selected=true]').dataset.rowIndex"
+            )
+            == "2"
+        )
+        window.evaluate_js(
+            "document.querySelector('#ampliar-grafica').focus();document.querySelector('#ampliar-grafica').click()"
+        )
+        wait(window, "!!document.querySelector('dialog[open]')")
+        window.evaluate_js(
+            "document.querySelector('dialog .dialog-heading button').click()"
+        )
+        wait(window, "document.activeElement.id === 'ampliar-grafica'")
+        report["cases"].append(
+            {"name": "geometría, fila, paso y ampliación sincronizados", "passed": True}
+        )
+        document_dir = output.parent / (output.stem + "-documentos")
+        os.environ["NEXO_DOCUMENT_DIR"] = str(document_dir)
+        for kind, filename in [
+            ("csv", "NexoLineal-tabla.csv"),
+            ("pdf", "NexoLineal-procedimiento.pdf"),
+        ]:
+            destination = document_dir / filename
+            window.evaluate_js(
+                "document.querySelector('#exportar-" + kind + "').click()"
+            )
+            end = time.monotonic() + 45
+            while time.monotonic() < end:
+                if destination.exists():
+                    break
+                time.sleep(0.1)
+            else:
+                raise AssertionError("Falta exportación " + kind)
+            wait(window, "!document.querySelector('#exportar-pdf').disabled")
+        import csv
+
+        with (document_dir / "NexoLineal-tabla.csv").open(
+            encoding="utf-8-sig", newline=""
+        ) as document:
+            csv_rows = list(csv.DictReader(document))
+        assert (
+            csv_rows and csv_rows[0]["iteracion"] == "1" and "residual" in csv_rows[0]
+        )
+        from nexolineal.application.catalog import CATALOG
+
+        fields = CATALOG["raices.biseccion"].fields
+        ids = {"expresion": "expresion", "inferior": "inferior", "superior": "superior"}
+        data = {
+            field["name"]: window.evaluate_js(
+                "document.getElementById("
+                + json.dumps(ids.get(field["name"], "dato-" + field["name"]))
+                + ").value"
+            )
+            for field in fields
+        }
+        data = {key: value for key, value in data.items() if value != ""}
+        expected_rows = execute(
+            {"schema_version": "1.0", "operation_id": "raices.biseccion", "input": data}
+        )["result"]["tabla"]
+        assert len(csv_rows) == len(expected_rows)
+        for expected, actual in zip(expected_rows, csv_rows):
+            assert all(
+                actual[key] == ("" if value is None else str(value))
+                for key, value in expected.items()
+            )
+
+        assert (
+            (document_dir / "NexoLineal-procedimiento.pdf")
+            .read_bytes()
+            .startswith(b"%PDF-")
+        )
+        report["exports"] = {
+            "pdf": True,
+            "csv": True,
+            "csv_rows": len(csv_rows),
+            "test_destination": True,
+        }
+        report["cases"].append(
+            {
+                "name": "PDF y CSV producidos por la interfaz y guardados por el puente",
+                "passed": True,
+            }
+        )
         window.evaluate_js(
             "document.querySelector('#expresion').closest('.input-field').querySelector('.save-input').click()"
         )

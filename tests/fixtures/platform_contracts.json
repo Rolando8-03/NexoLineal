@@ -1291,5 +1291,250 @@
       "expresion": "1e100*(x-1)+1",
       "inicial": "1"
     }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 1;1 -1",
+      "b": "3 1"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 1;2 2",
+      "b": "1 3"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 2;2 4",
+      "b": "3 6"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "0 0",
+      "b": "0"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 1 0;0 1 1",
+      "b": "2 3"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 1 1;1 -1 0;0 1 -1",
+      "b": "6 0 0"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.proyeccion",
+    "input": {
+      "u": "2 3",
+      "v": "1 0"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.proyeccion",
+    "input": {
+      "u": "2 3 5",
+      "v": "1 2 0"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.proyeccion",
+    "input": {
+      "u": "2 3",
+      "v": "0 0"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "transformaciones.analizar",
+    "input": {
+      "A": "1 2;0 -1"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.biseccion",
+    "input": {
+      "expresion": "x^2-2",
+      "inferior": "1",
+      "superior": "2"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.falsa_posicion",
+    "input": {
+      "expresion": "x^2-2",
+      "inferior": "1",
+      "superior": "2"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.newton",
+    "input": {
+      "expresion": "x^2-2",
+      "inicial": "2"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.secante",
+    "input": {
+      "expresion": "x^2-2",
+      "anterior": "1",
+      "inicial": "2"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "iterativos.jacobi",
+    "input": {
+      "A": "4 1;1 3",
+      "b": "1 2"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "iterativos.gauss_seidel",
+    "input": {
+      "A": "4 1;1 3",
+      "b": "1 2"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "raices.newton",
+    "input": {
+      "expresion": "1/x",
+      "inicial": "1",
+      "max_iteraciones": "3"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 1;1 -1",
+      "b": "30 10"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "1 0;0 2",
+      "b": "4 6"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "4/5 -1/10;-1/5 7/10",
+      "b": "70 30"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "sistemas.resolver",
+    "input": {
+      "A": "2 1;1 2",
+      "b": "40 50"
+    },
+    "options": {
+      "include_visualization": true
+    }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "matrices.producto",
+    "input": {
+      "A": "4/5 1/10;1/5 9/10",
+      "B": "200;100"
+    },
+    "options": {
+      "include_visualization": true
+    }
   }
 ]

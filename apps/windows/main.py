@@ -56,6 +56,15 @@ class NativeAPI:
     def export_document(self, data):
         kind, content = document_payload(data)
         name, filter = FORMATS[kind]
+        # Solo el modo explícito de autoprueba evita el diálogo y guarda en la evidencia.
+        test_dir = (
+            os.environ.get("NEXO_DOCUMENT_DIR") if "--self-test" in sys.argv else None
+        )
+        if test_dir:
+            destination = Path(test_dir) / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            save_document(destination, content)
+            return {"cancelled": False}
         paths = self._window.create_file_dialog(
             webview.FileDialog.SAVE, save_filename=name, file_types=(filter,)
         )

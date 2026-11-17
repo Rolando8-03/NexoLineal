@@ -144,7 +144,7 @@ async function axe(label) {
     const inventory = await page
       .locator("#operacion option")
       .evaluateAll((els) => els.map((e) => e.value));
-    assert.equal(inventory.length, 56);
+    assert.equal(inventory.length, 57);
     for (const area of [
       "Sistemas",
       "Matrices",
@@ -162,7 +162,7 @@ async function axe(label) {
     assert.ok(await page.locator("#project-name").isVisible());
     await navigate("Biblioteca y ayuda");
     assert.ok(await page.locator("#buscar-objetos").isVisible());
-    pass("10 destinos reales y catálogo de 56 operaciones");
+    pass("10 destinos reales y catálogo de 57 operaciones");
     await page.keyboard.press("Control+k");
     assert.equal(
       await page
@@ -310,7 +310,7 @@ async function axe(label) {
         await axe(mode + "-" + theme);
       }
     pass(
-      "Paridad de 56 operaciones, resultado y paso en cuatro combinaciones de modo y tema",
+      "Paridad de 57 operaciones, resultado y paso en cuatro combinaciones de modo y tema",
     );
     await navigate("Historial y proyectos");
     await page.locator("#project-name").fill("Álgebra portátil");

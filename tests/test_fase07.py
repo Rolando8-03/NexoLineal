@@ -238,5 +238,74 @@ class GeometryTests(unittest.TestCase):
             )
 
 
+class DocumentStorageTests(unittest.TestCase):
+    def test_pdf_binary_and_csv_utf8_are_validated(self):
+        import base64
+        from apps.windows.documents import document_payload
+
+        for kind, value in [
+            ("pdf", b"%PDF-1.7\n%%EOF"),
+            ("csv", '\ufeff"valor"\r\n"1/3"'.encode()),
+        ]:
+            self.assertEqual(
+                document_payload(
+                    {"kind": kind, "content": base64.b64encode(value).decode()}
+                ),
+                (kind, value),
+            )
+
+    def test_unknown_mime_or_bad_base64_are_rejected(self):
+        from apps.windows.documents import document_payload
+
+        for value in [
+            {"kind": "exe", "content": "eA=="},
+            {"kind": "pdf", "content": "%%%%"},
+            {"kind": "pdf", "content": "eA=="},
+            {"kind": "csv", "content": "/w=="},
+        ]:
+            with self.assertRaises(ValueError):
+                document_payload(value)
+
+    def test_document_replaces_atomically_and_preserves_exact_bytes(self):
+        import tempfile
+        from pathlib import Path
+        from apps.windows.documents import save_document
+
+        with tempfile.TemporaryDirectory() as directory:
+            p = Path(directory) / "reporte.pdf"
+            save_document(p, b"%PDF-one")
+            save_document(p, b"%PDF-two")
+            self.assertEqual(p.read_bytes(), b"%PDF-two")
+            self.assertEqual(list(Path(directory).iterdir()), [p])
+
+    def test_failed_replace_preserves_existing_document(self):
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from apps.windows.documents import save_document
+
+        with tempfile.TemporaryDirectory() as directory:
+            p = Path(directory) / "reporte.pdf"
+            p.write_bytes(b"original")
+            with patch(
+                "apps.windows.documents.os.replace", side_effect=OSError("disco")
+            ):
+                with self.assertRaises(OSError):
+                    save_document(p, b"nuevo")
+            self.assertEqual(p.read_bytes(), b"original")
+            self.assertEqual(list(Path(directory).iterdir()), [p])
+
+    def test_size_limit_precedes_base64_allocation(self):
+        from apps.windows.documents import document_payload, MAX_DOCUMENT_BYTES
+
+        with self.assertRaisesRegex(ValueError, "16 MiB"):
+            document_payload(
+                {
+                    "kind": "pdf",
+                    "content": "A" * (((MAX_DOCUMENT_BYTES + 2) // 3 * 4) + 1),
+                }
+            )
+
+
 if __name__ == "__main__":
     unittest.main()

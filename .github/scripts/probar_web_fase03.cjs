@@ -202,6 +202,7 @@ const report = { approved: false, cases: [], errors: [] };
             schema_version: "1.0",
             operation_id: result.operation_id,
             input: result.input,
+            options: { include_visualization: true },
           }),
         );
         const { execFileSync } = require("node:child_process");
