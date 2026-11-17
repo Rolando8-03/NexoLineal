@@ -1,0 +1,162 @@
+name: Distribución fase 08
+on:
+  push:
+    branches: [main, fase-08-distribucion]
+    paths: ['apps/**', 'packages/core/**', 'tests/**', '.github/scripts/*fase08*', '.github/workflows/distribucion.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: distribucion-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  web:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -e packages/core
+      - run: npm ci && npm run build
+        working-directory: apps/frontend
+      - run: |
+          npm install --prefix /tmp/nexo-playwright playwright@1.56.1
+          /tmp/nexo-playwright/node_modules/.bin/playwright install --with-deps chromium
+      - run: node .github/scripts/probar_distribucion_fase08.cjs
+        env: {NODE_PATH: /tmp/nexo-playwright/node_modules}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NexoLineal-0.8.0-Web
+          path: |
+            apps/frontend/dist/
+            evidencia-fase08/
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    env: {PYTHONUTF8: '1'}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -e packages/core -r apps/windows/requirements.txt
+      - run: npm ci && npm run build
+        working-directory: apps/frontend
+        env: {VITE_TARGET: windows}
+      - run: choco install innosetup --yes --no-progress
+      - run: python .github/scripts/casos_plataformas.py
+      - run: ./apps/windows/installer/build.ps1
+        shell: pwsh
+      - run: ./apps/windows/installer/test.ps1
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NexoLineal-0.8.0-Windows
+          path: |
+            dist/NexoLineal.exe
+            dist/NexoLineal-*-Setup.exe
+            evidencia-fase08/
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      NEXO_KEYSTORE: /tmp/nexolineal-release.jks
+      NEXO_KEY_ALIAS: ${{ secrets.NEXO_KEY_ALIAS }}
+      NEXO_STORE_PASSWORD: ${{ secrets.NEXO_STORE_PASSWORD }}
+      NEXO_KEY_PASSWORD: ${{ secrets.NEXO_KEY_PASSWORD }}
+      NEXO_TEST_RELEASE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21'}
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Preparar firma sin exponer secretos
+        id: signature
+        env:
+          OWNER_KEY: ${{ secrets.NEXO_KEYSTORE_BASE64 }}
+        shell: bash
+        run: |
+          mkdir -p evidencia-fase08
+          if [[ -n "$OWNER_KEY" && -n "$NEXO_KEY_ALIAS" && -n "$NEXO_STORE_PASSWORD" && -n "$NEXO_KEY_PASSWORD" ]]; then
+            printf '%s' "$OWNER_KEY" | base64 --decode > "$NEXO_KEYSTORE"
+            echo 'owner=true' >> "$GITHUB_OUTPUT"
+          else
+            # Clave efímera exclusivamente para comprobar el release NO depurable.
+            # Este APK no se publica como versión del propietario.
+            export NEXO_KEY_ALIAS=ci-verification
+            export NEXO_STORE_PASSWORD="$(openssl rand -hex 24)"
+            export NEXO_KEY_PASSWORD="$NEXO_STORE_PASSWORD"
+            echo "::add-mask::$NEXO_STORE_PASSWORD"
+            echo "NEXO_KEY_ALIAS=$NEXO_KEY_ALIAS" >> "$GITHUB_ENV"
+            echo "NEXO_STORE_PASSWORD=$NEXO_STORE_PASSWORD" >> "$GITHUB_ENV"
+            echo "NEXO_KEY_PASSWORD=$NEXO_KEY_PASSWORD" >> "$GITHUB_ENV"
+            keytool -genkeypair -keystore "$NEXO_KEYSTORE" -storepass:env NEXO_STORE_PASSWORD -keypass:env NEXO_KEY_PASSWORD -alias "$NEXO_KEY_ALIAS" -keyalg RSA -keysize 3072 -validity 7 -dname 'CN=NexoLineal CI verification only' -noprompt
+            echo 'owner=false' >> "$GITHUB_OUTPUT"
+          fi
+          chmod 600 "$NEXO_KEYSTORE"
+      - name: Construir release y pruebas
+        run: |
+          python -m pip install -e packages/core
+          python .github/scripts/casos_plataformas.py
+          cd apps/frontend
+          npm ci
+          VITE_TARGET=android npm run build
+          cd ../..
+          python apps/android/prepare.py
+          chmod +x apps/android/gradlew
+          apps/android/gradlew -p apps/android assembleRelease assembleReleaseAndroidTest
+      - name: Habilitar emulador
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Probar release en modo avión
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install apps/android/app/build/outputs/apk/release/app-release.apk
+            adb install -t apps/android/app/build/outputs/apk/androidTest/release/app-release-androidTest.apk
+            adb shell am instrument -w -e class org.nexolineal.app.ReleaseDistributionTest org.nexolineal.app.test/androidx.test.runner.AndroidJUnitRunner > evidencia-fase08/android-instrumentacion.log
+            cat evidencia-fase08/android-instrumentacion.log
+            python .github/scripts/reporte_android_fase08.py
+      - name: Comprobar firma y contenido
+        env:
+          OWNER_SIGNED: ${{ steps.signature.outputs.owner }}
+        run: |
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)"
+          "$APKSIGNER" verify --verbose --print-certs apps/android/app/build/outputs/apk/release/app-release.apk > evidencia-fase08/android-firma.txt
+          python - <<'PY'
+          import json,os,hashlib
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path('apps/android/app/build/outputs/apk/release/app-release.apk')
+          z=ZipFile(p)
+          assert all('lib/'+a+'/libpython3.12.so' in z.namelist() for a in ['arm64-v8a','x86_64'])
+          r={'owner_signed':os.environ['OWNER_SIGNED']=='true','sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size,'min_sdk':24,'version':'0.8.0','physical_phone_tested':False}
+          Path('evidencia-fase08/android-artefacto.json').write_text(json.dumps(r,indent=2))
+          print(json.dumps(r))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NexoLineal-0.8.0-Android-${{ steps.signature.outputs.owner == 'true' && 'Propietario' || 'SOLO-VERIFICACION-CI' }}
+          path: |
+            apps/android/app/build/outputs/apk/release/app-release.apk
+            evidencia-fase08/
+      - name: Eliminar clave del runner
+        if: always()
+        run: rm -f "$NEXO_KEYSTORE"
