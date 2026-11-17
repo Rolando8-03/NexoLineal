@@ -9,6 +9,7 @@ El workflow `Distribución fase 08` compila todos los destinos desde `github.sha
 | Chromium persistente bajo `/NexoLineal/` | Worker Python, manifiesto instalable, descarga íntegra, cierre/reapertura, recarga y cálculo sin red | Navegador Chromium probado; no certifica todos los navegadores ni evita que el sistema borre cachés por falta de espacio |
 | Actualización web fallida/completa | Conserva caché previa si falta un recurso, espera al cierre de pestañas y conserva IndexedDB | No sincroniza cuadernos entre usuarios o navegadores |
 | Migración web | Lee el JSON local anterior, confirma IndexedDB y conserva el original | El usuario debe exportar una copia antes de borrar los datos del sitio |
+| Cinco casos de puente Windows | Métodos presentes antes de inicializar cálculo o archivos, puente parcial, respuesta tardía y error recuperable | Simulación del fallo observado, complementada por reapertura real en WebView2 |
 | Diez pruebas SQLite | Transacción, rollback, concurrencia, reapertura, migración, corrupción y versión desconocida | Pruebas del adaptador Windows; Android se comprueba en instrumentación |
 | Instalador Windows | Instala, abre EXE congelado con PATH sin Python, desinstala, conserva SQLite, reinstala y recupera el trabajo | Runner Windows Server 2022 con herramientas instaladas; pendiente PC físico sin Python y caso de WebView2 inicialmente ausente |
 | APK release no depurable | Python incluido, primer inicio en modo avión, cálculo, reapertura y recreación de Activity, ejercicio de teclado/Atrás | Emulador Android API 35 x86_64; visibilidad del teclado y comportamiento físico pendientes |
@@ -26,6 +27,7 @@ python -B -m unittest discover -s tests -v
 npm ci --prefix apps/frontend
 npm run build --prefix apps/frontend
 # Instalar Playwright 1.56.1 y Chromium, accesibles mediante NODE_PATH.
+node .github/scripts/probar_puente_fase08.cjs
 node .github/scripts/probar_distribucion_fase08.cjs
 python .github/scripts/sellar_distribucion_fase08.py web
 ```
