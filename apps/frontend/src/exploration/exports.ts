@@ -74,6 +74,11 @@ export async function pdfBytes(
   response: CalculationResult,
   title: string,
 ): Promise<Uint8Array> {
+  const lines = procedureLines(response, title);
+  if (lines.reduce((sum, line) => sum + line.length, 0) > 2 * 1024 * 1024)
+    throw new Error(
+      "El texto del procedimiento supera 2 MiB. Exportá el resultado JSON o reducí el ejercicio.",
+    );
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ compress: true, putOnlyUsedFonts: true });
   const font = await fetch(fontUrl);
@@ -98,10 +103,14 @@ export async function pdfBytes(
         : "\\u{" + c.codePointAt(0)!.toString(16) + "}",
     ).join("");
   let y = 18;
-  for (const line of procedureLines(response, title)) {
+  for (const line of lines) {
     const wrapped = doc.splitTextToSize(visible(line), 176) as string[];
     for (const row of wrapped) {
       if (y > 278) {
+        if (doc.getNumberOfPages() >= 300)
+          throw new Error(
+            "El procedimiento supera 300 páginas. Exportá el resultado JSON.",
+          );
         doc.addPage();
         y = 18;
       }

@@ -115,6 +115,13 @@ def execute(data, *, is_cancelled=None, on_progress=None):
             model = contextualize(response)
             if model is not None:
                 response["metadata"]["application"] = model
+                view = response["metadata"]["visualization"]
+                if view.get("kind") == "system":
+                    view["axes"] = [v["name"] for v in model["interpretation"]]
+                    view["units"] = "; ".join(
+                        v["name"] + " [" + v["unit"] + "]"
+                        for v in model["interpretation"]
+                    )
         checkpoint()
         return response
 

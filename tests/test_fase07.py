@@ -186,6 +186,22 @@ class GeometryTests(unittest.TestCase):
                 ],
             )
 
+    def test_stagnated_newton_does_not_invent_a_vertical_tangent(self):
+        r = run(
+            "raices.newton", {"expresion": "1", "derivada": "1e100", "inicial": "1"}
+        )
+        self.assertEqual(r["status"], "stagnated")
+        s = r["metadata"]["visualization"]
+        self.assertEqual(s["kind"], "roots")
+        self.assertFalse(
+            any(
+                item["label"] == "Recta usada por Newton"
+                for frame in s["frames"]
+                for item in frame["series"]
+            )
+        )
+        self.assertTrue(any("vertical ficticia" in note for note in s["notes"]))
+
     def test_no_steps_has_rows_but_no_invented_step_indices(self):
         r = run(
             "raices.biseccion",

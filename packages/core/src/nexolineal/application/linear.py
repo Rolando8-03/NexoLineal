@@ -297,17 +297,36 @@ def execute_linear(problem, ctx):
             result = {"vector": [k * x for x in u]}
             checks = basic_check("La escala conserva cada componente exacta.")
         elif op == "vectores.proyeccion":
-            denominator = sum((x*x for x in v), F(0))
+            denominator = sum((x * x for x in v), F(0))
             if not denominator:
-                raise LinearFailure("not_applicable", "La proyección sobre la recta requiere v no nulo.")
-            coefficient = sum((a*b for a,b in zip(u,v)), F(0))/denominator
-            projected = [coefficient*x for x in v]
-            orthogonal = [a-b for a,b in zip(u,projected)]
-            result = {"proyeccion": projected, "componente_ortogonal": orthogonal,
-                      "coeficiente": coefficient, "formula": r"p=\frac{u\cdot v}{v\cdot v}v"}
-            checks = basic_check("u=p+(u−p) y (u−p)·v=0.",
-                                 [a+b for a,b in zip(projected,orthogonal)] == u
-                                 and sum((a*b for a,b in zip(orthogonal,v)),F(0)) == 0)
+                raise LinearFailure(
+                    "not_applicable", "La proyección sobre la recta requiere v no nulo."
+                )
+            numerator = sum((a * b for a, b in zip(u, v)), F(0))
+            coefficient = numerator / denominator
+            ctx.emit(
+                "coeficiente_proyeccion",
+                "Calcular los productos interiores y su cociente.",
+                {
+                    "u_punto_v": numerator,
+                    "v_punto_v": denominator,
+                    "coeficiente": coefficient,
+                },
+                r"c=(u\cdot v)/(v\cdot v)",
+            )
+            projected = [coefficient * x for x in v]
+            orthogonal = [a - b for a, b in zip(u, projected)]
+            result = {
+                "proyeccion": projected,
+                "componente_ortogonal": orthogonal,
+                "coeficiente": coefficient,
+                "formula": r"p=\frac{u\cdot v}{v\cdot v}v",
+            }
+            checks = basic_check(
+                "u=p+(u−p) y (u−p)·v=0.",
+                [a + b for a, b in zip(projected, orthogonal)] == u
+                and sum((a * b for a, b in zip(orthogonal, v)), F(0)) == 0,
+            )
         elif op == "vectores.producto_punto":
             terms = [a * b for a, b in zip(u, v)]
             result = {"valor": sum(terms, F(0)), "terminos": terms}

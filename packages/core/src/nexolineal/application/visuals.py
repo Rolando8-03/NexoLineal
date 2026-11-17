@@ -395,7 +395,7 @@ def roots_plot(response, ctx):
             geometry.append(
                 series("Punto anterior", [[old, yold]], "points", "tabla.x_anterior")
             )
-            if "derivada_x" in row:
+            if "derivada_x" in row and x != old:
                 geometry.append(
                     series(
                         "Recta usada por Newton",
@@ -404,7 +404,7 @@ def roots_plot(response, ctx):
                         "tabla.derivada_x; si fue suministrada, no se certifica que sea f prima",
                     )
                 )
-            elif "anterior" in row:
+            elif "anterior" in row and x != old:
                 geometry.append(
                     series(
                         "Secante de las semillas",
@@ -429,6 +429,10 @@ def roots_plot(response, ctx):
         "f(x) y geometría se aproximan solo para dibujar; tabla y pasos conservan sus valores.",
         "El muestreo no certifica todas las raíces ni la convergencia.",
     ]
+    if any("x_anterior" in row and F(row["x"]) == F(row["x_anterior"]) for row in rows):
+        notes.append(
+            "La abscisa no cambió a la precisión de trabajo; se omite la recta del método para no dibujar una tangente vertical ficticia."
+        )
     if gaps:
         notes.append(
             f"{gaps} separaciones o muestras omitidas por dominio o límite; no se conectan a través de ellas."
