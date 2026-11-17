@@ -1,3 +1,4 @@
+import { SystemInput, ALL_RESULTS } from "./SystemInput";
 import { useState } from "react";
 import { TheoryCards, ModelResult } from "../exploration/Learning";
 import { exportPdf, exportCsv } from "../exploration/exports";
@@ -61,12 +62,15 @@ export function WorkspacePanel(p: Props) {
       setExporting(false);
     }
   }
+  const isSystem = p.operation === "sistemas.resolver";
+  const [editing, setEditing] = useState(true);
+  const showInput = !isSystem || editing || !p.result;
   const scene = p.result?.metadata.visualization as Scene | undefined;
   const frame = scene?.frames?.find((f) => f.step === p.active.step);
   const categories = [...new Set(p.operations.map((o) => o.category))];
   return (
-    <div className="workspace">
-      <section className="panel input-panel" aria-labelledby="operacion-titulo">
+    <div className={"workspace" + (isSystem ? " system-workspace" : "")}>
+      <section hidden={!showInput} className="panel input-panel" aria-labelledby="operacion-titulo">
         <div className="panel-heading">
           <div>
             <span className="eyebrow">TU PROBLEMA</span>
@@ -85,7 +89,7 @@ export function WorkspacePanel(p: Props) {
         </div>
         <form
           noValidate
-          onSubmit={p.calculate}
+          onSubmit={(e) => { if (isSystem && !(p.values.resultados ?? ALL_RESULTS).trim()) {e.preventDefault(); return;} p.calculate(e); if (isSystem && !Object.keys(p.errors).length) setEditing(false); }}
           onKeyDown={(e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
               e.preventDefault();
@@ -116,7 +120,7 @@ export function WorkspacePanel(p: Props) {
             ))}
           </select>
           {p.spec?.description && <p className="help">{p.spec.description}</p>}
-          {p.spec && (
+          {isSystem ? <SystemInput values={p.values} busy={p.busy} change={p.change} errors={p.errors} /> : p.spec && (
             <FormFields
               spec={p.spec}
               values={p.values}
@@ -132,10 +136,10 @@ export function WorkspacePanel(p: Props) {
             <button
               id="calcular"
               className="primary"
-              disabled={!p.ready || p.busy}
+              disabled={!p.ready || p.busy || (isSystem && !(p.values.resultados ?? ALL_RESULTS).trim())}
               type="submit"
             >
-              {p.busy ? "Calculando…" : "Calcular"}
+              {p.busy ? "Calculando…" : isSystem ? "Resolver" : "Calcular"}
               <span aria-hidden="true"> ↗</span>
             </button>
             {p.busy && (
@@ -184,6 +188,7 @@ export function WorkspacePanel(p: Props) {
             </button>
           )}
         </div>
+        {isSystem && p.result && <button type="button" className="secondary" onClick={() => {setEditing(true); window.document.getElementById("operacion-titulo")?.focus();}}>Editar matriz</button>}
         {p.error && (
           <>
             <p role="alert" className="error">
@@ -239,9 +244,9 @@ export function WorkspacePanel(p: Props) {
                 },
               }}
             >
-              <ResultView value={p.result.result} compact />
+              <ResultView value={p.result.result} compact={!isSystem} />
             </IterationSelection.Provider>
-            {scene && (
+            {scene && !isSystem && (
               <GraphPanel
                 key={p.result.operation_id + JSON.stringify(p.result.input)}
                 scene={scene}
