@@ -35,7 +35,7 @@ class AlgebraContracts(unittest.TestCase):
         examples = json.loads(
             (ROOT / "tests/fixtures/fase04_defaults.json").read_text()
         )
-        self.assertEqual(len(examples),44)
+        self.assertEqual(len(examples),45)
         self.assertTrue({x["operation_id"] for x in examples} <= set(CATALOG))
         for example in examples:
             with self.subTest(operation=example["operation_id"]):

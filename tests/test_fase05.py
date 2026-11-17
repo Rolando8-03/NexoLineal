@@ -36,7 +36,7 @@ class NumericalContracts(unittest.TestCase):
         examples = json.loads(
             (ROOT / "tests/fixtures/fase05_defaults.json").read_text()
         )
-        self.assertEqual(len(examples), 56)
+        self.assertEqual(len(examples), 57)
         self.assertEqual({e["operation_id"] for e in examples}, set(CATALOG))
         for e in examples:
             with self.subTest(operation=e["operation_id"]):

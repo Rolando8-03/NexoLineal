@@ -70,6 +70,7 @@
         "conjuntos.operar",
         "calculo.primitiva",
         "calculo.numerica",
+        "vectores.proyeccion",
         "catalogo.operaciones"
       ]
     },
@@ -81,6 +82,10 @@
       "properties": {
         "include_steps": {
           "type": "boolean"
+        },
+        "include_visualization": {
+          "type": "boolean",
+          "default": false
         }
       },
       "additionalProperties": false
@@ -4574,6 +4579,83 @@
                   {
                     "type": "string",
                     "pattern": "^[+-]?[0-9]+$"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation_id": {
+            "const": "vectores.proyeccion"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "type": "object",
+            "required": [
+              "u",
+              "v"
+            ],
+            "properties": {
+              "u": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "v": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 20,
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        }
+                      ]
+                    }
                   }
                 ]
               }

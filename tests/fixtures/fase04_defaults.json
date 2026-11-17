@@ -345,5 +345,13 @@
     "input": {
       "expresion": "x^2"
     }
+  },
+  {
+    "schema_version": "1.0",
+    "operation_id": "vectores.proyeccion",
+    "input": {
+      "u": "1 2",
+      "v": "3 4"
+    }
   }
 ]

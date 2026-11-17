@@ -31,7 +31,20 @@ class OperationSpec:
         }
 
 
+# La proyección sobre una recta amplía explícitamente la geometría de fase 07.
+_projection = next(
+    item for item in OPERATION_DATA if item["id"] == "vectores.producto_punto"
+)
+VISUAL_DATA = [
+    {
+        **_projection,
+        "id": "vectores.proyeccion",
+        "title": "Proyección ortogonal",
+        "description": "Proyectar u sobre la recta generada por v ≠ 0; comprobar la descomposición ortogonal.",
+    }
+]
+
 CATALOG = {
     item["id"]: OperationSpec(**{**item, "fields": tuple(item["fields"])})
-    for item in OPERATION_DATA + NUMERICAL_DATA
+    for item in OPERATION_DATA + NUMERICAL_DATA + VISUAL_DATA
 }
