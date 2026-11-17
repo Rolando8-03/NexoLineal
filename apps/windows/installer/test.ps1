@@ -21,7 +21,14 @@ Remove-Item Env:PYTHONHOME,Env:PYTHONPATH -ErrorAction SilentlyContinue
 function Test-Installed([string[]]$arguments) {
  $process=Start-Process $exe -ArgumentList $arguments -WorkingDirectory $env:TEMP -PassThru
  if (-not $process.WaitForExit(180000)) { Stop-Process -Id $process.Id -Force; throw 'Inicio instalado excedió 180 s' }
- if ($process.ExitCode -ne 0) { Get-Content "$env:NEXO_EVIDENCE.error.log" -ErrorAction SilentlyContinue; throw 'Falló aplicación instalada' }
+ if ($process.ExitCode -ne 0) {
+  if (Test-Path $env:NEXO_EVIDENCE) {
+   $failure=Get-Content $env:NEXO_EVIDENCE -Raw | ConvertFrom-Json
+   @{ approved=$failure.approved;error=$failure.error;traceback=$failure.traceback;cases_completed=$failure.cases.Count;last_case=$failure.cases[-1].name } | ConvertTo-Json -Depth 5 | Write-Output
+  }
+  Get-Content "$env:NEXO_EVIDENCE.error.log" -ErrorAction SilentlyContinue
+  throw 'Falló aplicación instalada'
+ }
 }
 Test-Installed @('--self-test')
 $db = Join-Path $store 'workspace-v1.sqlite3'

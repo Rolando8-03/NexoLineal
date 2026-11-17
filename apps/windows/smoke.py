@@ -6,6 +6,7 @@ from pathlib import Path
 import platform
 import sys
 import time
+import traceback
 from nexolineal.application.service import execute
 from .sqlite_store import SQLiteStore as ProjectStore
 
@@ -154,6 +155,7 @@ def run(window):
             "document.querySelector('#resultado').innerText"
         )
         window.evaluate_js("document.querySelector('#modo-explorador').click()")
+        wait(window, "document.querySelector('.app').dataset.mode === 'explorador'")
         assert (
             window.evaluate_js("document.querySelector('.app').dataset.mode")
             == "explorador"
@@ -201,6 +203,7 @@ def run(window):
         wait(window, "document.querySelector('#resultado').dataset.status === 'ok'")
         assert window.evaluate_js("!!document.querySelector('.iteration-table table')")
         window.evaluate_js("document.querySelector('#modo-explorador').click()")
+        wait(window, "document.querySelector('.app').dataset.mode === 'explorador'")
         assert (
             window.evaluate_js("document.querySelector('#resultado').dataset.status")
             == "ok"
@@ -391,6 +394,7 @@ def run(window):
         report["approved"] = True
     except Exception as error:
         report["error"] = repr(error)
+        report["traceback"] = traceback.format_exc()
     finally:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(
