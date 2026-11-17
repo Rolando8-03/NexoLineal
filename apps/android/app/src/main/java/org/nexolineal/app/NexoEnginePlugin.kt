@@ -3,6 +3,7 @@ package org.nexolineal.app
 import android.app.Activity
 import android.content.Intent
 import android.util.AtomicFile
+import android.util.Base64
 import androidx.activity.result.ActivityResult
 import com.getcapacitor.annotation.ActivityCallback
 import java.io.FileNotFoundException
@@ -133,6 +134,42 @@ class NexoEnginePlugin : Plugin() {
             } ?: error("No se pudo leer el archivo elegido.")
             call.resolve(JSObject().put("cancelled", false).put("content", checked(output.toString("UTF-8"))))
         } catch (error: Exception) { call.reject(error.message ?: "No se pudo importar el proyecto.") }
+    }
+
+    private fun documentBytes(call: PluginCall): ByteArray {
+        val kind = call.getString("kind")
+        require(kind == "pdf" || kind == "csv") { "Tipo de documento no admitido." }
+        val encoded = call.getString("content") ?: error("Falta el documento.")
+        require(encoded.length <= 22369624) { "El documento supera 16 MiB." }
+        val bytes = Base64.decode(encoded, Base64.NO_WRAP)
+        require(bytes.size <= 16 * 1024 * 1024) { "El documento supera 16 MiB." }
+        if (kind == "pdf") require(String(bytes.take(5).toByteArray(), Charsets.US_ASCII) == "%PDF-") { "No es un PDF." }
+        return bytes
+    }
+
+    @PluginMethod
+    fun export_document(call: PluginCall) {
+        try {
+            documentBytes(call)
+            val pdf = call.getString("kind") == "pdf"
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE)
+                .setType(if (pdf) "application/pdf" else "text/csv")
+                .putExtra(Intent.EXTRA_TITLE, if (pdf) "NexoLineal-procedimiento.pdf" else "NexoLineal-tabla.csv")
+            startActivityForResult(call, intent, "documentReady")
+        } catch (error: Exception) { call.reject(error.message ?: "No se pudo preparar el documento.") }
+    }
+
+    @ActivityCallback
+    private fun documentReady(call: PluginCall?, result: ActivityResult) {
+        if (call == null) return
+        try {
+            val uri = result.data?.data
+            if (result.resultCode != Activity.RESULT_OK || uri == null) { call.resolve(JSObject().put("cancelled", true)); return }
+            val bytes = documentBytes(call)
+            context.contentResolver.openOutputStream(uri, "wt")?.use { it.write(bytes) }
+                ?: error("No se pudo escribir el documento.")
+            call.resolve(JSObject().put("cancelled", false))
+        } catch (error: Exception) { call.reject(error.message ?: "No se pudo exportar el documento.") }
     }
 
     override fun handleOnDestroy() {

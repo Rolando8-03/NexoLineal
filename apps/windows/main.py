@@ -7,6 +7,7 @@ import sys
 import webview
 from nexolineal.platforms.jobs import JobPool
 from .project_io import ProjectStore, validate_content, MAX_BYTES
+from .documents import document_payload, save_document, FORMATS
 
 
 class NativeAPI:
@@ -50,6 +51,17 @@ class NativeAPI:
             return {"cancelled": True}
         destination = Path(paths if isinstance(paths, str) else paths[0])
         ProjectStore(destination).save(content)
+        return {"cancelled": False}
+
+    def export_document(self, data):
+        kind, content = document_payload(data)
+        name, filter = FORMATS[kind]
+        paths = self._window.create_file_dialog(
+            webview.FileDialog.SAVE, save_filename=name, file_types=(filter,)
+        )
+        if not paths:
+            return {"cancelled": True}
+        save_document(paths if isinstance(paths, str) else paths[0], content)
         return {"cancelled": False}
 
     def import_project(self):
