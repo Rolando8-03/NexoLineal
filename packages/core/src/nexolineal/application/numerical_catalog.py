@@ -2,13 +2,15 @@
 
 
 def field(
-    name, label, kind="scalar", default="", required=False, choices=None, when=None
+    name, label, kind="scalar", default="", required=False, choices=None, when=None, required_when=None
 ):
     result = dict(name=name, label=label, kind=kind, default=default, required=required)
     if choices:
         result["choices"] = choices
     if when:
         result["when"] = when
+    if required_when:
+        result["required_when"] = required_when
     return result
 
 
@@ -200,6 +202,7 @@ NUMERICAL_DATA.extend(
                     "set",
                     "",
                     when={"operacion": ["complemento"]},
+                    required_when={"operacion": ["complemento"]},
                 ),
             ],
             "Las etiquetas son texto, sin duplicados; [] representa vacío. El complemento requiere universo explícito.",

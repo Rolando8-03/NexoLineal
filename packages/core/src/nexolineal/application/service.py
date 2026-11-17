@@ -76,7 +76,7 @@ def execute(data, *, is_cancelled=None, on_progress=None):
         checkpoint()
         if operation == "catalogo.operaciones":
             return CalculationResult(operation,inputs,"ok",{"operations":[spec.to_dict() for spec in CATALOG.values()]},
-                                     metadata={"index_base":0,"catalog_version":"0.5.0"}).to_dict()
+                                     metadata={"index_base":0,"catalog_version":"0.6.0"}).to_dict()
         if operation in NUMERICAL_IDS:
             result = execute_numerical(problem, Context(checkpoint, on_progress))
             checkpoint()

@@ -19,6 +19,7 @@ export interface FieldSpec {
   required: boolean;
   choices?: string[];
   when?: Record<string, string[]>;
+  required_when?:Record<string,string[]>;
 }
 export interface OperationSpec {
   id: string;
