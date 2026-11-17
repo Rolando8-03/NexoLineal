@@ -1,7 +1,7 @@
+import { loadWebState, saveWebState } from "./webStore";
 /** Persistencia local por destino; nunca sube problemas a un servicio externo. */
 import { MAX_BYTES } from "./project";
 const target = import.meta.env.VITE_TARGET || "web";
-const KEY = "nexolineal.project.v1";
 interface NativeFiles {
   export_document(data: {
     kind: string;
@@ -46,13 +46,13 @@ export const storageName =
       : "esta instalación de Android";
 export async function loadState(): Promise<string | null> {
   return target === "web"
-    ? localStorage.getItem(KEY)
+    ? await loadWebState()
     : (await (await native()).load_state()).content;
 }
 export async function saveState(content: string): Promise<void> {
   if (new TextEncoder().encode(content).length > MAX_BYTES)
     throw new Error("El proyecto supera 2 MiB.");
-  if (target === "web") localStorage.setItem(KEY, content);
+  if (target === "web") await saveWebState(content);
   else await (await native()).save_state({ content });
 }
 export async function exportFile(

@@ -60,6 +60,7 @@ class NexoEnginePlugin : Plugin() {
         } catch (error: Exception) { call.reject(error.message ?: "No se pudo consultar el progreso.") }
     }
 
+    private val projects by lazy { ProjectDatabase(context) }
     private val maxProjectBytes = 2 * 1024 * 1024
     private fun checked(content: String): String {
         require(content.toByteArray(Charsets.UTF_8).size <= maxProjectBytes) { "El proyecto supera 2 MiB." }
@@ -71,9 +72,7 @@ class NexoEnginePlugin : Plugin() {
     @PluginMethod
     fun load_state(call: PluginCall) {
         try {
-            val file = AtomicFile(File(context.filesDir, "workspace-v1.json"))
-            val content = try { checked(String(file.readFully(), Charsets.UTF_8)) } catch (error: FileNotFoundException) { null }
-            call.resolve(JSObject().put("content", content ?: JSONObject.NULL))
+            call.resolve(JSObject().put("content", projects.load() ?: JSONObject.NULL))
         } catch (error: Exception) { call.reject(error.message ?: "No se pudo recuperar el proyecto.") }
     }
 
@@ -81,10 +80,7 @@ class NexoEnginePlugin : Plugin() {
     fun save_state(call: PluginCall) {
         try {
             val content = checked(call.getString("content") ?: error("Falta el proyecto."))
-            val file = AtomicFile(File(context.filesDir, "workspace-v1.json"))
-            val stream = file.startWrite()
-            try { stream.write(content.toByteArray(Charsets.UTF_8)); file.finishWrite(stream) }
-            catch (error: Exception) { file.failWrite(stream); throw error }
+            projects.save(content)
             call.resolve(JSObject().put("saved", true))
         } catch (error: Exception) { call.reject(error.message ?: "No se pudo guardar el proyecto.") }
     }
@@ -181,6 +177,7 @@ class NexoEnginePlugin : Plugin() {
     override fun handleOnDestroy() {
         engine().callAttr("cancel_all")
         executor.shutdownNow()
+        projects.close()
         super.handleOnDestroy()
     }
 }

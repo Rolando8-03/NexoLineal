@@ -7,7 +7,7 @@ import platform
 import sys
 import time
 from nexolineal.application.service import execute
-from .project_io import ProjectStore
+from .sqlite_store import SQLiteStore as ProjectStore
 
 
 def wait(window, expression, timeout=90):
@@ -86,7 +86,7 @@ def run(window):
             )
             report["persistence"] = {
                 "reopened": True,
-                "adapter": "archivo atomico independiente del puerto",
+                "adapter": "SQLite independiente del puerto",
             }
             report["approved"] = True
             return
@@ -329,7 +329,7 @@ def run(window):
                 "passed": True,
             }
         )
-        report["persistence"] = {"saved": True, "adapter": "archivo atomico"}
+        report["persistence"] = {"saved": True, "adapter": "SQLite"}
         report["approved"] = True
     except Exception as error:
         report["error"] = repr(error)

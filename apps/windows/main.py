@@ -7,13 +7,14 @@ import sys
 import webview
 from nexolineal.platforms.jobs import JobPool
 from .project_io import ProjectStore, validate_content, MAX_BYTES
+from .sqlite_store import SQLiteStore
 from .documents import document_payload, save_document, FORMATS
 
 
 class NativeAPI:
     def __init__(self):
         self._pool = JobPool()
-        self._store = ProjectStore()
+        self._store = SQLiteStore()
         self._window = None
 
     def _id(self, data):

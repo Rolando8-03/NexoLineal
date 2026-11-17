@@ -5,7 +5,7 @@ const assert = require("node:assert/strict"),
   os = require("node:os");
 const ts = require(path.resolve("apps/frontend/node_modules/typescript"));
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "nexo-project-"));
-for (const name of ["project", "validation", "navigation"])
+for (const name of ["project", "validation", "navigation", "webStore"])
   fs.writeFileSync(
     path.join(dir, name + ".js"),
     ts.transpileModule(

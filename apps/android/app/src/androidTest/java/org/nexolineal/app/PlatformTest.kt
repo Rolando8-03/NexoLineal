@@ -160,19 +160,19 @@ class PlatformTest {
             assertEquals(2,portable.getJSONObject("active").getInt("step"))
             js("document.querySelector('#importar-json').click()")
             waitFor("!document.querySelector('dialog') && document.querySelector('#resultado').dataset.status === 'ok'")
-            val savedFile = File(context.filesDir, "workspace-v1.json")
+            val savedStore = ProjectDatabase(context)
             val saveDeadline = SystemClock.elapsedRealtime()+20000
             var confirmed = false
             while (SystemClock.elapsedRealtime()<saveDeadline) {
                 try {
-                    val data = JSONObject(savedFile.readText())
+                    val data = JSONObject((savedStore.load() ?: "{}"))
                     confirmed = data.getString("name")=="Continuidad fase 06" && data.getJSONObject("active").getInt("step")==2 && data.getJSONArray("objects").length()==1 && data.getJSONArray("history").getJSONObject(0).getBoolean("favorite")
                     if (confirmed) break
                 } catch (_: Exception) { }
                 SystemClock.sleep(100)
             }
             assertTrue("Debe confirmarse el archivo antes de cerrar",confirmed)
-            val historySize = JSONObject(savedFile.readText()).getJSONArray("history").length()
+            val historySize = JSONObject((savedStore.load() ?: "{}")).getJSONArray("history").length()
             scenario.close()
             scenario = ActivityScenario.launch(android.content.Intent(context, MainActivity::class.java).putExtra("nexoExportSelfTest",true))
             waitFor("document.querySelector('#calcular') && !document.querySelector('#calcular').disabled")
@@ -181,10 +181,10 @@ class PlatformTest {
             assertEquals("\"2\"",js("document.querySelector('#paso').value"))
             assertEquals("\"explorador\"",js("document.querySelector('.app').dataset.mode"))
             assertEquals("\"oscuro\"",js("document.querySelector('.app').dataset.theme"))
-            val reopened = JSONObject(savedFile.readText())
+            val reopened = JSONObject((savedStore.load() ?: "{}"))
             assertEquals(historySize,reopened.getJSONArray("history").length())
             assertEquals("Función persistente",reopened.getJSONArray("objects").getJSONObject(0).getString("name"))
-            report.put("persistence",JSONObject().put("saved",true).put("reopened",true).put("adapter","archivo atomico privado"))
+            report.put("persistence",JSONObject().put("saved",true).put("reopened",true).put("adapter","SQLite privado"))
             cases.put(JSONObject().put("name","objetos, favorito, tema y paso tras cerrar y reabrir la aplicación").put("passed",true))
             report.put("approved", true)
             UiDevice.getInstance(instrumentation).takeScreenshot(File(context.filesDir, "fase03-android.png"))

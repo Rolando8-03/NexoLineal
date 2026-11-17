@@ -410,8 +410,22 @@ async function axe(label) {
     await page.locator(".steps summary").click();
     await page.locator("#paso").selectOption("2");
     await page.keyboard.press("Control+s");
-    await page.waitForFunction(() => {
-      const p = JSON.parse(localStorage.getItem("nexolineal.project.v1"));
+    await page.waitForFunction(async () => {
+      const raw = await new Promise((resolve, reject) => {
+        const r = indexedDB.open("nexolineal.workspace", 1);
+        r.onerror = () => reject(r.error);
+        r.onsuccess = () => {
+          const db = r.result;
+          const tx = db.transaction("projects", "readonly");
+          const get = tx.objectStore("projects").get("active");
+          get.onsuccess = () => {
+            resolve(get.result);
+            db.close();
+          };
+        };
+      });
+      if (!raw) return false;
+      const p = JSON.parse(raw);
       return (
         p.active.step === 2 &&
         p.name === "Álgebra portátil" &&
@@ -530,7 +544,7 @@ async function axe(label) {
     extraBrowser = await chromium.launch();
     const quota = await extraBrowser.newContext();
     await quota.addInitScript(() => {
-      Storage.prototype.setItem = function () {
+      IDBObjectStore.prototype.put = function () {
         throw new DOMException("Cuota agotada", "QuotaExceededError");
       };
     });
