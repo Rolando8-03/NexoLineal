@@ -85,9 +85,44 @@ def execute_linear(problem, ctx):
 
     if op == "sistemas.resolver":
         method = data.get("metodo", "gauss_jordan")
-        result = r.solve(A, vector(data["b"], len(A)), ctx, method)
-        checks = result.pop("verification")
-        status = status_for(result["clasificacion"])
+        if "resultados" in data:
+            selected = data["resultados"].split()
+            allowed = {"clasificacion", "rangos", "gauss", "jordan", "solucion", "comprobacion"}
+            if not selected or set(selected) - allowed:
+                raise InputError("Elegí al menos un resultado válido.")
+            method = "gauss" if "gauss" in selected else "gauss_jordan"
+            ctx.collect_steps = ctx.collect_steps and bool({"gauss", "jordan"} & set(selected))
+            full = r.solve(A, vector(data["b"], len(A)), ctx, method)
+            checks = full.pop("verification")
+            status = status_for(full["clasificacion"])
+            result = {}
+            groups = {
+                "clasificacion": ("clasificacion",),
+                "rangos": ("rango_A", "rango_aumentada", "pivotes", "variables_libres"),
+                "solucion": ("particular", "direcciones", "familia", "parametros", "certificado"),
+            }
+            for group, keys in groups.items():
+                if group in selected:
+                    result.update({k: full[k] for k in keys if k in full})
+            if "gauss" in selected:
+                result["gauss"] = {"matrix": full["matrix"]}
+            if "jordan" in selected:
+                # La forma escalonada ya obtenida es la entrada de la segunda etapa.
+                reduced = (r.reduce(full["matrix"], ctx, pivot_limit=len(A[0]))["matrix"]
+                           if "gauss" in selected else full["matrix"])
+                result["gauss_jordan"] = {"matrix": reduced}
+            if "comprobacion" in selected:
+                result["comprobacion"] = {**checks}
+                if "certificado" in full:
+                    result["comprobacion"]["certificado"] = full["certificado"]
+            if "solucion" not in selected:
+                ctx.steps[:] = [step for step in ctx.steps if step.kind != "sustitucion"]
+            if not ctx.collect_steps:
+                ctx.steps.clear()
+        else:
+            result = r.solve(A, vector(data["b"], len(A)), ctx, method)
+            checks = result.pop("verification")
+            status = status_for(result["clasificacion"])
     elif op in ("sistemas.cramer", "sistemas.inversa"):
         m.square(A)
         b = vector(data["b"], len(A))
@@ -423,7 +458,8 @@ def execute_linear(problem, ctx):
 
     if checks is None or checks.get("passed") is not True:
         raise ArithmeticError("La comprobación del resultado no fue satisfactoria.")
-    if not ctx.steps:
+    selective_system = op == "sistemas.resolver" and "resultados" in data
+    if not ctx.steps and not selective_system:
         ctx.emit(
             "resultado",
             "Resultado obtenido aplicando la definición de la operación.",
@@ -440,7 +476,7 @@ def execute_linear(problem, ctx):
         status,
         result,
         ctx.steps if problem.options.get("include_steps", True) else [],
-        checks,
+        checks if not selective_system or "comprobacion" in selected else {},
         warnings=(
             [
                 "Multiplicar una fila o columna por cero no es una transformación reversible."
@@ -457,7 +493,7 @@ def execute_linear(problem, ctx):
         },
         error=(
             {"code": status, "message": messages[status]}
-            if status in messages
+            if status in messages and (not selective_system or "clasificacion" in selected)
             else None
         ),
     )

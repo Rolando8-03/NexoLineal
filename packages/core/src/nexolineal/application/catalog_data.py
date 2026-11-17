@@ -28,6 +28,7 @@ OPERATION_DATA = [
         "title": "Resolver y clasificar un sistema",
         "category": "Sistemas",
         "fields": [
+            {"name": "resultados", "label": "Resultados", "kind": "text", "default": "clasificacion rangos gauss jordan solucion comprobacion", "required": False},
             {
                 "name": "A",
                 "label": "Matriz A",
