@@ -1,7 +1,7 @@
 name: NexoLineal multiplataforma
 on:
   push:
-    branches: [main, fase-03-plataformas, fase-04-algebra, fase-05-numericos, fase-06-experiencia]
+    branches: [main, fase-03-plataformas, fase-04-algebra, fase-05-numericos, fase-06-experiencia, fase-07-visualizacion]
     paths:
       - 'apps/**'
       - 'packages/core/**'
@@ -9,6 +9,7 @@ on:
       - 'packages/contracts/**'
       - '.github/scripts/generar_catalogo.py'
       - '.github/scripts/*fase06*'
+      - '.github/scripts/*fase07*'
       - 'tests/fixtures/platform_contracts.json'
       - '.github/scripts/*fase03*'
       - '.github/scripts/casos_plataformas.py'
@@ -35,13 +36,14 @@ jobs:
           cache-dependency-path: apps/frontend/package-lock.json
       - name: Verificar núcleo y regresiones
         run: |
-          python -m pip install -e packages/core sympy==1.14.0 jsonschema==4.23.0
+          python -m pip install -e packages/core sympy==1.14.0 jsonschema==4.23.0 pypdf==7.1.0
           python -B pruebas.py -v
           python -B -m unittest discover -s tests -v
           python .github/scripts/generar_catalogo.py --check
           python -m tests.auditoria_matematica
           python -m tests.auditoria_fase04
           python -m tests.auditoria_fase05
+          python -m tests.auditoria_fase07
           python .github/scripts/casos_plataformas.py
       - name: Compilar web con Python local
         working-directory: apps/frontend
@@ -60,6 +62,7 @@ jobs:
           node .github/scripts/probar_estado_fase06.cjs
           node .github/scripts/probar_web_fase03.cjs
           node .github/scripts/probar_experiencia_fase06.cjs
+          node .github/scripts/probar_visualizacion_fase07.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -69,6 +72,7 @@ jobs:
             evidencia-fase04/
             evidencia-fase05/
             evidencia-fase06/
+            evidencia-fase07/
             apps/frontend/dist/
           retention-days: 30
   windows:
@@ -205,6 +209,8 @@ jobs:
             cat evidencia-fase03/instrumentacion-android.log
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.json > evidencia-fase03/android.json
             adb exec-out run-as org.nexolineal.app cat files/fase03-android.png > evidencia-fase03/android.png
+            adb exec-out run-as org.nexolineal.app cat files/NexoLineal-procedimiento.pdf > evidencia-fase03/android-procedimiento.pdf
+            adb exec-out run-as org.nexolineal.app cat files/NexoLineal-tabla.csv > evidencia-fase03/android-tabla.csv
             python -c "from pathlib import Path; import json; p=Path('evidencia-fase03/android.json'); r=json.loads(p.read_text()); print('NEXO_ANDROID_REPORT='+json.dumps(r,ensure_ascii=False)); assert r['approved']"
       - name: Comprobar contenido y tamaño del APK
         run: |

@@ -64,12 +64,37 @@ assert (
     reports["windows-fuente"]["persistence"]["saved"]
     and reports["windows-ejecutable"]["persistence"]["saved"]
 )
+# La fase 07 agrega evidencia propia y no rebaja las puertas anteriores.
+visual_files = [
+    p for p in (root / "fase03-web").rglob("ui.json") if "evidencia-fase07" in p.parts
+]
+assert len(visual_files) == 1
+visual_ui = json.loads(visual_files[0].read_text(encoding="utf-8"))
+assert visual_ui["approved"] and not visual_ui["errors"]
+assert all(not run["violations"] for run in visual_ui["a11y"])
+for platform in ("windows-fuente", "windows-ejecutable", "android"):
+    assert reports[platform]["exports"]["pdf"] and reports[platform]["exports"]["csv"]
+audit_files = [
+    p
+    for p in (root / "fase03-web").rglob("auditoria.json")
+    if "evidencia-fase07" in p.parts
+]
+assert len(audit_files) == 1
+visual_audit = json.loads(audit_files[0].read_text(encoding="utf-8"))
+assert visual_audit["approved"]
 summary = {
     "approved": True,
     "platforms": list(reports),
     "shared_contracts": len(expected),
     "identical_core_files": len(manifests[0]),
     "android_offline": reports["android"]["offline"],
+    "visualization": {
+        "ui_cases": len(visual_ui["cases"]),
+        "accessibility_runs": len(visual_ui["a11y"]),
+        "accessibility_violations": 0,
+        "audit_checks": visual_audit["checks"],
+        "native_pdf_csv": True,
+    },
     "workspace": {
         "web_reopened": True,
         "windows_source_reopened": True,
@@ -90,6 +115,8 @@ print(
             "summary": summary,
             "reports": reports,
             "reopened": reopened,
+            "visualization_ui": visual_ui,
+            "visualization_audit": visual_audit,
             "workspace_ui": ui,
             "project_codec": codec,
             "core_manifest": manifests[0],

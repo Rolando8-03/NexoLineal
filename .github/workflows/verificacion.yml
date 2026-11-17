@@ -1,7 +1,7 @@
 name: Verificación de la línea de partida
 on:
   push:
-    branches: [main, fase-02-nucleo, fase-03-plataformas, fase-04-algebra, fase-05-numericos, fase-06-experiencia]
+    branches: [main, fase-02-nucleo, fase-03-plataformas, fase-04-algebra, fase-05-numericos, fase-06-experiencia, fase-07-visualizacion]
     paths:
       - '**/*.py'
       - '*.py'

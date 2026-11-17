@@ -1,7 +1,7 @@
 name: Núcleo matemático
 on:
   push:
-    branches: [main, fase-04-algebra, fase-05-numericos, fase-06-experiencia]
+    branches: [main, fase-04-algebra, fase-05-numericos, fase-06-experiencia, fase-07-visualizacion]
     paths: ['packages/**', 'python/**', 'modulos/**', 'teoremas/**', 'tests/**', '.github/workflows/fase04.yml', '.github/scripts/generar_catalogo.py']
   workflow_dispatch:
 permissions:
@@ -28,6 +28,7 @@ jobs:
           python -m tests.auditoria_matematica
           python -m tests.auditoria_fase04
           python -m tests.auditoria_fase05
+          python -m tests.auditoria_fase07
           python -m compileall -q packages/core/src python modulos teoremas
       - uses: actions/upload-artifact@v4
         if: always()
@@ -36,4 +37,5 @@ jobs:
           path: |
             evidencia-fase04/
             evidencia-fase05/
+            evidencia-fase07/
           retention-days: 30

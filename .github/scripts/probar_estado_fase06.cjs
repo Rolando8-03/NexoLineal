@@ -184,6 +184,7 @@ check(() => assert.equal(full.history.length, 100));
 async function nativeAdapters() {
   let thenReads = 0;
   let saved = null;
+  let document = null;
   const proxy = new Proxy(
     {},
     {
@@ -199,6 +200,10 @@ async function nativeAdapters() {
             return {};
           }
           if (key === "export_project") return { cancelled: false };
+          if (key === "export_document") {
+            document = data;
+            return { cancelled: false };
+          }
           if (key === "import_project") return { content: saved };
           throw new Error("Método inesperado: " + String(key));
         };
@@ -244,6 +249,14 @@ async function nativeAdapters() {
           check(() => assert.equal(exported, true));
           const imported = await storage.importNativeFile();
           check(() => assert.equal(imported, saved));
+          const pdf = await storage.saveDocument(
+            new Uint8Array([37, 80, 68, 70, 45]),
+            "pdf",
+          );
+          check(() => assert.equal(pdf, true));
+          check(() =>
+            assert.deepEqual(document, { kind: "pdf", content: "JVBERi0=" }),
+          );
           check(() => assert.equal(thenReads, 0));
         })(),
         deadline,
