@@ -238,7 +238,13 @@ export function DataView({
     );
   return null;
 }
-export function ResultView({ value }: { value: Record<string, unknown> }) {
+export function ResultView({
+  value,
+  compact = false,
+}: {
+  value: Record<string, unknown>;
+  compact?: boolean;
+}) {
   const first = [
     "aproximacion_decimal",
     "aproximacion",
@@ -263,14 +269,56 @@ export function ResultView({ value }: { value: Record<string, unknown> }) {
       (k) => !first.includes(k) && !["precision_bits", "exactitud"].includes(k),
     ),
   ];
+  const important = [
+    "aproximacion_decimal",
+    "clasificacion",
+    "familia",
+    "matrix",
+    "vector",
+    "particular",
+    "direcciones",
+    "valor",
+    "expresion",
+    "coordenadas",
+    "base",
+    "base_nucleo",
+    "base_imagen",
+    "base_columna",
+    "base_fila",
+    "es_base",
+    "independiente",
+    "pertenece",
+    "conjunto",
+    "representacion",
+    "tabla",
+    "convergencia",
+    "motivo_parada",
+    "norma",
+    "P",
+    "L",
+    "U",
+  ];
+  const primary = compact ? keys.filter((k) => important.includes(k)) : keys;
+  const extras = compact ? keys.filter((k) => !important.includes(k)) : [];
   return (
     <div className="result-data">
-      {keys.map((key) => (
+      {(primary.length ? primary : keys).map((key) => (
         <section className="data-field" key={key}>
           <h3>{label(key)}</h3>
           <DataView value={value[key]} name={key} />
         </section>
       ))}
+      {primary.length > 0 && extras.length > 0 && (
+        <details className="result-extras">
+          <summary>Ver todos los datos del resultado</summary>
+          {extras.map((key) => (
+            <section className="data-field" key={key}>
+              <h3>{label(key)}</h3>
+              <DataView value={value[key]} name={key} />
+            </section>
+          ))}
+        </details>
+      )}
     </div>
   );
 }

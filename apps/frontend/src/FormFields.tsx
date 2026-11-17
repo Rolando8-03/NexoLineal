@@ -1,4 +1,8 @@
 import type { FieldSpec, OperationSpec } from "./contracts";
+import { visible, required, normalizePaste } from "./workspace/validation";
+export { visible } from "./workspace/validation";
+import { supports, type SavedObject } from "./workspace/project";
+import type { ResultObject } from "./workspace/WorkspacePanel";
 const ids: Record<string, string> = {
   A: "matriz-a",
   B: "matriz-b",
@@ -9,14 +13,6 @@ const ids: Record<string, string> = {
 };
 export function fieldId(name: string) {
   return ids[name] || "dato-" + name;
-}
-export function visible(field: FieldSpec, values: Record<string, string>) {
-  return (
-    !field.when ||
-    Object.entries(field.when).every(([key, choices]) =>
-      choices.includes(values[key]),
-    )
-  );
 }
 export function initialValues(spec: OperationSpec): Record<string, string> {
   return Object.fromEntries(
@@ -62,11 +58,19 @@ export function FormFields({
   values,
   busy,
   change,
+  errors = {},
+  objects = [],
+  onSave,
+  onReuse,
 }: {
   spec: OperationSpec;
   values: Record<string, string>;
   busy: boolean;
   change: (name: string, value: string) => void;
+  errors?: Record<string, string>;
+  objects?: SavedObject[];
+  onSave?: (object: ResultObject) => void;
+  onReuse?: (field: string, object: SavedObject) => void;
 }) {
   return (
     <>
@@ -81,7 +85,7 @@ export function FormFields({
               <div className="field-heading">
                 <label htmlFor={id}>
                   {f.label}
-                  {!f.required && !f.label.includes("opcional") && (
+                  {!required(f, values) && !f.label.includes("opcional") && (
                     <small> · opcional</small>
                   )}
                 </label>
@@ -89,6 +93,31 @@ export function FormFields({
                   <span>{dimensions(text)}</span>
                 )}
               </div>
+              {!!objects.filter((o) => supports(f.kind, o)).length && (
+                <div className="field-tools">
+                  <label className="sr-only" htmlFor={id + "-reuse"}>
+                    Usar un objeto en {f.label}
+                  </label>
+                  <select
+                    id={id + "-reuse"}
+                    value=""
+                    disabled={busy}
+                    onChange={(e) => {
+                      const o = objects.find((o) => o.id === e.target.value);
+                      if (o) onReuse?.(f.name, o);
+                    }}
+                  >
+                    <option value="">Usar un objeto guardado…</option>
+                    {objects
+                      .filter((o) => supports(f.kind, o))
+                      .map((o) => (
+                        <option key={o.id} value={o.id}>
+                          {o.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
               {f.kind === "select" || f.kind === "boolean" ? (
                 <select
                   id={id}
@@ -107,10 +136,26 @@ export function FormFields({
                   id={id}
                   value={text}
                   rows={4}
+                  onPaste={(e) => {
+                    const raw = e.clipboardData.getData("text");
+                    if (raw.includes("\t") || raw.includes("−")) {
+                      e.preventDefault();
+                      const el = e.currentTarget;
+                      change(
+                        f.name,
+                        el.value.slice(0, el.selectionStart) +
+                          normalizePaste(raw) +
+                          el.value.slice(el.selectionEnd),
+                      );
+                    }
+                  }}
                   disabled={busy}
                   spellCheck={false}
                   onChange={(e) => change(f.name, e.target.value)}
-                  aria-describedby={id + "-ayuda"}
+                  aria-invalid={!!errors[f.name]}
+                  aria-describedby={
+                    id + "-ayuda" + (errors[f.name] ? " " + id + "-error" : "")
+                  }
                 />
               ) : (
                 <input
@@ -120,8 +165,39 @@ export function FormFields({
                   spellCheck={false}
                   autoComplete="off"
                   onChange={(e) => change(f.name, e.target.value)}
-                  aria-describedby={id + "-ayuda"}
+                  aria-invalid={!!errors[f.name]}
+                  aria-describedby={
+                    id + "-ayuda" + (errors[f.name] ? " " + id + "-error" : "")
+                  }
                 />
+              )}
+              {errors[f.name] && (
+                <p className="field-error" id={id + "-error"} role="alert">
+                  {errors[f.name]}
+                </p>
+              )}
+              {["matrix", "vector", "vectors", "expression"].includes(
+                f.kind,
+              ) && (
+                <button
+                  className="text-button save-input"
+                  type="button"
+                  disabled={busy || !text.trim()}
+                  onClick={() =>
+                    onSave?.({
+                      name: f.label,
+                      kind:
+                        f.kind === "expression"
+                          ? "function"
+                          : f.kind === "vectors"
+                            ? "base"
+                            : (f.kind as "matrix" | "vector"),
+                      text,
+                    })
+                  }
+                >
+                  ＋ Guardar como objeto
+                </button>
               )}
               <p className="help" id={id + "-ayuda"}>
                 {f.kind === "set"

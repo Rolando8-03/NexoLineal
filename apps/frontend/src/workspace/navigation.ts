@@ -61,25 +61,23 @@ export function matches(op: OperationSpec, query: string) {
   const q = searchable(query).trim();
   return (
     !q ||
-    q
-      .split(/\s+/)
-      .every((term) =>
-        searchable(
-          [
-            op.title,
-            op.id,
-            op.category,
-            op.description,
-            (
-              {
-                "sistemas.resolver": "gauss gauss jordan ecuaciones",
-                "espacios.fundamentales": "núcleo columnas filas rango nulidad",
-                "matrices.ref": "gauss forma escalonada",
-                "matrices.rref": "gauss jordan forma escalonada reducida",
-              } as Record<string, string>
-            )[op.id],
-          ].join(" "),
-        ).includes(term),
-      )
+    q.split(/\s+/).every((term) =>
+      searchable(
+        [
+          op.title,
+          op.id,
+          op.category,
+          op.description,
+          (
+            {
+              "sistemas.resolver": "gauss gauss jordan ecuaciones",
+              "espacios.fundamentales": "núcleo columnas filas rango nulidad",
+              "matrices.ref": "gauss forma escalonada",
+              "matrices.rref": "gauss jordan forma escalonada reducida",
+            } as Record<string, string>
+          )[op.id],
+        ].join(" "),
+      ).includes(term),
+    )
   );
 }

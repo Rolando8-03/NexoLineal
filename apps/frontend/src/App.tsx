@@ -1,48 +1,328 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ChangeEvent,
+} from "react";
 import { createEngine } from "./adapters";
 import type { CalculationResult, OperationSpec } from "./contracts";
-import { FormFields, initialValues, payload } from "./FormFields";
-import { DataView, ResultView, StepView } from "./ResultView";
+import { initialValues, payload, fieldId } from "./FormFields";
+import { WorkspacePanel, type ResultObject } from "./workspace/WorkspacePanel";
+import { HistoryPanel, LibraryPanel } from "./workspace/Panels";
+import { Dialog } from "./workspace/Dialog";
+import { AstroArt, AcademicArt } from "./workspace/AstroArt";
+import { AREAS, matches, areaFor } from "./workspace/navigation";
+import {
+  emptyProject,
+  encodeProject,
+  decodeProject,
+  addHistory,
+  id,
+  supports,
+  MAX_BYTES,
+  type Project,
+  type SavedObject,
+  type HistoryEntry,
+} from "./workspace/project";
+import { validateFields } from "./workspace/validation";
+import {
+  loadState,
+  saveState,
+  exportFile,
+  importNativeFile,
+  isWeb,
+  storageName,
+} from "./workspace/storage";
 
+type Route = "inicio" | "trabajo" | "historial" | "biblioteca" | string;
+type Modal =
+  | { kind: "object"; object: ResultObject }
+  | { kind: "reuse"; object: SavedObject }
+  | { kind: "json"; text: string; result?: boolean }
+  | { kind: "new" }
+  | null;
+let navFocusTimer: ReturnType<typeof setTimeout> | undefined;
+function focusMain() {
+  clearTimeout(navFocusTimer);
+  navFocusTimer = setTimeout(() => {
+    if (document.activeElement?.matches("input,textarea,select")) return;
+    [...document.querySelectorAll<HTMLElement>("main h1,#operacion-titulo")]
+      .find((el) => el.offsetParent !== null)
+      ?.focus();
+  }, 0);
+}
 export function App() {
-  const [engine] = useState(createEngine);
-  const [operations, setOperations] = useState<OperationSpec[]>([]);
+  const [engine] = useState(createEngine),
+    [project, setProject] = useState(emptyProject),
+    [operations, setOperations] = useState<OperationSpec[]>([]);
   const [ready, setReady] = useState(false),
-    [home, setHome] = useState(true);
-  const [mode, setMode] = useState<"serio" | "explorador">("serio");
-  const [operation, setOperation] = useState("matrices.producto");
-  const [inputs, setInputs] = useState<Record<string, Record<string, string>>>(
-    {},
-  );
+    [hydrated, setHydrated] = useState(false),
+    [blocked, setBlocked] = useState(false);
+  const [route, setRoute] = useState<Route>("inicio"),
+    [menu, setMenu] = useState(false),
+    [query, setQuery] = useState("");
   const [busy, setBusy] = useState(false),
-    [progress, setProgress] = useState(0);
-  const [result, setResult] = useState<CalculationResult | null>(null);
-  const [error, setError] = useState(""),
-    [selectedStep, setSelectedStep] = useState(0);
-  const running = useRef(false),
-    alive = useRef(true);
-  const spec = operations.find((item) => item.id === operation);
-  const values = spec ? inputs[operation] || initialValues(spec) : {};
-  const categories = [...new Set(operations.map((item) => item.category))];
-  async function initialize() {
-    setReady(false);
+    [progress, setProgress] = useState(0),
+    [result, setResult] = useState<CalculationResult | null>(null),
+    [error, setError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({}),
+    [notice, setNotice] = useState(""),
+    [saveStatus, setSaveStatus] = useState("Preparando cuaderno…");
+  const [modal, setModal] = useState<Modal>(null),
+    [modalName, setModalName] = useState(""),
+    [modalText, setModalText] = useState(""),
+    [modalError, setModalError] = useState(""),
+    [undo, setUndo] = useState<Project | null>(null);
+  const alive = useRef(true),
+    running = useRef(false),
+    initializing = useRef(false),
+    current = useRef(project),
+    nav = useRef<HTMLElement>(null),
+    saveQueue = useRef<Promise<unknown>>(Promise.resolve()),
+    saveSequence = useRef(0),
+    saved = useRef("");
+  current.current = project;
+  const spec = operations.find((o) => o.id === project.active.operation),
+    values = spec ? project.active.inputs[spec.id] || initialValues(spec) : {};
+  const mode = project.preferences.mode,
+    theme = project.preferences.theme;
+  const update = (next: Project | ((p: Project) => Project)) =>
+    setProject((p) => ({
+      ...(typeof next === "function" ? next(p) : next),
+      updatedAt: new Date().toISOString(),
+    }));
+  function setActive(patch: Partial<Project["active"]>) {
+    update((p) => ({ ...p, active: { ...p.active, ...patch } }));
+  }
+  function navigate(next: Route) {
+    setRoute(next);
+    setMenu(false);
+    setQuery("");
+    focusMain();
+  }
+  function change(name: string, value: string) {
+    if (running.current || !spec) return;
+    update((p) => ({
+      ...p,
+      active: {
+        ...p.active,
+        inputs: {
+          ...p.active.inputs,
+          [spec.id]: {
+            ...initialValues(spec),
+            ...p.active.inputs[spec.id],
+            [name]: value,
+          },
+        },
+        resumeResult: false,
+      },
+    }));
+    setResult(null);
+    setError("");
+    setErrors((e) => {
+      const next = { ...e };
+      delete next[name];
+      return next;
+    });
+    setUndo(null);
+  }
+  function choose(operation: string) {
+    if (running.current || !ready) return;
+    const chosen = operations.find((o) => o.id === operation);
+    if (!chosen) return;
+    update((p) => ({
+      ...p,
+      active: {
+        ...p.active,
+        operation,
+        inputs: {
+          ...p.active.inputs,
+          [operation]: p.active.inputs[operation] || initialValues(chosen),
+        },
+        step: 0,
+        stepsOpen: false,
+        verificationOpen: false,
+        resumeResult: false,
+      },
+    }));
+    setResult(null);
+    setError("");
+    setErrors({});
+    navigate("trabajo");
+  }
+  async function persist(p = current.current) {
+    let raw: string;
+    try {
+      raw = encodeProject(p);
+    } catch (e) {
+      setSaveStatus(String((e as Error).message));
+      return;
+    }
+    const sequence = ++saveSequence.current;
+    setSaveStatus("Guardando…");
+    const task = saveQueue.current.catch(() => {}).then(() => saveState(raw));
+    saveQueue.current = task;
+    try {
+      await task;
+      saved.current = raw;
+      if (alive.current) {
+        setBlocked(false);
+        if (sequence === saveSequence.current) {
+          try {
+            setSaveStatus(
+              raw === encodeProject(current.current)
+                ? "Guardado en " + storageName
+                : "Cambios pendientes…",
+            );
+          } catch (e) {
+            setSaveStatus((e as Error).message);
+          }
+        }
+      }
+    } catch (e) {
+      if (alive.current)
+        setSaveStatus("No se pudo guardar. " + String((e as Error).message));
+    }
+  }
+  async function calculateProblem(
+    p: Project,
+    append: boolean,
+    preserveStep = false,
+  ) {
+    const s = operations.find((o) => o.id === p.active.operation);
+    if (!s) return;
+    running.current = true;
+    setBusy(true);
+    setProgress(0);
+    setResult(null);
     setError("");
     try {
+      const vals = p.active.inputs[s.id] || initialValues(s);
+      const response = await engine.execute(
+        { schema_version: "1.0", operation_id: s.id, input: payload(s, vals) },
+        (n) => {
+          if (alive.current) setProgress(n);
+        },
+      );
+      if (!alive.current) return;
+      setResult(response);
+      let next = {
+        ...current.current,
+        active: {
+          ...current.current.active,
+          inputs: { ...current.current.active.inputs, [s.id]: { ...vals } },
+          step: preserveStep
+            ? Math.min(p.active.step, Math.max(0, response.steps.length - 1))
+            : 0,
+          resumeResult: response.status !== "cancelled",
+        },
+      };
+      if (append) {
+        try {
+          next = addHistory(next, {
+            id: id(),
+            date: new Date().toISOString(),
+            operation: s.id,
+            values: { ...vals },
+            label: s.title,
+            status: response.status,
+            favorite: false,
+          });
+        } catch (e) {
+          setNotice((e as Error).message);
+        }
+      }
+      update(next);
+      return response;
+    } catch (e) {
+      if (alive.current) setError((e as Error).message);
+    } finally {
+      running.current = false;
+      if (alive.current) setBusy(false);
+    }
+  }
+  async function initialize() {
+    if (initializing.current) return;
+    initializing.current = true;
+    setError("");
+    setReady(false);
+    try {
       await engine.initialize();
-      const catalog = await engine.execute({
+      const response = await engine.execute({
         schema_version: "1.0",
         operation_id: "catalogo.operaciones",
         input: {},
       });
-      if (catalog.status !== "ok" || !Array.isArray(catalog.result?.operations))
-        throw new Error("No se pudo cargar el catálogo de operaciones.");
-      if (alive.current) {
-        setOperations(catalog.result.operations as OperationSpec[]);
-        setReady(true);
+      if (
+        response.status !== "ok" ||
+        !Array.isArray(response.result?.operations)
+      )
+        throw new Error("No se pudo cargar el catálogo.");
+      const ops = response.result.operations as OperationSpec[];
+      if (!alive.current) return;
+      setOperations(ops);
+      let restored = emptyProject();
+      try {
+        const raw = await loadState();
+        if (raw) {
+          restored = decodeProject(raw, ops);
+          saved.current = encodeProject(restored);
+        }
+        setSaveStatus("Guardado local disponible");
+      } catch (e) {
+        setBlocked(true);
+        setSaveStatus(
+          "No se pudo recuperar el guardado. La copia existente no se sobrescribió.",
+        );
+        setNotice((e as Error).message);
       }
-    } catch (reason) {
-      if (alive.current)
-        setError(reason instanceof Error ? reason.message : String(reason));
+      const activeSpec = ops.find((s) => s.id === restored.active.operation)!;
+      restored = {
+        ...restored,
+        active: {
+          ...restored.active,
+          inputs: {
+            ...restored.active.inputs,
+            [activeSpec.id]:
+              restored.active.inputs[activeSpec.id] ||
+              initialValues(activeSpec),
+          },
+        },
+      };
+      current.current = restored;
+      setProject(restored);
+      setHydrated(true);
+      if (restored.active.resumeResult) {
+        running.current = true;
+        setBusy(true);
+        const s = ops.find((o) => o.id === restored.active.operation)!;
+        try {
+          const r = await engine.execute({
+            schema_version: "1.0",
+            operation_id: s.id,
+            input: payload(s, restored.active.inputs[s.id] || initialValues(s)),
+          });
+          if (alive.current) {
+            setResult(r);
+            setProject((p) => ({
+              ...p,
+              active: {
+                ...p.active,
+                step: Math.min(p.active.step, Math.max(0, r.steps.length - 1)),
+              },
+            }));
+          }
+        } finally {
+          running.current = false;
+          setBusy(false);
+        }
+      }
+      if (alive.current) setReady(true);
+    } catch (e) {
+      if (alive.current) setError((e as Error).message);
+    } finally {
+      initializing.current = false;
     }
   }
   useEffect(() => {
@@ -53,342 +333,940 @@ export function App() {
       engine.dispose();
     };
   }, [engine]);
-  function choose(id: string) {
-    if (running.current) return;
-    setOperation(id);
-    setResult(null);
-    setError("");
-    setHome(false);
-    setSelectedStep(0);
-  }
-  function change(name: string, value: string) {
-    if (!spec) return;
-    setInputs((current) => ({
-      ...current,
-      [operation]: {
-        ...initialValues(spec),
-        ...current[operation],
-        [name]: value,
-      },
-    }));
-    setResult(null);
-    setError("");
-  }
-  async function calculate(event: FormEvent) {
-    event.preventDefault();
-    if (!ready || !spec || running.current) return;
-    running.current = true;
-    setBusy(true);
-    setProgress(0);
-    setResult(null);
-    setError("");
+  useEffect(() => {
+    if (!hydrated || blocked) return;
+    let raw: string;
     try {
-      const response = await engine.execute(
-        {
-          schema_version: "1.0",
-          operation_id: operation,
-          input: payload(spec, values),
-        },
-        (value) => {
-          if (alive.current) setProgress(value);
-        },
-      );
-      if (alive.current) {
-        setResult(response);
-        setSelectedStep(0);
-      }
-    } catch (reason) {
-      if (alive.current)
-        setError(reason instanceof Error ? reason.message : String(reason));
-    } finally {
-      running.current = false;
-      if (alive.current) setBusy(false);
+      raw = encodeProject(project);
+    } catch (e) {
+      setSaveStatus((e as Error).message);
+      return;
     }
+    if (raw === saved.current) {
+      setSaveStatus("Guardado en " + storageName);
+      return;
+    }
+    setSaveStatus("Cambios pendientes…");
+    const timer = setTimeout(() => void persist(project), 180);
+    return () => clearTimeout(timer);
+  }, [project, hydrated, blocked]);
+  useEffect(() => {
+    function key(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        clearTimeout(navFocusTimer);
+        document.getElementById("buscar-operaciones")?.focus();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        if (!blocked) void persist();
+      }
+      if (e.key === "Escape" && !document.querySelector("dialog[open]")) {
+        setMenu(false);
+        if (menu) document.getElementById("menu-toggle")?.focus();
+        if (query) setQuery("");
+      }
+    }
+    document.addEventListener("keydown", key);
+    return () => document.removeEventListener("keydown", key);
+  }, [menu, query, blocked]);
+  useEffect(() => {
+    if (menu)
+      nav.current?.querySelector<HTMLElement>("a[href],button")?.focus();
+  }, [menu]);
+  async function calculate(e: FormEvent) {
+    e.preventDefault();
+    if (!ready || running.current || !spec) return;
+    const found = validateFields(spec, values);
+    setErrors(found);
+    if (Object.keys(found).length) {
+      document.getElementById(fieldId(Object.keys(found)[0]))?.focus();
+      return;
+    }
+    await calculateProblem(current.current, true);
   }
   async function cancel() {
     try {
       await engine.cancel();
-    } catch (reason) {
-      if (alive.current) setError(String(reason));
+    } catch (e) {
+      setError((e as Error).message);
     }
   }
-  function exportResult() {
-    if (!result) return;
-    const url = URL.createObjectURL(
-      new Blob([JSON.stringify(result, null, 2)], { type: "application/json" }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "nexolineal-resultado.json";
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  function openObject(object: ResultObject) {
+    setModal({ kind: "object", object });
+    setModalName(object.name.replace(/[:?]/g, "").slice(0, 90));
+    setModalError("");
   }
-  const status = busy
-    ? "Calculando"
-    : ready
-      ? "Motor listo"
-      : "Preparando el motor";
+  function saveObject() {
+    if (modal?.kind !== "object") return;
+    const name = modalName.trim();
+    if (!name) {
+      setModalError("Dale un nombre al objeto.");
+      return;
+    }
+    if (
+      project.objects.some(
+        (o) => o.name.toLocaleLowerCase("es") === name.toLocaleLowerCase("es"),
+      )
+    ) {
+      setModalError("Ya hay un objeto con ese nombre.");
+      return;
+    }
+    if (project.objects.length >= 100) {
+      setModalError("El máximo es de 100 objetos por proyecto.");
+      return;
+    }
+    const next = {
+      ...project,
+      objects: [...project.objects, { ...modal.object, id: id(), name }],
+    };
+    try {
+      encodeProject(next);
+    } catch (e) {
+      setModalError((e as Error).message);
+      return;
+    }
+    update(next);
+    setModal(null);
+    setNotice("Objeto guardado: " + name);
+  }
+  function reuse(field: string, object: SavedObject) {
+    change(field, object.text);
+    if (
+      object.ambient &&
+      spec?.fields.some((f) => f.name === "dimension_ambiente")
+    )
+      change("dimension_ambiente", String(object.ambient));
+    setModal(null);
+    navigate("trabajo");
+  }
+  const candidates: ResultObject[] = [];
+  if (result?.result) {
+    for (const key of [
+      "matrix",
+      "vector",
+      "base",
+      "base_columna",
+      "base_fila",
+      "base_nucleo",
+      "base_imagen",
+      "base_generado",
+      "base_suma",
+      "base_interseccion",
+    ]) {
+      const value = result.result[key];
+      if (!Array.isArray(value)) continue;
+      const kind =
+        key === "matrix" ? "matrix" : key === "vector" ? "vector" : "base";
+      const valid =
+        kind === "vector"
+          ? value.every((x) => typeof x === "string")
+          : value.every(
+              (row) =>
+                Array.isArray(row) && row.every((x) => typeof x === "string"),
+            );
+      if (!valid) continue;
+      const text =
+        kind === "vector"
+          ? value.join(" ")
+          : value.length
+            ? value.map((v) => (v as string[]).join(" ")).join("\n")
+            : "[]";
+      const ambient = Number(
+        result.result[
+          key === "base_columna" || key === "base_imagen"
+            ? "dimension_codominio"
+            : key === "base_fila" || key === "base_nucleo"
+              ? "dimension_dominio"
+              : "dimension_ambiente"
+        ],
+      );
+      candidates.push({
+        name:
+          (
+            {
+              matrix: "Matriz resultado",
+              vector: "Vector resultado",
+              base: "Base",
+              base_columna: "Base del espacio columna",
+              base_fila: "Base del espacio fila",
+              base_nucleo: "Base del núcleo",
+              base_imagen: "Base de la imagen",
+              base_generado: "Base del generado",
+              base_suma: "Base de la suma",
+              base_interseccion: "Base de la intersección",
+            } as Record<string, string>
+          )[key] + (result.metadata.exact === false ? " (aproximado)" : ""),
+        kind,
+        text,
+        ...(Number.isInteger(ambient) && ambient > 0 && ambient <= 20
+          ? { ambient }
+          : {}),
+      });
+    }
+  }
+  async function repeat(h: HistoryEntry, again: boolean) {
+    if (running.current) return;
+    const next = {
+      ...project,
+      active: {
+        ...project.active,
+        operation: h.operation,
+        inputs: { ...project.active.inputs, [h.operation]: { ...h.values } },
+        step: 0,
+        stepsOpen: false,
+        verificationOpen: false,
+        resumeResult: false,
+      },
+    };
+    current.current = next;
+    update(next);
+    setResult(null);
+    setErrors({});
+    setError("");
+    navigate("trabajo");
+    if (again) await calculateProblem(next, true);
+  }
+  async function applyImport(raw: string) {
+    try {
+      const next = decodeProject(raw, operations);
+      setUndo(project);
+      current.current = next;
+      setProject(next);
+      setBlocked(false);
+      setResult(null);
+      setErrors({});
+      setError("");
+      setModal(null);
+      navigate("trabajo");
+      const checked = next.active.resumeResult
+        ? await calculateProblem(next, false, true)
+        : null;
+      setNotice(
+        !next.active.resumeResult
+          ? "Proyecto importado con sus datos y preferencias."
+          : checked
+            ? "Proyecto importado. Los resultados se comprobaron de nuevo con el motor actual."
+            : "Proyecto importado. No se pudo recalcular: revisá el mensaje del motor.",
+      );
+    } catch (e) {
+      setModalError((e as Error).message);
+      setNotice((e as Error).message);
+    }
+  }
+  async function readFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (file.size > MAX_BYTES) {
+      setNotice("El archivo supera 2 MiB.");
+      return;
+    }
+    await applyImport(await file.text());
+  }
+  async function importNative() {
+    try {
+      const content = await importNativeFile();
+      if (content !== null) await applyImport(content);
+    } catch (e) {
+      setNotice((e as Error).message);
+    }
+  }
+  async function exportProject() {
+    let raw: string;
+    try {
+      raw = encodeProject(project);
+    } catch (e) {
+      setNotice((e as Error).message);
+      return;
+    }
+    try {
+      if (await exportFile(raw)) setNotice("Proyecto exportado.");
+    } catch (e) {
+      setModal({ kind: "json", text: raw });
+      setModalText(raw);
+      setModalError(
+        "No se pudo guardar el archivo. Podés copiar el JSON. " +
+          (e as Error).message,
+      );
+    }
+  }
+  async function exportResult() {
+    if (!result) return;
+    const raw = JSON.stringify(result, null, 2);
+    if (isWeb()) {
+      await exportFile(raw, "nexolineal-resultado.json");
+    } else {
+      setModal({ kind: "json", text: raw, result: true });
+      setModalText(raw);
+      setModalError("");
+    }
+  }
+  async function copyJson() {
+    try {
+      await navigator.clipboard.writeText(modalText);
+      setNotice("JSON copiado.");
+    } catch {
+      const field =
+        document.querySelector<HTMLTextAreaElement>("#project-json");
+      field?.focus();
+      field?.select();
+      setModalError(
+        "El permiso del portapapeles no está disponible. El texto quedó seleccionado para copiarlo.",
+      );
+    }
+  }
+  const allMatches = operations.filter((o) => matches(o, query));
+  const workspaceVisible = route === "trabajo" || route === "inicio";
+  const routes = [
+    { id: "inicio", name: "Inicio", icon: "⌂" },
+    ...AREAS.map((a) => ({ id: a.name, name: a.name, icon: a.icon })),
+    { id: "historial", name: "Historial y proyectos", icon: "◷" },
+    { id: "biblioteca", name: "Biblioteca y ayuda", icon: "▧" },
+  ];
   return (
-    <div className={"app " + mode} data-mode={mode}>
-      <header className="topbar">
+    <div
+      className={"app " + mode + " theme-" + theme}
+      data-mode={mode}
+      data-theme={theme}
+    >
+      <a className="skip-link" href="#main-content">
+        Saltar al contenido
+      </a>
+      <aside
+        className={"sidebar " + (menu ? "is-open" : "")}
+        ref={nav}
+        onKeyDown={(e) => {
+          if (e.key === "Tab" && menu) {
+            const els = [
+              ...nav.current!.querySelectorAll<HTMLElement>(
+                "a[href],button:not([disabled])",
+              ),
+            ].filter((el) => el.offsetParent !== null);
+            if (e.shiftKey && document.activeElement === els[0]) {
+              e.preventDefault();
+              els.at(-1)?.focus();
+            } else if (!e.shiftKey && document.activeElement === els.at(-1)) {
+              e.preventDefault();
+              els[0]?.focus();
+            }
+          }
+        }}
+      >
         <a
           href="#inicio"
           className="brand"
           onClick={(e) => {
             e.preventDefault();
-            setHome(true);
+            navigate("inicio");
           }}
         >
           <img src="./icono.ico" alt="" />
-          NexoLineal
+          <span>
+            NexoLineal<small>Un espacio para entender</small>
+          </span>
         </a>
+        <button
+          className="drawer-close icon-button"
+          aria-label="Cerrar menú"
+          onClick={() => {
+            setMenu(false);
+            document.getElementById("menu-toggle")?.focus();
+          }}
+        >
+          ×
+        </button>
+        <span className="nav-label">EXPLORÁ TU CUADERNO</span>
         <nav aria-label="Menú principal">
+          {routes.map((r) => (
+            <button
+              key={r.id}
+              type="button"
+              aria-current={route === r.id ? "page" : undefined}
+              data-route={r.id}
+              onClick={() => navigate(r.id)}
+            >
+              <span aria-hidden="true">{r.icon}</span>
+              <span>{r.name}</span>
+              {r.id === "historial" && !!project.history.length && (
+                <small>{project.history.length}</small>
+              )}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-footer">
+          <span className="local-dot" />
+          Tu trabajo se guarda en este dispositivo.
+          <small>NexoLineal · 0.6.0</small>
+        </div>
+      </aside>
+      {menu && (
+        <button
+          className="menu-scrim"
+          aria-label="Cerrar navegación"
+          tabIndex={-1}
+          onClick={() => setMenu(false)}
+        />
+      )}
+      <div className="app-body">
+        <header className="topbar">
           <button
-            type="button"
-            aria-pressed={home}
-            onClick={() => setHome(true)}
+            id="menu-toggle"
+            className="icon-button mobile-menu"
+            aria-label="Abrir menú principal"
+            aria-expanded={menu}
+            onClick={() => setMenu(true)}
           >
-            Inicio
+            ☰
           </button>
+          <div className="global-search">
+            <span aria-hidden="true">⌕</span>
+            <label htmlFor="buscar-operaciones" className="sr-only">
+              Buscar operaciones
+            </label>
+            <input
+              id="buscar-operaciones"
+              type="search"
+              placeholder="Buscá una operación…"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setRoute("inicio");
+              }}
+            />
+            <kbd>⌘ K</kbd>
+          </div>
           <button
-            type="button"
-            aria-pressed={!home}
-            onClick={() => setHome(false)}
+            className="workspace-return text-button"
+            onClick={() => navigate("trabajo")}
           >
             Área de trabajo
           </button>
-        </nav>
-        <div className="mode" aria-label="Presentación">
-          <button
-            id="modo-serio"
-            type="button"
-            aria-pressed={mode === "serio"}
-            onClick={() => setMode("serio")}
-          >
-            Serio
-          </button>
-          <button
-            id="modo-explorador"
-            type="button"
-            aria-pressed={mode === "explorador"}
-            onClick={() => setMode("explorador")}
-          >
-            Explorador
-          </button>
-        </div>
-      </header>
-      <main id="inicio">
-        {home && (
-          <section className="welcome" aria-labelledby="objetivo">
-            <h1 id="objetivo">¿Qué querés calcular?</h1>
-            <div className="operation-grid">
-              {categories.map((category) => {
-                const group = operations.filter(
-                  (op) => op.category === category,
-                );
-                return (
-                  <button
-                    type="button"
-                    className="operation-card"
-                    key={category}
-                    disabled={busy}
-                    onClick={() => choose(group[0].id)}
-                  >
-                    <strong>{category}</strong>
-                    <span>{group.length} operaciones disponibles</span>
-                  </button>
-                );
-              })}
+          <div className="preferences">
+            <div className="mode" role="group" aria-label="Presentación">
+              <button
+                id="modo-serio"
+                aria-pressed={mode === "serio"}
+                onClick={() =>
+                  update((p) => ({
+                    ...p,
+                    preferences: { ...p.preferences, mode: "serio" },
+                  }))
+                }
+              >
+                Serio
+              </button>
+              <button
+                id="modo-explorador"
+                aria-pressed={mode === "explorador"}
+                onClick={() =>
+                  update((p) => ({
+                    ...p,
+                    preferences: { ...p.preferences, mode: "explorador" },
+                  }))
+                }
+              >
+                Explorador
+              </button>
             </div>
-          </section>
-        )}
-        <div className="workspace">
-          <section
-            className="panel input-panel"
-            aria-labelledby="operacion-titulo"
-          >
-            <div className="panel-heading">
-              <h2 id="operacion-titulo">{spec?.title || "Calculadora"}</h2>
-              <span className="engine-status" role="status">
-                <i className={ready ? "ready" : ""} />
-                {status}
-              </span>
+            <div className="theme" role="group" aria-label="Tema">
+              <button
+                id="tema-claro"
+                aria-pressed={theme === "claro"}
+                onClick={() =>
+                  update((p) => ({
+                    ...p,
+                    preferences: { ...p.preferences, theme: "claro" },
+                  }))
+                }
+              >
+                Claro
+              </button>
+              <button
+                id="tema-oscuro"
+                aria-pressed={theme === "oscuro"}
+                onClick={() =>
+                  update((p) => ({
+                    ...p,
+                    preferences: { ...p.preferences, theme: "oscuro" },
+                  }))
+                }
+              >
+                Oscuro
+              </button>
             </div>
-            <form
-              noValidate
-              onSubmit={calculate}
-              onKeyDown={(e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key === "Enter")
-                  e.currentTarget.requestSubmit();
+          </div>
+        </header>
+        <div
+          className="save-strip"
+          role="region"
+          aria-label="Estado del cuaderno"
+        >
+          <span>{project.name || "Cuaderno sin nombre"}</span>
+          <span id="estado-guardado" role="status">
+            {saveStatus}
+          </span>
+          {blocked && (
+            <button
+              className="text-button"
+              onClick={() => {
+                setBlocked(false);
+                void persist();
               }}
             >
-              <label htmlFor="operacion">Operación</label>
-              <select
-                id="operacion"
-                value={operation}
-                disabled={busy || !ready}
-                onChange={(e) => choose(e.target.value)}
+              Guardar el cuaderno actual
+            </button>
+          )}
+        </div>
+        {notice && (
+          <div className="notice" role="status">
+            <span>{notice}</span>
+            {undo && (
+              <button
+                className="text-button"
+                onClick={() => {
+                  const previous = undo;
+                  setUndo(null);
+                  current.current = previous;
+                  setProject(previous);
+                  setResult(null);
+                  if (previous.active.resumeResult)
+                    void calculateProblem(previous, false, true);
+                }}
               >
-                {!operations.length && (
-                  <option value="matrices.producto">
-                    Cargando operaciones…
-                  </option>
-                )}
-                {categories.map((category) => (
-                  <optgroup key={category} label={category}>
-                    {operations
-                      .filter((op) => op.category === category)
-                      .map((op) => (
-                        <option key={op.id} value={op.id}>
-                          {op.title}
-                        </option>
-                      ))}
-                  </optgroup>
+                Deshacer importación
+              </button>
+            )}
+            <button
+              className="icon-button"
+              aria-label="Cerrar aviso"
+              onClick={() => setNotice("")}
+            >
+              ×
+            </button>
+          </div>
+        )}
+        {!workspaceVisible && (
+          <div
+            className="active-problem"
+            role="region"
+            aria-label="Ejercicio activo"
+          >
+            <div>
+              <span className="eyebrow">EJERCICIO ACTIVO</span>
+              <strong>{spec?.title || "Cargando…"}</strong>
+              <span className="active-expression">
+                {values.expresion ||
+                  values.A ||
+                  values.v ||
+                  "Tus datos permanecen en el área de trabajo."}
+              </span>
+            </div>
+            <button className="secondary" onClick={() => navigate("trabajo")}>
+              Volver al cálculo
+            </button>
+            <details>
+              <summary>Ver datos activos</summary>
+              {Object.entries(values)
+                .filter(([, v]) => v.trim())
+                .map(([name, value]) => (
+                  <div key={name}>
+                    <strong>
+                      {spec?.fields.find((f) => f.name === name)?.label || name}
+                    </strong>
+                    <pre>{value}</pre>
+                  </div>
                 ))}
-              </select>
-              {spec?.description && <p className="help">{spec.description}</p>}
-              {spec && (
-                <FormFields
-                  spec={spec}
-                  values={values}
-                  busy={busy}
-                  change={change}
-                />
+            </details>
+          </div>
+        )}
+        <main id="main-content" tabIndex={-1}>
+          {route === "inicio" && (
+            <section
+              className="welcome"
+              aria-labelledby={query ? "search-title" : "objetivo"}
+            >
+              {!query && (
+                <div className="hero">
+                  <div className="hero-copy">
+                    <span className="eyebrow">
+                      {mode === "explorador"
+                        ? "TU PRÓXIMA MISIÓN"
+                        : "ÁLGEBRA LINEAL, PASO A PASO"}
+                    </span>
+                    <h1 id="objetivo" tabIndex={-1}>
+                      {mode === "explorador" ? (
+                        <>
+                          ¿Qué rincón del cosmos
+                          <br />
+                          resolvemos hoy?
+                        </>
+                      ) : (
+                        <>
+                          ¿Qué querés
+                          <br />
+                          calcular hoy?
+                        </>
+                      )}
+                    </h1>
+                    <p>
+                      Elegí una operación. Ingresá solo lo necesario.
+                      <br className="desktop-break" /> Entendé el resultado,
+                      paso a paso.
+                    </p>
+                    <button
+                      className="hero-resume secondary"
+                      onClick={() => navigate("trabajo")}
+                    >
+                      {mode === "explorador"
+                        ? "↗ Retomar misión"
+                        : "↗ Continuar con"}{" "}
+                      · {spec?.title || "tu ejercicio"}
+                    </button>
+                  </div>
+                  {mode === "explorador" ? <AstroArt /> : <AcademicArt />}
+                </div>
               )}
+              {query ? (
+                <div className="search-results panel">
+                  <h1 id="search-title" tabIndex={-1}>
+                    Resultados de búsqueda
+                  </h1>
+                  <p>
+                    {allMatches.length} operaciones disponibles para «{query}»
+                  </p>
+                  <div className="operation-list">
+                    {allMatches.map((o) => (
+                      <button
+                        className="operation-choice"
+                        key={o.id}
+                        disabled={busy}
+                        onClick={() => choose(o.id)}
+                      >
+                        <strong>{o.title}</strong>
+                        <span>{o.category} · Disponible</span>
+                      </button>
+                    ))}
+                  </div>
+                  {!allMatches.length && (
+                    <p className="empty">
+                      Probá con «Gauss», «base», «norma» o «integral».
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className="section-heading">
+                    <h2>Elegí tu punto de partida</h2>
+                    <span>{operations.length} operaciones disponibles</span>
+                  </div>
+                  <div className="operation-grid">
+                    {AREAS.map((a, i) => {
+                      const ops = operations.filter(
+                        (o) => o.category === a.name,
+                      );
+                      return (
+                        <button
+                          className={"operation-card card-" + i}
+                          type="button"
+                          key={a.name}
+                          onClick={() => navigate(a.name)}
+                        >
+                          <span className="card-symbol" aria-hidden="true">
+                            {a.icon}
+                          </span>
+                          <div>
+                            <strong>
+                              {mode === "explorador" ? a.alias : a.name}
+                            </strong>
+                            {mode === "explorador" && (
+                              <span className="academic-subtitle">
+                                {a.name}
+                              </span>
+                            )}
+                            <p>{a.copy}</p>
+                            <span className="card-status">
+                              {ops.length
+                                ? ops.length + " operaciones · Disponible"
+                                : "Cargando catálogo…"}{" "}
+                              <b aria-hidden="true">↗</b>
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </section>
+          )}
+          {AREAS.some((a) => a.name === route) && (
+            <section className="panel page-panel">
+              <span className="eyebrow">
+                {mode === "explorador"
+                  ? areaFor(route)?.alias
+                  : "ELEGÍ UNA OPERACIÓN"}
+              </span>
+              <h1 tabIndex={-1}>{route}</h1>
+              <p className="help">
+                {areaFor(route)?.copy} Todas las operaciones listadas están
+                disponibles.
+              </p>
+              <div className="operation-list">
+                {operations
+                  .filter((o) => o.category === route)
+                  .map((o) => (
+                    <button
+                      key={o.id}
+                      className="operation-choice"
+                      disabled={busy}
+                      onClick={() => choose(o.id)}
+                    >
+                      <strong>{o.title}</strong>
+                      <span>{o.description}</span>
+                      <small>Disponible →</small>
+                    </button>
+                  ))}
+              </div>
+            </section>
+          )}
+          <div hidden={!workspaceVisible}>
+            {route === "trabajo" && (
+              <h1 className="sr-only" tabIndex={-1}>
+                Área de trabajo
+              </h1>
+            )}
+            <WorkspacePanel
+              operations={operations}
+              spec={spec}
+              operation={project.active.operation}
+              values={values}
+              ready={ready}
+              busy={busy}
+              progress={progress}
+              result={result}
+              error={error}
+              errors={errors}
+              active={project.active}
+              objects={project.objects}
+              candidates={candidates}
+              choose={choose}
+              change={change}
+              calculate={(e) => void calculate(e)}
+              cancel={() => void cancel()}
+              retry={() => void initialize()}
+              setActive={setActive}
+              exportResult={() => void exportResult()}
+              saveObject={openObject}
+              reuse={reuse}
+            />
+          </div>
+          {route === "historial" && (
+            <HistoryPanel
+              project={project}
+              operations={operations}
+              busy={busy}
+              name={(name) => update((p) => ({ ...p, name }))}
+              favorite={(entry) =>
+                update((p) => ({
+                  ...p,
+                  history: p.history.map((h) =>
+                    h.id === entry ? { ...h, favorite: !h.favorite } : h,
+                  ),
+                }))
+              }
+              edit={(h, again) => void repeat(h, again)}
+              remove={(entry) =>
+                update((p) => ({
+                  ...p,
+                  history: p.history.filter((h) => h.id !== entry),
+                }))
+              }
+              exportProject={() => void exportProject()}
+              importFile={(e) => void readFile(e)}
+              importNative={() => void importNative()}
+              json={() => {
+                try {
+                  const raw = encodeProject(project);
+                  setModal({ kind: "json", text: raw });
+                  setModalText(raw);
+                  setModalError("");
+                } catch (e) {
+                  setNotice((e as Error).message);
+                }
+              }}
+              newProject={() => setModal({ kind: "new" })}
+              save={() => void persist()}
+            />
+          )}
+          {route === "biblioteca" && (
+            <LibraryPanel
+              project={project}
+              operations={operations}
+              busy={busy}
+              choose={choose}
+              reuse={(object) => {
+                setModal({ kind: "reuse", object });
+                setModalError("");
+              }}
+              remove={(object) =>
+                update((p) => ({
+                  ...p,
+                  objects: p.objects.filter((o) => o.id !== object),
+                }))
+              }
+            />
+          )}
+        </main>
+        <footer className="app-footer">
+          <span>Hecho para explorar, entender y comprobar.</span>
+          <span>Un motor Python · Dos formas de aprender</span>
+        </footer>
+      </div>
+      {modal && (
+        <Dialog
+          title={
+            modal.kind === "object"
+              ? "Guardar objeto"
+              : modal.kind === "reuse"
+                ? "¿Dónde querés usar este objeto?"
+                : modal.kind === "new"
+                  ? "Crear un cuaderno nuevo"
+                  : modal.result
+                    ? "JSON del resultado"
+                    : "Proyecto JSON versionado"
+          }
+          onClose={() => setModal(null)}
+        >
+          {modal.kind === "object" && (
+            <>
+              <label htmlFor="object-name">Nombre del objeto</label>
+              <input
+                id="object-name"
+                autoFocus
+                maxLength={100}
+                value={modalName}
+                onChange={(e) => setModalName(e.target.value)}
+              />
+              <pre className="object-preview">{modal.object.text}</pre>
+              <p className="help">
+                Se conserva el texto exacto. La validez matemática se comprueba
+                al calcular.
+              </p>
+              <button
+                id="confirmar-objeto"
+                className="primary"
+                onClick={saveObject}
+              >
+                Guardar objeto
+              </button>
+            </>
+          )}
+          {modal.kind === "reuse" && (
+            <>
+              <p>
+                Usar «{modal.object.name}» en {spec?.title}:
+              </p>
+              <div className="object-actions">
+                {spec?.fields
+                  .filter((f) => supports(f.kind, modal.object))
+                  .map((f) => (
+                    <button
+                      className="secondary"
+                      key={f.name}
+                      onClick={() => reuse(f.name, modal.object)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+              </div>
+              {!spec?.fields.some((f) => supports(f.kind, modal.object)) && (
+                <p className="help">
+                  La operación activa no usa este tipo de objeto. Elegí primero
+                  una operación compatible.
+                </p>
+              )}
+            </>
+          )}
+          {modal.kind === "json" && (
+            <>
+              <label htmlFor="project-json">
+                {modal.result
+                  ? "Resultado completo"
+                  : "Contenido del proyecto · versión 1"}
+              </label>
+              <textarea
+                id="project-json"
+                rows={12}
+                value={modalText}
+                readOnly={modal.result}
+                onChange={(e) => setModalText(e.target.value)}
+                spellCheck={false}
+              />
               <div className="actions">
-                <button
-                  id="calcular"
-                  type="submit"
-                  className="primary"
-                  disabled={!ready || busy}
-                >
-                  {busy ? "Calculando…" : "Calcular"}
+                <button className="secondary" onClick={() => void copyJson()}>
+                  Copiar JSON
                 </button>
-                {busy && (
+                {!modal.result && (
                   <button
-                    id="cancelar"
-                    type="button"
-                    className="secondary"
-                    onClick={() => void cancel()}
+                    id="importar-json"
+                    className="primary"
+                    disabled={busy || !ready}
+                    onClick={() => void applyImport(modalText)}
                   >
-                    Cancelar
+                    Importar este proyecto
                   </button>
                 )}
               </div>
-              {busy && (
-                <progress
-                  max={100}
-                  value={progress || undefined}
-                  aria-label="Progreso del cálculo"
-                />
-              )}
-            </form>
-          </section>
-          <section
-            id="resultado"
-            className="panel result-panel"
-            aria-live="polite"
-            aria-labelledby="resultado-titulo"
-            data-status={result?.status || (error ? "transport_error" : "idle")}
-          >
-            <div className="panel-heading">
-              <h2 id="resultado-titulo">Resultado</h2>
-              {result && (import.meta.env.VITE_TARGET || "web") === "web" && (
+              <p className="help">
+                {modal.result
+                  ? "Incluye datos, pasos y comprobaciones del motor."
+                  : "Se valida el archivo completo antes de reemplazar el cuaderno. Los resultados se vuelven a calcular."}
+              </p>
+            </>
+          )}
+          {modal.kind === "new" && (
+            <>
+              <p>
+                El cuaderno actual se reemplazará. Podés exportarlo antes para
+                conservarlo.
+              </p>
+              <div className="actions">
                 <button
-                  id="exportar"
                   className="secondary"
-                  type="button"
-                  onClick={exportResult}
+                  onClick={() => void exportProject()}
                 >
-                  Exportar JSON
+                  Exportar primero
                 </button>
-              )}
-            </div>
-            {error && (
-              <>
-                <p className="error" role="alert">
-                  {error}
-                </p>
-                {!ready && (
-                  <button
-                    id="reintentar-motor"
-                    type="button"
-                    className="secondary"
-                    onClick={() => void initialize()}
-                  >
-                    Reintentar
-                  </button>
-                )}
-              </>
-            )}
-            {result?.error && (
-              <p
-                className={
-                  ["infinite", "inconsistent", "cancelled"].includes(
-                    result.status,
-                  )
-                    ? "outcome-message"
-                    : "error"
-                }
-                role={result.status === "cancelled" ? "status" : "alert"}
-              >
-                {result.error.message}
-              </p>
-            )}
-            {!result && !error && (
-              <p className="empty">
-                {busy
-                  ? "Podés seguir navegando mientras calculamos."
-                  : "El resultado y su procedimiento aparecerán aquí."}
-              </p>
-            )}
-            {result?.warnings.map((message, i) => (
-              <p className="outcome-message" key={i}>
-                {message}
-              </p>
-            ))}
-            {result?.result && <ResultView value={result.result} />}
-            {result?.metadata.exact === true && result.result && (
-              <p className="accuracy">Resultado exacto</p>
-            )}
-            {result?.metadata.exact === false && result.result && (
-              <p className="accuracy">Resultado aproximado</p>
-            )}
-            {result?.verification.passed === true && (
-              <p className="verified">
-                {String(
-                  result.verification.description ||
-                    "Comprobación de los pasos correcta",
-                )}
-              </p>
-            )}
-            {!!result?.steps.length && (
-              <details className="steps">
-                <summary>Ver procedimiento</summary>
-                <label htmlFor="paso">Paso</label>
-                <select
-                  id="paso"
-                  value={selectedStep}
-                  onChange={(e) => setSelectedStep(Number(e.target.value))}
+                <button
+                  id="confirmar-nuevo"
+                  className="primary"
+                  onClick={() => {
+                    const next = emptyProject();
+                    next.preferences = project.preferences;
+                    setUndo(project);
+                    current.current = next;
+                    setProject(next);
+                    setResult(null);
+                    setModal(null);
+                    setErrors({});
+                    setError("");
+                    navigate("inicio");
+                    setNotice("Cuaderno nuevo. Podés deshacer este cambio.");
+                  }}
                 >
-                  {result.steps.map((step, i) => (
-                    <option key={step.id} value={i}>
-                      Paso {i + 1}: {step.description}
-                    </option>
-                  ))}
-                </select>
-                <StepView step={result.steps[selectedStep]} />
-              </details>
-            )}
-            {result && Object.keys(result.verification).length > 0 && (
-              <details className="verification-details">
-                <summary>Ver comprobación</summary>
-                <DataView value={result.verification} />
-              </details>
-            )}
-          </section>
-        </div>
-      </main>
+                  Crear cuaderno
+                </button>
+              </div>
+            </>
+          )}
+          {modalError && (
+            <p className="error" role="alert">
+              {modalError}
+            </p>
+          )}
+        </Dialog>
+      )}
     </div>
   );
 }
