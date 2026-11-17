@@ -1,0 +1,25 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "Proyección ortogonal con fracciones",
+  "updatedAt": "2026-11-17T12:30:40.671705+00:00",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "vectores.proyeccion",
+    "inputs": {
+      "vectores.proyeccion": {
+        "u": "2 3",
+        "v": "1 2"
+      }
+    },
+    "step": 0,
+    "stepsOpen": true,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": []
+}

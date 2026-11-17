@@ -1,0 +1,4776 @@
+{
+  "version": "0.7.0",
+  "verified_source_sha": "772c2e9e09551529bd74d8ce60dcd58698ea70a4",
+  "verification_date_local": "2026-11-17",
+  "timezone": "America/Managua",
+  "summary": {
+    "approved": true,
+    "platforms": [
+      "web",
+      "windows-fuente",
+      "windows-ejecutable",
+      "android"
+    ],
+    "shared_contracts": 136,
+    "identical_core_files": 48,
+    "android_offline": true,
+    "visualization": {
+      "ui_cases": 11,
+      "accessibility_runs": 5,
+      "accessibility_violations": 0,
+      "audit_checks": 8083,
+      "native_pdf_csv": true,
+      "data_checks": 23
+    },
+    "workspace": {
+      "web_reopened": true,
+      "windows_source_reopened": true,
+      "windows_exe_reopened": true,
+      "android_reopened": true,
+      "ui_cases": 19,
+      "codec_checks": 54,
+      "accessibility_runs": 7,
+      "accessibility_violations": 0
+    }
+  },
+  "unit_tests": {
+    "original": 29,
+    "core_and_platforms": 131,
+    "total": 160,
+    "added_in_phase07": 29
+  },
+  "independent_audit": {
+    "approved": true,
+    "seed": 2026111707,
+    "reference": "SymPy 1.14.0",
+    "calls": 553,
+    "checks": 8083,
+    "systems": 240,
+    "projections": 160,
+    "combinations": 40,
+    "transformations": 100,
+    "root_examples": 8,
+    "applications": 5
+  },
+  "visualization_ui": {
+    "approved": true,
+    "cases": [
+      {
+        "name": "Rectas y solución del sistema original con alternativa textual",
+        "passed": true
+      },
+      {
+        "name": "Planos 3D, cámara, ampliación, Escape y retorno del foco",
+        "passed": true
+      },
+      {
+        "name": "Proyección ortogonal disponible y representada",
+        "passed": true
+      },
+      {
+        "name": "Cuadrícula transformada con segmentos rectos",
+        "passed": true
+      },
+      {
+        "name": "Bisección, falsa posición, Newton y secante sincronizan fila, paso y geometría",
+        "passed": true
+      },
+      {
+        "name": "Paso seleccionado cambia página y se conserva al cambiar modo/tema",
+        "passed": true
+      },
+      {
+        "name": "CSV leído con csv y PDF leído con pypdf coinciden con el mismo resultado",
+        "passed": true
+      },
+      {
+        "name": "Norma residual e iteración seleccionada sincronizadas",
+        "passed": true
+      },
+      {
+        "name": "Doce fichas con hipótesis y cinco modelos resueltos con unidades y restricciones",
+        "passed": true
+      },
+      {
+        "name": "Curva racional separada en la discontinuidad, sin unir a través del polo",
+        "passed": true
+      },
+      {
+        "name": "Gráfica, controles y tabla accesibles a 390 px sin desbordar la página",
+        "passed": true
+      }
+    ],
+    "a11y": [
+      {
+        "label": "sistema-2d-serio-claro",
+        "violations": [],
+        "passes": 29
+      },
+      {
+        "label": "planos-3d-dialogo",
+        "violations": [],
+        "passes": 22
+      },
+      {
+        "label": "raiz-explorador-oscuro",
+        "violations": [],
+        "passes": 33
+      },
+      {
+        "label": "biblioteca-teoria-aplicaciones",
+        "violations": [],
+        "passes": 29
+      },
+      {
+        "label": "grafica-movil",
+        "violations": [],
+        "passes": 33
+      }
+    ],
+    "errors": []
+  },
+  "visualization_data": {
+    "approved": true,
+    "checks": 23,
+    "coordinate_conversion": "solo presentación",
+    "csv": "UTF-8 BOM; todas las columnas; escape RFC4180 y protección de fórmulas",
+    "pdf": "mismo resultado y procedimiento; lectura PDF en prueba de navegador"
+  },
+  "project_codec": {
+    "approved": true,
+    "checks": 54,
+    "operations": 57,
+    "format": "NexoLineal.Project",
+    "version": 1,
+    "native_adapters": [
+      "android-proxy",
+      "windows-proxy"
+    ]
+  },
+  "workspace_ui": {
+    "approved": true,
+    "cases": [
+      {
+        "name": "10 destinos reales y catálogo de 57 operaciones",
+        "passed": true
+      },
+      {
+        "name": "Buscador matemático con atajo y formulario mínimo de transpuesta",
+        "passed": true
+      },
+      {
+        "name": "Vacío y cero distintos, error localizado y foco correcto",
+        "passed": true
+      },
+      {
+        "name": "Pegado TSV conserva celdas vacías e infiere dimensiones",
+        "passed": true
+      },
+      {
+        "name": "Objeto matriz reutilizado sin transcripción ni pérdida de fracción",
+        "passed": true
+      },
+      {
+        "name": "Base calculada reutilizada para coordenadas en la orientación correcta",
+        "passed": true
+      },
+      {
+        "name": "Función reutilizable en otra operación",
+        "passed": true
+      },
+      {
+        "name": "Paridad de 57 operaciones, resultado y paso en cuatro combinaciones de modo y tema",
+        "passed": true
+      },
+      {
+        "name": "Historial, búsqueda y favoritos persistibles",
+        "passed": true
+      },
+      {
+        "name": "Exportación de proyecto JSON versionado con valores exactos",
+        "passed": true
+      },
+      {
+        "name": "Portapapeles no disponible: JSON enfocado y seleccionado para copia manual",
+        "passed": true
+      },
+      {
+        "name": "Proyecto incompatible rechazado sin reemplazar el trabajo",
+        "passed": true
+      },
+      {
+        "name": "Importación restaura trabajo y paso, recalculando el resultado",
+        "passed": true
+      },
+      {
+        "name": "Cierre y reapertura de Chromium conserva objetos, favoritos, problema y paso",
+        "passed": true
+      },
+      {
+        "name": "Editar y repetir son recorridos diferentes y funcionales",
+        "passed": true
+      },
+      {
+        "name": "Movimiento reducido elimina las animaciones decorativas",
+        "passed": true
+      },
+      {
+        "name": "Menú táctil, Escape, retorno de foco y ancho móvil de 390 px",
+        "passed": true
+      },
+      {
+        "name": "Fallo de almacenamiento visible sin borrar la entrada activa",
+        "passed": true
+      },
+      {
+        "name": "Guardado incompatible conservado sin sobrescritura automática",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "a11y": [
+      {
+        "label": "serio-claro",
+        "violations": [],
+        "passes": 45
+      },
+      {
+        "label": "serio-oscuro",
+        "violations": [],
+        "passes": 45
+      },
+      {
+        "label": "explorador-claro",
+        "violations": [],
+        "passes": 45
+      },
+      {
+        "label": "explorador-oscuro",
+        "violations": [],
+        "passes": 45
+      },
+      {
+        "label": "biblioteca",
+        "violations": [],
+        "passes": 48
+      },
+      {
+        "label": "historial",
+        "violations": [],
+        "passes": 46
+      },
+      {
+        "label": "movil-historial",
+        "violations": [],
+        "passes": 43
+      }
+    ]
+  },
+  "legacy_ui": {
+    "commit": "fc29644bf365c69d60952220c790bb4b250c500a",
+    "casos": [
+      {
+        "nombre": "sistema 2x2",
+        "A": [
+          [
+            "2",
+            "1"
+          ],
+          [
+            "1",
+            "-1"
+          ]
+        ],
+        "b": [
+          "5",
+          "1"
+        ],
+        "esperado": [
+          "2",
+          "1"
+        ],
+        "observado": [
+          "2",
+          "1"
+        ],
+        "aprobado": true
+      },
+      {
+        "nombre": "aritmética",
+        "expresion": "(8+2)/5",
+        "esperado": "2",
+        "observado": "2",
+        "aprobado": true
+      },
+      {
+        "nombre": "Ans racional",
+        "esperado": "1",
+        "aprobado": true
+      },
+      {
+        "nombre": "integral racional exacta",
+        "esperado": "2/3",
+        "aprobado": true
+      },
+      {
+        "nombre": "singularidad 1/x+0",
+        "aprobado": true
+      },
+      {
+        "nombre": "singularidad 2*(1/x)",
+        "aprobado": true
+      },
+      {
+        "nombre": "fracción grande en pantalla y exportación",
+        "esperado": "9007199254740993/2",
+        "aprobado": true
+      },
+      {
+        "nombre": "entrada numérica insegura requiere texto",
+        "aprobado": true
+      },
+      {
+        "nombre": "paridad matrices.producto ok",
+        "aprobado": true
+      },
+      {
+        "nombre": "paridad matrices.producto invalid_input",
+        "aprobado": true
+      },
+      {
+        "nombre": "paridad calculo.definida domain_error",
+        "aprobado": true
+      }
+    ],
+    "errores": [],
+    "aprobado": true
+  },
+  "platform_reports": {
+    "web": {
+      "approved": true,
+      "errors": [],
+      "case_count": 142,
+      "cases": [
+        {
+          "name": "recuperación tras fallo al cargar el motor",
+          "passed": true
+        },
+        {
+          "name": "interfaz, exportación y presentaciones",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "2ee1e696f46cc46d1905783158afc31ac128f6fa274b68b125b8cf0f6ab7cd78",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "5f56c3c69340c4dda4c5a3dfa2ff1a7d25162625735970450246dd1b527397c5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "e4191bb74229aed6bd4ce37eaebb1fdd03487084fff7f685e30e66730a67afec",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "0ac187109f57530b9814982c35f6cc8bc0c2fda3ec2f61da322a214b8331928c",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "calculadora.evaluar",
+          "passed": true,
+          "response_sha256": "1534d55db8694f59545df23422dad9760a17a7c8e4da87d1f60b0a6e80799dba",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "6596789ccaa31ff60ab5e588f164db37b68a103c3693cce85f5c61057c9e169e",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.derivar",
+          "passed": true,
+          "response_sha256": "e1a02c6964e80dfe25075de7e2983283c87fea00fa7400042ef51512cec237e4",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "1a70e99dfe56cbc2cd44fbff7d05c2b6b0a75c9a0d1e50df22176185fb4b217a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.cramer",
+          "passed": true,
+          "response_sha256": "6840753e63d90b394137d772c25c4a6844f212f91e80c6329ae29fc090b01611",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.inversa",
+          "passed": true,
+          "response_sha256": "fcaef68a4763e53296b6f1915dea4407040233cfbe0a162f42bf511945becc88",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "fd683ef0b0e15d9abbc795783164c103889e4d054960935fb5bdccee0f550ec7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "41caa4fe3fa132159af47f10b2dc8cdb905f98adef0f3976b1b4fbd5ecb62b9c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma",
+          "passed": true,
+          "response_sha256": "85b1f929d35c616fbad92099f90fcfe1826d24d83b060f84f756fbd6eed08f39",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.resta",
+          "passed": true,
+          "response_sha256": "5bcf0f365db2a6d278bdb01b5573390e847bbaffe28c8ee32902569879345936",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.escalar",
+          "passed": true,
+          "response_sha256": "82adf3e824c8b1461fdceecd4b91e49887be128fc3d89dddb1f918d83b7ae6e4",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.transpuesta",
+          "passed": true,
+          "response_sha256": "9921b2db982d75890bbc9235f1830932393ac45e28eea8c98837b7c8b688ef0e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.analizar",
+          "passed": true,
+          "response_sha256": "59369e78d7b284f8afcf14c4da8e9d1c6a30052b06ad581c9b93a80d22cb6184",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.ref",
+          "passed": true,
+          "response_sha256": "c266a60291d1a5f48a3ce10d0ad43817003f548a92c4590dcdb8599cec748cd0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.rref",
+          "passed": true,
+          "response_sha256": "89cf07f41cef630fc9905b548315dd9e28557e96223e2a0cea252d23a0041d58",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.traza",
+          "passed": true,
+          "response_sha256": "dcf10db8b23814e23742c5156370933a2f9e0274ba23fc4c7b527d4b0a433a04",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "4d63fa30666b5a3e2b67ca4a1605af2935a6c87f41ea6ceb6036a830a0ddf461",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.elemental",
+          "passed": true,
+          "response_sha256": "f9eb7ba11722651bd2b6ae094e2e2dd36e36781de8685843beef984b01957e6a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.propiedades",
+          "passed": true,
+          "response_sha256": "e2a1770f44dc8502c29a89ace1cb72bfe81676a2d80db64321afc47a486a4a34",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.particionar",
+          "passed": true,
+          "response_sha256": "d795b4f27dc7041c658cec4f2ef4cc24420845e66cc2e81f7eedd5bf5265f832",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma_bloques",
+          "passed": true,
+          "response_sha256": "61cd2dbcc26276c71be9171880a19cec9c7f1c6ef751d35b683f0e324977894f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "1be2a0a69c54873716372a41fab5c47180a11d61632cbc4cbb6d413f9e02809e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "a6cefdf6a0838e3a0e4550334b5898cd4e8ed7d4e98c8aa90ce04a6e938dfb06",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.cofactores",
+          "passed": true,
+          "response_sha256": "e5ef4c65810536fda2c828cc0bf39a61a1f7b1cebf8fcf28e943e22a7e48c236",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "a86d0e66ae9d81a36d2f4072088fb42178bd2b490c8efa205b9fe17d6cf292e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.suma",
+          "passed": true,
+          "response_sha256": "50d2363e0b2d9916e01f5b3a4bde1be674a7e3e441b0f24fbbdcdfc5cb57cb30",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.resta",
+          "passed": true,
+          "response_sha256": "9866d4485053228ab7bd2d82efd18ff528006ca0b9e2e7d403e5ba85f542cd79",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_punto",
+          "passed": true,
+          "response_sha256": "81a016857c2dba912710f62b5f35859f3331c6e536a92af6b9fa3654de890b75",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_cruz",
+          "passed": true,
+          "response_sha256": "90d8f2ae61cda3a98ac72673c5785d956bbfa02aa05902a7e6fe4af91eef7df3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.escalar",
+          "passed": true,
+          "response_sha256": "131e711d896322c25aa05ecda5fc9113cc940bbcfd01cbd0fe585be839ddc949",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "909bcbe8c7e1117c17ad15ce9c78dbfa15b64607e18c3b79160c5b9062068336",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "6bfb1222e2f4c28016a6f4f5c41b80efb3938a4d87acca6d5ee82ff114e0a30b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "2f1ea7c71c03316e4483ad07131b1b6c214178f9ec742130d47ec9a8b8a58d14",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.fundamentales",
+          "passed": true,
+          "response_sha256": "3324164967fab68fe40ba51b3f31e33f272ccf82ef68fca22d308b6b2953af4c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "4a9603a19d4f64e8ba2de0210b549185c4bc38808456f0b5ed4e30d054dc98ab",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.suma",
+          "passed": true,
+          "response_sha256": "3fe7c29bb8ea3bdab92ecede4d491e9637721e8587a1c745813921b353a4d320",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "990d841b55efca6ac368831348e9239c2f6867794c43f3ef5b8127f6990d5556",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "77e2af933e12299c242c884ac7c6d13ccc0fef8cb0f9d8f9f5591edb3a2160fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "e449cc33de2c42a5d3957d7dcbf247f8d88f92ae1453ab6e59bd14cc383e6ac7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "721a3f0756bc5c0a27ff70a9c0a645c924fd1d3e802f377081cee363af36d361",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "6e1b09d853001d79659088bee0c3f419080865a0ffe5e72de9adadeb808737e6",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.componer",
+          "passed": true,
+          "response_sha256": "fe1cd68b7974a6b0ce0539101e295009157ada93b64b8688106f09e101fefbed",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "fe63f815b0555e3c1b7ef6e04b090ce018bf6f828653573ff4837b6afcaf9b93",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "7095a1daa14d82ac3454873bf14dd50b267043f337ac518cf46fc9d1697708bc",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "c553e470bf97ea42fc28b7d91c8ece7a38a792564c9968643dc5fa66cbd91922",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "a3a67c5025b5ef389ab45f1f246d8e653b7816231a287aabcc6b6be24b8983b3",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "288c2caad9ac30901b101e7675080c8d5dd0cfb36b3ed7c65160d0319b3cd3b0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "12f5e61ba0b9d9e68b1b70f42be8830d4e4af4ac3e13733bf8b29dff98db1e2b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "765c94de89a0fc981bcdf8b712646404e72e56004cc7ab917018af6482bfce5f",
+          "status": "singular",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "47aab162452e43553266431a9e82b0ac8ad9757cbfdb481b82b961241ddab24e",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "746f0ba538885812fbb1b98df300b0418f58fb1150166b18666b6e62f2159f63",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "0a04beac3d5bc017c5c6598d35784d76d96ae88c7411f7cd4e656058471f8148",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "46d7524fc69555f0c790e41c5561b984856e85e0178d06952813aefdd6402905",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "b48110855d1944a707d0388ab9a0260cef6f27aac4670d233f611df87c1164fa",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "d308db26462dc5b7ebfd7ae3addeef9c4398e8dfd400f5399e7349d2d6fd7634",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "83768f72a2f5677eebfd7986f8291d9b84b64811b805779892399ae6cad6e0ce",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "26937b416201d877a5bdb9d1f07544252c54bbe04469038534726f827584a0a6",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "2c0dd972a5886cbdcb78b7e28c7d015f709ed80d4334a0e52f712969cb2b0ddc",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "259a6410248d26ee13e549dc207b411d39e627b1525e37853dfb4ed0ee9d29e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "06365598da332ebf99185d37fc7cab62e5c9154fe5805b8ebc91399e8bc2e41d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "49e96770911e4c2714671dd075d9ae150883fd7cb0bf010c0f001528afcb5ffd",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "cfaf64e784b10302808abd0553e0d392ad6a703146a82488f196d83c7fd61c1d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "e211f6d953213caf7e5078693a49a0a5a55bc1a7fa80836b5b9547aafc7967f8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "bf53d6bc23f8a4b1cd597abe53030809c5ca612f0f1e961fee76f15f36a6f637",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "f551d146f8ea00f925c36fc2c79ffcee8b565ca6c4820c70a42dcb89fad00f0f",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "9f3389f7b876ff6b0aa11bcb32e8afb3579a25cdb7cbd75b2b9fb63f39d05dfe",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "963144fa8409f3ae56afbcad4c80e2b7287fce3fbf9dd24cb847192787150479",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "c79de2ea28d3934e2350f207e3508e9cc62a6027605a54b3968109c913f7c53f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "7d87d8c2e6347df7b99139c631b7ca0c664e7bb235fbca62667d333fe5bce097",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "be959f1d2b0051b3e18cf26384ef6be236561f1e734f4867a4b74a59a221aa09",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1f137b1d69bbe43bde5d396dc689af1a8e141279493557c0ef744b5fb682f8ae",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "70e739a88fa310de3ce000226846dedff20600a0b2164604515a64034eee009f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "57973d02ae228f182b83ed1570b374a8c2e13f6a3829c12e1e2be5b21aef46e8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "a77b9408b7dd64e6708a98e0861e1ef7d82414f1fe157ffdbc53d9ad8ad5b8d1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "0841985c6b715aa2d9265bfc6f34f3978a7c4635e496217d6e71287035acc6a9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "ba04b1bdd461c69940cac68f5313b99a165ad4d9280619fef3df8af12fbd45ba",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "387fdfe5a0fb7852adc877af1a9b7aa4868a24d471262637ba84ccd097252d38",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "a6c6dbcb0bb4cc3310dd553917914004f16fcb54c4aebe46c735356ad1d075db",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "9432f63292563aefd820f5f2ad4c768ea0448ae42e07ac951ab0b5d734114f45",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "c794683600a42d3c2bf3929d102925c28febcd7a6d3937e648b4fd2d52d04d9b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "0c39abc9833138de5baac497bcf7ac13c48f3a7e505043fda6982bd0ee8b29b8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "fcabc46ac6a9780b12aa39f420d01cd359798800bc7bb770ee3066ce8e52db98",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1d05e8a1b98ff46d55793222e9cd10f094d188ee0ee6e6ce83275518abf72502",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "5f8f82610235f9d4b55c69d036a75fe1d704e173e9236bbd18a2853ba7cb7e7f",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "00a180855eb3eae6ff9f9168e024e556b30517b771b7aff266a9a82625c75618",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "07217269a3bcf20a002477bc5315f700bfa3de1d12e0a0ecee4c25c93a8dd67e",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "a570fa21e9924428595baa5f3312245169e5b1e2a31b35c3c2fd2ab524b8af4a",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0dab3a03a78e0b291eb8e3d25d03a78846cce2c86d9259f00e90cdbc37e519f2",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "c753bceb81da08507d2c424d0d4266c16a6a9dad0787fb010c17d30c9810bba9",
+          "status": "domain_error",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "af78b80deabe283949d85e09fb59ef4080a25468b455193d3c9a9d97dc55f6d0",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "23cd79d20f544d4f89885dde92f7723fdf3737e3af8079993b165db241bb773a",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "b92f100284e786be93d8c01c5d2f96a5358a118de863e8c3b76fc302f426e51e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "c0e897ecd642baf6197c63bc13fd1601b97464703310c0b771405fed96d54a2d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "54b4f657cbbd2f608d5beae65fd9836e24a075682edcd4f05e2f32cd7193a370",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "9bd50595f45a613e34518e0a7688e8b337143c4854adf23e2cc13ca82b445ef7",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "a8d614d9e7dea73761e40a71c2acc71e529d3e2bf1540eba6eef7425540ac4b3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "5c9aa3938dbb978e5b2b1733b7e20f169bd80a8d0942a7077c09293be737ad71",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "68cffe987175da48b32ea2c3f215db7ed3da403f4ff429d7d86329f1bd7537df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "80ea2a00972194da1d29433fa7ef11936da598429945fb2831c99e13ad97cf4a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "754e586950e668393ce69d6bf31458808a58f3bc4a9762306648c8f8fe3d7829",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "47aad0acad56cfb2c2512e6fad9b5028f5594bae7b291d1945e08f867aef07ba",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1683c70d0850de54d3ddda7395e3c7daf659d70a691152e4089fc2dcae31c25e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "60f56dc41aac4bea7da0fc4a29893274c6e5750c51e745aaeb6a497536c86d7d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1a577dfd0c3d35076e079b16845b89ae81db093101b7e09e88658cb9317183df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "6bb19a2be84abbe36f25fbf88cea2210c103bb8b9348d67e0f02d3e65627b6fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "eaf67c684dca63798f2c5ef8c603b3067b64c09c6f36d1069fe85ccbe3637319",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "ffd92341d0fcb8c1101d8b754978fbc47ecae847a462e910dfc61285e20710b8",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "f315e9a630af2ec4963114dbc235b9ecb8541b1a23cecf67b6ace30d37b867da",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "20a78051e05030fcacee46ba699b3ffee3655e9f9ff23a685b32b62f54619bf6",
+          "status": "stagnated",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "0adf3d77e5f06d8b863498cf821f52b0e754c2758f02a9a6b05d909a3b99405f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "269390a21439b526d85cfe22f2ee4e325ca43fec11a7d08857615d98581e10af",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "352c0f0666882e23351f23df471acff7efced366984dfe5b27bb80691029bb94",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "62d12c07f4558a2c87cf7437b6cfb5f605c743da4547ea2631f17f8e5060c52f",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "b200b1f9161f276efdce25b12d335bdb9a7b1371c4d3779f7c49da3efdc86bff",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "6b6603e926539885e68e72a36d1e7abe49b03bff59e018f18631bee936c94322",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "114e2e181a3977cf2f84c91ed9dfb23e44712195cd044b04f097ef6ad8f5e16c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "2b3f99cd9155b2c597f2eca5f371083b4ac801c478d86a1b9be8bae50f3e46f1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "71584f7e3c47b4f224b53e8abbbc275c9fedfa5670610ce54c28a1caf7966b3c",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "b4ce6a21448b0df62e604277109409fb0cc00321e3f6de4db555e5b8e442a5e5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "a2037a2eefc7e3deae964fea3ed7d98741f5d9d1a8556a1ce1aa0e27b620078f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "fbec238fbec2fe6878f7e708d6e0962750a79ca14d0340ac324d44a3514c89c7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "1774797b8b8e25e83c3c8d29c38d3e0a44ac8f5e5d3c5a18bada306ac19b684e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "4af2726a374148ae03f1a6240917113afd0298cbf73661300201204bd0ed383b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "610eb5a89342c2cc1cc5a40fd3fb91e10055f48f133134982c1de171b368a98f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "91304e5b7bf0bde63bc2e69f071eefb0e048f9efbda72c526e38a843fdb77ccf",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0a0e03dd2bda7f332aa59805d231ee0aed493835b842b97d48b80b1e16245557",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d85a5cdae9804d487c42b00b8a458c2faba30d7e2fd6f26a301535d8478b7463",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "da3235792af4edd5993abfbce67e292373cc448a61a75be40d7c751a3fbdae17",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "dbdae232dea299f3df263371aa5994b9feae3e9d149261597e4974b37d8f4305",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d91eb79b60874d40905f29a62d1731d33c4de804627147141ecb111171ea56e0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "d9a84f81113ad1995b8b439fb2ada3a5020fdb0fe28da9581c891718497e3d84",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "a941340b29bbea6a609255b1d152d10bd8e3ff95ab65107904fc6a06d7bf86f9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "57 formularios en Serio y Explorador",
+          "passed": true,
+          "operations": 57,
+          "modes": 2
+        },
+        {
+          "name": "tabla numérica paginada, modo conservado y móvil sin desbordamiento",
+          "passed": true
+        },
+        {
+          "name": "cambio de presentación conserva el paso seleccionado",
+          "passed": true
+        },
+        {
+          "name": "navegación durante cálculo, cancelación y recuperación",
+          "passed": true
+        }
+      ]
+    },
+    "windows-fuente": {
+      "approved": true,
+      "platform": "Windows-2022Server-10.0.20348-SP0",
+      "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+      "exports": {
+        "pdf": true,
+        "csv": true,
+        "csv_rows": 27,
+        "test_destination": true
+      },
+      "persistence": {
+        "saved": true,
+        "adapter": "archivo atomico"
+      },
+      "case_count": 143,
+      "cases": [
+        {
+          "name": "interfaz y cambio de presentación",
+          "passed": true
+        },
+        {
+          "name": "sistema rectangular desde formulario en ambos modos",
+          "passed": true
+        },
+        {
+          "name": "bisección desde formulario nativo con tabla y cambio de modo",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "2ee1e696f46cc46d1905783158afc31ac128f6fa274b68b125b8cf0f6ab7cd78",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "5f56c3c69340c4dda4c5a3dfa2ff1a7d25162625735970450246dd1b527397c5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "e4191bb74229aed6bd4ce37eaebb1fdd03487084fff7f685e30e66730a67afec",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "0ac187109f57530b9814982c35f6cc8bc0c2fda3ec2f61da322a214b8331928c",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "calculadora.evaluar",
+          "passed": true,
+          "response_sha256": "1534d55db8694f59545df23422dad9760a17a7c8e4da87d1f60b0a6e80799dba",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "6596789ccaa31ff60ab5e588f164db37b68a103c3693cce85f5c61057c9e169e",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.derivar",
+          "passed": true,
+          "response_sha256": "e1a02c6964e80dfe25075de7e2983283c87fea00fa7400042ef51512cec237e4",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "1a70e99dfe56cbc2cd44fbff7d05c2b6b0a75c9a0d1e50df22176185fb4b217a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.cramer",
+          "passed": true,
+          "response_sha256": "6840753e63d90b394137d772c25c4a6844f212f91e80c6329ae29fc090b01611",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.inversa",
+          "passed": true,
+          "response_sha256": "fcaef68a4763e53296b6f1915dea4407040233cfbe0a162f42bf511945becc88",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "fd683ef0b0e15d9abbc795783164c103889e4d054960935fb5bdccee0f550ec7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "41caa4fe3fa132159af47f10b2dc8cdb905f98adef0f3976b1b4fbd5ecb62b9c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma",
+          "passed": true,
+          "response_sha256": "85b1f929d35c616fbad92099f90fcfe1826d24d83b060f84f756fbd6eed08f39",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.resta",
+          "passed": true,
+          "response_sha256": "5bcf0f365db2a6d278bdb01b5573390e847bbaffe28c8ee32902569879345936",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.escalar",
+          "passed": true,
+          "response_sha256": "82adf3e824c8b1461fdceecd4b91e49887be128fc3d89dddb1f918d83b7ae6e4",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.transpuesta",
+          "passed": true,
+          "response_sha256": "9921b2db982d75890bbc9235f1830932393ac45e28eea8c98837b7c8b688ef0e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.analizar",
+          "passed": true,
+          "response_sha256": "59369e78d7b284f8afcf14c4da8e9d1c6a30052b06ad581c9b93a80d22cb6184",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.ref",
+          "passed": true,
+          "response_sha256": "c266a60291d1a5f48a3ce10d0ad43817003f548a92c4590dcdb8599cec748cd0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.rref",
+          "passed": true,
+          "response_sha256": "89cf07f41cef630fc9905b548315dd9e28557e96223e2a0cea252d23a0041d58",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.traza",
+          "passed": true,
+          "response_sha256": "dcf10db8b23814e23742c5156370933a2f9e0274ba23fc4c7b527d4b0a433a04",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "4d63fa30666b5a3e2b67ca4a1605af2935a6c87f41ea6ceb6036a830a0ddf461",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.elemental",
+          "passed": true,
+          "response_sha256": "f9eb7ba11722651bd2b6ae094e2e2dd36e36781de8685843beef984b01957e6a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.propiedades",
+          "passed": true,
+          "response_sha256": "e2a1770f44dc8502c29a89ace1cb72bfe81676a2d80db64321afc47a486a4a34",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.particionar",
+          "passed": true,
+          "response_sha256": "d795b4f27dc7041c658cec4f2ef4cc24420845e66cc2e81f7eedd5bf5265f832",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma_bloques",
+          "passed": true,
+          "response_sha256": "61cd2dbcc26276c71be9171880a19cec9c7f1c6ef751d35b683f0e324977894f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "1be2a0a69c54873716372a41fab5c47180a11d61632cbc4cbb6d413f9e02809e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "a6cefdf6a0838e3a0e4550334b5898cd4e8ed7d4e98c8aa90ce04a6e938dfb06",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.cofactores",
+          "passed": true,
+          "response_sha256": "e5ef4c65810536fda2c828cc0bf39a61a1f7b1cebf8fcf28e943e22a7e48c236",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "a86d0e66ae9d81a36d2f4072088fb42178bd2b490c8efa205b9fe17d6cf292e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.suma",
+          "passed": true,
+          "response_sha256": "50d2363e0b2d9916e01f5b3a4bde1be674a7e3e441b0f24fbbdcdfc5cb57cb30",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.resta",
+          "passed": true,
+          "response_sha256": "9866d4485053228ab7bd2d82efd18ff528006ca0b9e2e7d403e5ba85f542cd79",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_punto",
+          "passed": true,
+          "response_sha256": "81a016857c2dba912710f62b5f35859f3331c6e536a92af6b9fa3654de890b75",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_cruz",
+          "passed": true,
+          "response_sha256": "90d8f2ae61cda3a98ac72673c5785d956bbfa02aa05902a7e6fe4af91eef7df3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.escalar",
+          "passed": true,
+          "response_sha256": "131e711d896322c25aa05ecda5fc9113cc940bbcfd01cbd0fe585be839ddc949",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "909bcbe8c7e1117c17ad15ce9c78dbfa15b64607e18c3b79160c5b9062068336",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "6bfb1222e2f4c28016a6f4f5c41b80efb3938a4d87acca6d5ee82ff114e0a30b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "2f1ea7c71c03316e4483ad07131b1b6c214178f9ec742130d47ec9a8b8a58d14",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.fundamentales",
+          "passed": true,
+          "response_sha256": "3324164967fab68fe40ba51b3f31e33f272ccf82ef68fca22d308b6b2953af4c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "4a9603a19d4f64e8ba2de0210b549185c4bc38808456f0b5ed4e30d054dc98ab",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.suma",
+          "passed": true,
+          "response_sha256": "3fe7c29bb8ea3bdab92ecede4d491e9637721e8587a1c745813921b353a4d320",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "990d841b55efca6ac368831348e9239c2f6867794c43f3ef5b8127f6990d5556",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "77e2af933e12299c242c884ac7c6d13ccc0fef8cb0f9d8f9f5591edb3a2160fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "e449cc33de2c42a5d3957d7dcbf247f8d88f92ae1453ab6e59bd14cc383e6ac7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "721a3f0756bc5c0a27ff70a9c0a645c924fd1d3e802f377081cee363af36d361",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "6e1b09d853001d79659088bee0c3f419080865a0ffe5e72de9adadeb808737e6",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.componer",
+          "passed": true,
+          "response_sha256": "fe1cd68b7974a6b0ce0539101e295009157ada93b64b8688106f09e101fefbed",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "fe63f815b0555e3c1b7ef6e04b090ce018bf6f828653573ff4837b6afcaf9b93",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "7095a1daa14d82ac3454873bf14dd50b267043f337ac518cf46fc9d1697708bc",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "c553e470bf97ea42fc28b7d91c8ece7a38a792564c9968643dc5fa66cbd91922",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "a3a67c5025b5ef389ab45f1f246d8e653b7816231a287aabcc6b6be24b8983b3",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "288c2caad9ac30901b101e7675080c8d5dd0cfb36b3ed7c65160d0319b3cd3b0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "12f5e61ba0b9d9e68b1b70f42be8830d4e4af4ac3e13733bf8b29dff98db1e2b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "765c94de89a0fc981bcdf8b712646404e72e56004cc7ab917018af6482bfce5f",
+          "status": "singular",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "47aab162452e43553266431a9e82b0ac8ad9757cbfdb481b82b961241ddab24e",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "746f0ba538885812fbb1b98df300b0418f58fb1150166b18666b6e62f2159f63",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "0a04beac3d5bc017c5c6598d35784d76d96ae88c7411f7cd4e656058471f8148",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "46d7524fc69555f0c790e41c5561b984856e85e0178d06952813aefdd6402905",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "b48110855d1944a707d0388ab9a0260cef6f27aac4670d233f611df87c1164fa",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "d308db26462dc5b7ebfd7ae3addeef9c4398e8dfd400f5399e7349d2d6fd7634",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "83768f72a2f5677eebfd7986f8291d9b84b64811b805779892399ae6cad6e0ce",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "26937b416201d877a5bdb9d1f07544252c54bbe04469038534726f827584a0a6",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "2c0dd972a5886cbdcb78b7e28c7d015f709ed80d4334a0e52f712969cb2b0ddc",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "259a6410248d26ee13e549dc207b411d39e627b1525e37853dfb4ed0ee9d29e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "06365598da332ebf99185d37fc7cab62e5c9154fe5805b8ebc91399e8bc2e41d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "49e96770911e4c2714671dd075d9ae150883fd7cb0bf010c0f001528afcb5ffd",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "cfaf64e784b10302808abd0553e0d392ad6a703146a82488f196d83c7fd61c1d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "e211f6d953213caf7e5078693a49a0a5a55bc1a7fa80836b5b9547aafc7967f8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "bf53d6bc23f8a4b1cd597abe53030809c5ca612f0f1e961fee76f15f36a6f637",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "f551d146f8ea00f925c36fc2c79ffcee8b565ca6c4820c70a42dcb89fad00f0f",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "9f3389f7b876ff6b0aa11bcb32e8afb3579a25cdb7cbd75b2b9fb63f39d05dfe",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "963144fa8409f3ae56afbcad4c80e2b7287fce3fbf9dd24cb847192787150479",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "c79de2ea28d3934e2350f207e3508e9cc62a6027605a54b3968109c913f7c53f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "7d87d8c2e6347df7b99139c631b7ca0c664e7bb235fbca62667d333fe5bce097",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "be959f1d2b0051b3e18cf26384ef6be236561f1e734f4867a4b74a59a221aa09",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1f137b1d69bbe43bde5d396dc689af1a8e141279493557c0ef744b5fb682f8ae",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "70e739a88fa310de3ce000226846dedff20600a0b2164604515a64034eee009f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "57973d02ae228f182b83ed1570b374a8c2e13f6a3829c12e1e2be5b21aef46e8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "a77b9408b7dd64e6708a98e0861e1ef7d82414f1fe157ffdbc53d9ad8ad5b8d1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "0841985c6b715aa2d9265bfc6f34f3978a7c4635e496217d6e71287035acc6a9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "ba04b1bdd461c69940cac68f5313b99a165ad4d9280619fef3df8af12fbd45ba",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "387fdfe5a0fb7852adc877af1a9b7aa4868a24d471262637ba84ccd097252d38",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "a6c6dbcb0bb4cc3310dd553917914004f16fcb54c4aebe46c735356ad1d075db",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "9432f63292563aefd820f5f2ad4c768ea0448ae42e07ac951ab0b5d734114f45",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "c794683600a42d3c2bf3929d102925c28febcd7a6d3937e648b4fd2d52d04d9b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "0c39abc9833138de5baac497bcf7ac13c48f3a7e505043fda6982bd0ee8b29b8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "fcabc46ac6a9780b12aa39f420d01cd359798800bc7bb770ee3066ce8e52db98",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1d05e8a1b98ff46d55793222e9cd10f094d188ee0ee6e6ce83275518abf72502",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "5f8f82610235f9d4b55c69d036a75fe1d704e173e9236bbd18a2853ba7cb7e7f",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "00a180855eb3eae6ff9f9168e024e556b30517b771b7aff266a9a82625c75618",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "07217269a3bcf20a002477bc5315f700bfa3de1d12e0a0ecee4c25c93a8dd67e",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "a570fa21e9924428595baa5f3312245169e5b1e2a31b35c3c2fd2ab524b8af4a",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0dab3a03a78e0b291eb8e3d25d03a78846cce2c86d9259f00e90cdbc37e519f2",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "c753bceb81da08507d2c424d0d4266c16a6a9dad0787fb010c17d30c9810bba9",
+          "status": "domain_error",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "af78b80deabe283949d85e09fb59ef4080a25468b455193d3c9a9d97dc55f6d0",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "23cd79d20f544d4f89885dde92f7723fdf3737e3af8079993b165db241bb773a",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "b92f100284e786be93d8c01c5d2f96a5358a118de863e8c3b76fc302f426e51e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "c0e897ecd642baf6197c63bc13fd1601b97464703310c0b771405fed96d54a2d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "54b4f657cbbd2f608d5beae65fd9836e24a075682edcd4f05e2f32cd7193a370",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "9bd50595f45a613e34518e0a7688e8b337143c4854adf23e2cc13ca82b445ef7",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "a8d614d9e7dea73761e40a71c2acc71e529d3e2bf1540eba6eef7425540ac4b3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "5c9aa3938dbb978e5b2b1733b7e20f169bd80a8d0942a7077c09293be737ad71",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "68cffe987175da48b32ea2c3f215db7ed3da403f4ff429d7d86329f1bd7537df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "80ea2a00972194da1d29433fa7ef11936da598429945fb2831c99e13ad97cf4a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "754e586950e668393ce69d6bf31458808a58f3bc4a9762306648c8f8fe3d7829",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "47aad0acad56cfb2c2512e6fad9b5028f5594bae7b291d1945e08f867aef07ba",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1683c70d0850de54d3ddda7395e3c7daf659d70a691152e4089fc2dcae31c25e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "60f56dc41aac4bea7da0fc4a29893274c6e5750c51e745aaeb6a497536c86d7d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1a577dfd0c3d35076e079b16845b89ae81db093101b7e09e88658cb9317183df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "6bb19a2be84abbe36f25fbf88cea2210c103bb8b9348d67e0f02d3e65627b6fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "eaf67c684dca63798f2c5ef8c603b3067b64c09c6f36d1069fe85ccbe3637319",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "ffd92341d0fcb8c1101d8b754978fbc47ecae847a462e910dfc61285e20710b8",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "f315e9a630af2ec4963114dbc235b9ecb8541b1a23cecf67b6ace30d37b867da",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "20a78051e05030fcacee46ba699b3ffee3655e9f9ff23a685b32b62f54619bf6",
+          "status": "stagnated",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "0adf3d77e5f06d8b863498cf821f52b0e754c2758f02a9a6b05d909a3b99405f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "269390a21439b526d85cfe22f2ee4e325ca43fec11a7d08857615d98581e10af",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "352c0f0666882e23351f23df471acff7efced366984dfe5b27bb80691029bb94",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "62d12c07f4558a2c87cf7437b6cfb5f605c743da4547ea2631f17f8e5060c52f",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "b200b1f9161f276efdce25b12d335bdb9a7b1371c4d3779f7c49da3efdc86bff",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "6b6603e926539885e68e72a36d1e7abe49b03bff59e018f18631bee936c94322",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "114e2e181a3977cf2f84c91ed9dfb23e44712195cd044b04f097ef6ad8f5e16c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "2b3f99cd9155b2c597f2eca5f371083b4ac801c478d86a1b9be8bae50f3e46f1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "71584f7e3c47b4f224b53e8abbbc275c9fedfa5670610ce54c28a1caf7966b3c",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "b4ce6a21448b0df62e604277109409fb0cc00321e3f6de4db555e5b8e442a5e5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "a2037a2eefc7e3deae964fea3ed7d98741f5d9d1a8556a1ce1aa0e27b620078f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "fbec238fbec2fe6878f7e708d6e0962750a79ca14d0340ac324d44a3514c89c7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "1774797b8b8e25e83c3c8d29c38d3e0a44ac8f5e5d3c5a18bada306ac19b684e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "4af2726a374148ae03f1a6240917113afd0298cbf73661300201204bd0ed383b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "610eb5a89342c2cc1cc5a40fd3fb91e10055f48f133134982c1de171b368a98f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "91304e5b7bf0bde63bc2e69f071eefb0e048f9efbda72c526e38a843fdb77ccf",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0a0e03dd2bda7f332aa59805d231ee0aed493835b842b97d48b80b1e16245557",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d85a5cdae9804d487c42b00b8a458c2faba30d7e2fd6f26a301535d8478b7463",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "da3235792af4edd5993abfbce67e292373cc448a61a75be40d7c751a3fbdae17",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "dbdae232dea299f3df263371aa5994b9feae3e9d149261597e4974b37d8f4305",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d91eb79b60874d40905f29a62d1731d33c4de804627147141ecb111171ea56e0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "d9a84f81113ad1995b8b439fb2ada3a5020fdb0fe28da9581c891718497e3d84",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "a941340b29bbea6a609255b1d152d10bd8e3ff95ab65107904fc6a06d7bf86f9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "cancelación y recuperación",
+          "passed": true
+        },
+        {
+          "name": "geometría, fila, paso y ampliación sincronizados",
+          "passed": true
+        },
+        {
+          "name": "PDF y CSV producidos por la interfaz y guardados por el puente",
+          "passed": true
+        },
+        {
+          "name": "objetos, favorito, tema y paso guardados desde la interfaz",
+          "passed": true
+        }
+      ]
+    },
+    "windows-ejecutable": {
+      "approved": true,
+      "platform": "Windows-2022Server-10.0.20348-SP0",
+      "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+      "exports": {
+        "pdf": true,
+        "csv": true,
+        "csv_rows": 27,
+        "test_destination": true
+      },
+      "persistence": {
+        "saved": true,
+        "adapter": "archivo atomico"
+      },
+      "case_count": 143,
+      "cases": [
+        {
+          "name": "interfaz y cambio de presentación",
+          "passed": true
+        },
+        {
+          "name": "sistema rectangular desde formulario en ambos modos",
+          "passed": true
+        },
+        {
+          "name": "bisección desde formulario nativo con tabla y cambio de modo",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "2ee1e696f46cc46d1905783158afc31ac128f6fa274b68b125b8cf0f6ab7cd78",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "5f56c3c69340c4dda4c5a3dfa2ff1a7d25162625735970450246dd1b527397c5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "e4191bb74229aed6bd4ce37eaebb1fdd03487084fff7f685e30e66730a67afec",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "0ac187109f57530b9814982c35f6cc8bc0c2fda3ec2f61da322a214b8331928c",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "calculadora.evaluar",
+          "passed": true,
+          "response_sha256": "1534d55db8694f59545df23422dad9760a17a7c8e4da87d1f60b0a6e80799dba",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "6596789ccaa31ff60ab5e588f164db37b68a103c3693cce85f5c61057c9e169e",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.derivar",
+          "passed": true,
+          "response_sha256": "e1a02c6964e80dfe25075de7e2983283c87fea00fa7400042ef51512cec237e4",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "1a70e99dfe56cbc2cd44fbff7d05c2b6b0a75c9a0d1e50df22176185fb4b217a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.cramer",
+          "passed": true,
+          "response_sha256": "6840753e63d90b394137d772c25c4a6844f212f91e80c6329ae29fc090b01611",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.inversa",
+          "passed": true,
+          "response_sha256": "fcaef68a4763e53296b6f1915dea4407040233cfbe0a162f42bf511945becc88",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "fd683ef0b0e15d9abbc795783164c103889e4d054960935fb5bdccee0f550ec7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "41caa4fe3fa132159af47f10b2dc8cdb905f98adef0f3976b1b4fbd5ecb62b9c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma",
+          "passed": true,
+          "response_sha256": "85b1f929d35c616fbad92099f90fcfe1826d24d83b060f84f756fbd6eed08f39",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.resta",
+          "passed": true,
+          "response_sha256": "5bcf0f365db2a6d278bdb01b5573390e847bbaffe28c8ee32902569879345936",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.escalar",
+          "passed": true,
+          "response_sha256": "82adf3e824c8b1461fdceecd4b91e49887be128fc3d89dddb1f918d83b7ae6e4",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.transpuesta",
+          "passed": true,
+          "response_sha256": "9921b2db982d75890bbc9235f1830932393ac45e28eea8c98837b7c8b688ef0e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.analizar",
+          "passed": true,
+          "response_sha256": "59369e78d7b284f8afcf14c4da8e9d1c6a30052b06ad581c9b93a80d22cb6184",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.ref",
+          "passed": true,
+          "response_sha256": "c266a60291d1a5f48a3ce10d0ad43817003f548a92c4590dcdb8599cec748cd0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.rref",
+          "passed": true,
+          "response_sha256": "89cf07f41cef630fc9905b548315dd9e28557e96223e2a0cea252d23a0041d58",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.traza",
+          "passed": true,
+          "response_sha256": "dcf10db8b23814e23742c5156370933a2f9e0274ba23fc4c7b527d4b0a433a04",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "4d63fa30666b5a3e2b67ca4a1605af2935a6c87f41ea6ceb6036a830a0ddf461",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.elemental",
+          "passed": true,
+          "response_sha256": "f9eb7ba11722651bd2b6ae094e2e2dd36e36781de8685843beef984b01957e6a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.propiedades",
+          "passed": true,
+          "response_sha256": "e2a1770f44dc8502c29a89ace1cb72bfe81676a2d80db64321afc47a486a4a34",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.particionar",
+          "passed": true,
+          "response_sha256": "d795b4f27dc7041c658cec4f2ef4cc24420845e66cc2e81f7eedd5bf5265f832",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma_bloques",
+          "passed": true,
+          "response_sha256": "61cd2dbcc26276c71be9171880a19cec9c7f1c6ef751d35b683f0e324977894f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "1be2a0a69c54873716372a41fab5c47180a11d61632cbc4cbb6d413f9e02809e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "a6cefdf6a0838e3a0e4550334b5898cd4e8ed7d4e98c8aa90ce04a6e938dfb06",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.cofactores",
+          "passed": true,
+          "response_sha256": "e5ef4c65810536fda2c828cc0bf39a61a1f7b1cebf8fcf28e943e22a7e48c236",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "a86d0e66ae9d81a36d2f4072088fb42178bd2b490c8efa205b9fe17d6cf292e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.suma",
+          "passed": true,
+          "response_sha256": "50d2363e0b2d9916e01f5b3a4bde1be674a7e3e441b0f24fbbdcdfc5cb57cb30",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.resta",
+          "passed": true,
+          "response_sha256": "9866d4485053228ab7bd2d82efd18ff528006ca0b9e2e7d403e5ba85f542cd79",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_punto",
+          "passed": true,
+          "response_sha256": "81a016857c2dba912710f62b5f35859f3331c6e536a92af6b9fa3654de890b75",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_cruz",
+          "passed": true,
+          "response_sha256": "90d8f2ae61cda3a98ac72673c5785d956bbfa02aa05902a7e6fe4af91eef7df3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.escalar",
+          "passed": true,
+          "response_sha256": "131e711d896322c25aa05ecda5fc9113cc940bbcfd01cbd0fe585be839ddc949",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "909bcbe8c7e1117c17ad15ce9c78dbfa15b64607e18c3b79160c5b9062068336",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "6bfb1222e2f4c28016a6f4f5c41b80efb3938a4d87acca6d5ee82ff114e0a30b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "2f1ea7c71c03316e4483ad07131b1b6c214178f9ec742130d47ec9a8b8a58d14",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.fundamentales",
+          "passed": true,
+          "response_sha256": "3324164967fab68fe40ba51b3f31e33f272ccf82ef68fca22d308b6b2953af4c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "4a9603a19d4f64e8ba2de0210b549185c4bc38808456f0b5ed4e30d054dc98ab",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.suma",
+          "passed": true,
+          "response_sha256": "3fe7c29bb8ea3bdab92ecede4d491e9637721e8587a1c745813921b353a4d320",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "990d841b55efca6ac368831348e9239c2f6867794c43f3ef5b8127f6990d5556",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "77e2af933e12299c242c884ac7c6d13ccc0fef8cb0f9d8f9f5591edb3a2160fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "e449cc33de2c42a5d3957d7dcbf247f8d88f92ae1453ab6e59bd14cc383e6ac7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "721a3f0756bc5c0a27ff70a9c0a645c924fd1d3e802f377081cee363af36d361",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "6e1b09d853001d79659088bee0c3f419080865a0ffe5e72de9adadeb808737e6",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.componer",
+          "passed": true,
+          "response_sha256": "fe1cd68b7974a6b0ce0539101e295009157ada93b64b8688106f09e101fefbed",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "fe63f815b0555e3c1b7ef6e04b090ce018bf6f828653573ff4837b6afcaf9b93",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "7095a1daa14d82ac3454873bf14dd50b267043f337ac518cf46fc9d1697708bc",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "c553e470bf97ea42fc28b7d91c8ece7a38a792564c9968643dc5fa66cbd91922",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "a3a67c5025b5ef389ab45f1f246d8e653b7816231a287aabcc6b6be24b8983b3",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "288c2caad9ac30901b101e7675080c8d5dd0cfb36b3ed7c65160d0319b3cd3b0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "12f5e61ba0b9d9e68b1b70f42be8830d4e4af4ac3e13733bf8b29dff98db1e2b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "765c94de89a0fc981bcdf8b712646404e72e56004cc7ab917018af6482bfce5f",
+          "status": "singular",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "47aab162452e43553266431a9e82b0ac8ad9757cbfdb481b82b961241ddab24e",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "746f0ba538885812fbb1b98df300b0418f58fb1150166b18666b6e62f2159f63",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "0a04beac3d5bc017c5c6598d35784d76d96ae88c7411f7cd4e656058471f8148",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "46d7524fc69555f0c790e41c5561b984856e85e0178d06952813aefdd6402905",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "b48110855d1944a707d0388ab9a0260cef6f27aac4670d233f611df87c1164fa",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "d308db26462dc5b7ebfd7ae3addeef9c4398e8dfd400f5399e7349d2d6fd7634",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "83768f72a2f5677eebfd7986f8291d9b84b64811b805779892399ae6cad6e0ce",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "26937b416201d877a5bdb9d1f07544252c54bbe04469038534726f827584a0a6",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "2c0dd972a5886cbdcb78b7e28c7d015f709ed80d4334a0e52f712969cb2b0ddc",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "259a6410248d26ee13e549dc207b411d39e627b1525e37853dfb4ed0ee9d29e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "06365598da332ebf99185d37fc7cab62e5c9154fe5805b8ebc91399e8bc2e41d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "49e96770911e4c2714671dd075d9ae150883fd7cb0bf010c0f001528afcb5ffd",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "cfaf64e784b10302808abd0553e0d392ad6a703146a82488f196d83c7fd61c1d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "e211f6d953213caf7e5078693a49a0a5a55bc1a7fa80836b5b9547aafc7967f8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "bf53d6bc23f8a4b1cd597abe53030809c5ca612f0f1e961fee76f15f36a6f637",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "f551d146f8ea00f925c36fc2c79ffcee8b565ca6c4820c70a42dcb89fad00f0f",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "9f3389f7b876ff6b0aa11bcb32e8afb3579a25cdb7cbd75b2b9fb63f39d05dfe",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "963144fa8409f3ae56afbcad4c80e2b7287fce3fbf9dd24cb847192787150479",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "c79de2ea28d3934e2350f207e3508e9cc62a6027605a54b3968109c913f7c53f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "7d87d8c2e6347df7b99139c631b7ca0c664e7bb235fbca62667d333fe5bce097",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "be959f1d2b0051b3e18cf26384ef6be236561f1e734f4867a4b74a59a221aa09",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1f137b1d69bbe43bde5d396dc689af1a8e141279493557c0ef744b5fb682f8ae",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "70e739a88fa310de3ce000226846dedff20600a0b2164604515a64034eee009f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "57973d02ae228f182b83ed1570b374a8c2e13f6a3829c12e1e2be5b21aef46e8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "a77b9408b7dd64e6708a98e0861e1ef7d82414f1fe157ffdbc53d9ad8ad5b8d1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "0841985c6b715aa2d9265bfc6f34f3978a7c4635e496217d6e71287035acc6a9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "ba04b1bdd461c69940cac68f5313b99a165ad4d9280619fef3df8af12fbd45ba",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "387fdfe5a0fb7852adc877af1a9b7aa4868a24d471262637ba84ccd097252d38",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "a6c6dbcb0bb4cc3310dd553917914004f16fcb54c4aebe46c735356ad1d075db",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "9432f63292563aefd820f5f2ad4c768ea0448ae42e07ac951ab0b5d734114f45",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "c794683600a42d3c2bf3929d102925c28febcd7a6d3937e648b4fd2d52d04d9b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "0c39abc9833138de5baac497bcf7ac13c48f3a7e505043fda6982bd0ee8b29b8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "fcabc46ac6a9780b12aa39f420d01cd359798800bc7bb770ee3066ce8e52db98",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1d05e8a1b98ff46d55793222e9cd10f094d188ee0ee6e6ce83275518abf72502",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "5f8f82610235f9d4b55c69d036a75fe1d704e173e9236bbd18a2853ba7cb7e7f",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "00a180855eb3eae6ff9f9168e024e556b30517b771b7aff266a9a82625c75618",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "07217269a3bcf20a002477bc5315f700bfa3de1d12e0a0ecee4c25c93a8dd67e",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "a570fa21e9924428595baa5f3312245169e5b1e2a31b35c3c2fd2ab524b8af4a",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0dab3a03a78e0b291eb8e3d25d03a78846cce2c86d9259f00e90cdbc37e519f2",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "c753bceb81da08507d2c424d0d4266c16a6a9dad0787fb010c17d30c9810bba9",
+          "status": "domain_error",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "af78b80deabe283949d85e09fb59ef4080a25468b455193d3c9a9d97dc55f6d0",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "23cd79d20f544d4f89885dde92f7723fdf3737e3af8079993b165db241bb773a",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "b92f100284e786be93d8c01c5d2f96a5358a118de863e8c3b76fc302f426e51e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "c0e897ecd642baf6197c63bc13fd1601b97464703310c0b771405fed96d54a2d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "54b4f657cbbd2f608d5beae65fd9836e24a075682edcd4f05e2f32cd7193a370",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "9bd50595f45a613e34518e0a7688e8b337143c4854adf23e2cc13ca82b445ef7",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "a8d614d9e7dea73761e40a71c2acc71e529d3e2bf1540eba6eef7425540ac4b3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "5c9aa3938dbb978e5b2b1733b7e20f169bd80a8d0942a7077c09293be737ad71",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "68cffe987175da48b32ea2c3f215db7ed3da403f4ff429d7d86329f1bd7537df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "80ea2a00972194da1d29433fa7ef11936da598429945fb2831c99e13ad97cf4a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "754e586950e668393ce69d6bf31458808a58f3bc4a9762306648c8f8fe3d7829",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "47aad0acad56cfb2c2512e6fad9b5028f5594bae7b291d1945e08f867aef07ba",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1683c70d0850de54d3ddda7395e3c7daf659d70a691152e4089fc2dcae31c25e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "60f56dc41aac4bea7da0fc4a29893274c6e5750c51e745aaeb6a497536c86d7d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1a577dfd0c3d35076e079b16845b89ae81db093101b7e09e88658cb9317183df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "6bb19a2be84abbe36f25fbf88cea2210c103bb8b9348d67e0f02d3e65627b6fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "eaf67c684dca63798f2c5ef8c603b3067b64c09c6f36d1069fe85ccbe3637319",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "ffd92341d0fcb8c1101d8b754978fbc47ecae847a462e910dfc61285e20710b8",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "f315e9a630af2ec4963114dbc235b9ecb8541b1a23cecf67b6ace30d37b867da",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "20a78051e05030fcacee46ba699b3ffee3655e9f9ff23a685b32b62f54619bf6",
+          "status": "stagnated",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "0adf3d77e5f06d8b863498cf821f52b0e754c2758f02a9a6b05d909a3b99405f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "269390a21439b526d85cfe22f2ee4e325ca43fec11a7d08857615d98581e10af",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "352c0f0666882e23351f23df471acff7efced366984dfe5b27bb80691029bb94",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "62d12c07f4558a2c87cf7437b6cfb5f605c743da4547ea2631f17f8e5060c52f",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "b200b1f9161f276efdce25b12d335bdb9a7b1371c4d3779f7c49da3efdc86bff",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "6b6603e926539885e68e72a36d1e7abe49b03bff59e018f18631bee936c94322",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "114e2e181a3977cf2f84c91ed9dfb23e44712195cd044b04f097ef6ad8f5e16c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "2b3f99cd9155b2c597f2eca5f371083b4ac801c478d86a1b9be8bae50f3e46f1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "71584f7e3c47b4f224b53e8abbbc275c9fedfa5670610ce54c28a1caf7966b3c",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "b4ce6a21448b0df62e604277109409fb0cc00321e3f6de4db555e5b8e442a5e5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "a2037a2eefc7e3deae964fea3ed7d98741f5d9d1a8556a1ce1aa0e27b620078f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "fbec238fbec2fe6878f7e708d6e0962750a79ca14d0340ac324d44a3514c89c7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "1774797b8b8e25e83c3c8d29c38d3e0a44ac8f5e5d3c5a18bada306ac19b684e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "4af2726a374148ae03f1a6240917113afd0298cbf73661300201204bd0ed383b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "610eb5a89342c2cc1cc5a40fd3fb91e10055f48f133134982c1de171b368a98f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "91304e5b7bf0bde63bc2e69f071eefb0e048f9efbda72c526e38a843fdb77ccf",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0a0e03dd2bda7f332aa59805d231ee0aed493835b842b97d48b80b1e16245557",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d85a5cdae9804d487c42b00b8a458c2faba30d7e2fd6f26a301535d8478b7463",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "da3235792af4edd5993abfbce67e292373cc448a61a75be40d7c751a3fbdae17",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "dbdae232dea299f3df263371aa5994b9feae3e9d149261597e4974b37d8f4305",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d91eb79b60874d40905f29a62d1731d33c4de804627147141ecb111171ea56e0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "d9a84f81113ad1995b8b439fb2ada3a5020fdb0fe28da9581c891718497e3d84",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "a941340b29bbea6a609255b1d152d10bd8e3ff95ab65107904fc6a06d7bf86f9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "cancelación y recuperación",
+          "passed": true
+        },
+        {
+          "name": "geometría, fila, paso y ampliación sincronizados",
+          "passed": true
+        },
+        {
+          "name": "PDF y CSV producidos por la interfaz y guardados por el puente",
+          "passed": true
+        },
+        {
+          "name": "objetos, favorito, tema y paso guardados desde la interfaz",
+          "passed": true
+        }
+      ]
+    },
+    "android": {
+      "approved": true,
+      "offline": true,
+      "api": 35,
+      "abis": [
+        "x86_64",
+        "arm64-v8a"
+      ],
+      "python": "3.12.15 (main, Oct  2 2026, 03:03:05) [Clang 18.0.4 (https://android.googlesource.com/toolchain/llvm-project d8003a456",
+      "exports": {
+        "pdf": true,
+        "csv": true,
+        "test_destination": true
+      },
+      "persistence": {
+        "saved": true,
+        "reopened": true,
+        "adapter": "archivo atomico privado"
+      },
+      "case_count": 143,
+      "cases": [
+        {
+          "name": "interfaz offline y cambio de presentación",
+          "passed": true
+        },
+        {
+          "name": "sistema rectangular desde formulario en ambos modos",
+          "passed": true
+        },
+        {
+          "name": "bisección desde formulario nativo con tabla y cambio de modo",
+          "passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "2ee1e696f46cc46d1905783158afc31ac128f6fa274b68b125b8cf0f6ab7cd78",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "5f56c3c69340c4dda4c5a3dfa2ff1a7d25162625735970450246dd1b527397c5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "e4191bb74229aed6bd4ce37eaebb1fdd03487084fff7f685e30e66730a67afec",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "0ac187109f57530b9814982c35f6cc8bc0c2fda3ec2f61da322a214b8331928c",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "calculadora.evaluar",
+          "passed": true,
+          "response_sha256": "1534d55db8694f59545df23422dad9760a17a7c8e4da87d1f60b0a6e80799dba",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.definida",
+          "passed": true,
+          "response_sha256": "6596789ccaa31ff60ab5e588f164db37b68a103c3693cce85f5c61057c9e169e",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "calculo.derivar",
+          "passed": true,
+          "response_sha256": "e1a02c6964e80dfe25075de7e2983283c87fea00fa7400042ef51512cec237e4",
+          "status": "ok",
+          "verification_passed": null
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "1a70e99dfe56cbc2cd44fbff7d05c2b6b0a75c9a0d1e50df22176185fb4b217a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.cramer",
+          "passed": true,
+          "response_sha256": "6840753e63d90b394137d772c25c4a6844f212f91e80c6329ae29fc090b01611",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.inversa",
+          "passed": true,
+          "response_sha256": "fcaef68a4763e53296b6f1915dea4407040233cfbe0a162f42bf511945becc88",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "fd683ef0b0e15d9abbc795783164c103889e4d054960935fb5bdccee0f550ec7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "41caa4fe3fa132159af47f10b2dc8cdb905f98adef0f3976b1b4fbd5ecb62b9c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma",
+          "passed": true,
+          "response_sha256": "85b1f929d35c616fbad92099f90fcfe1826d24d83b060f84f756fbd6eed08f39",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.resta",
+          "passed": true,
+          "response_sha256": "5bcf0f365db2a6d278bdb01b5573390e847bbaffe28c8ee32902569879345936",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.escalar",
+          "passed": true,
+          "response_sha256": "82adf3e824c8b1461fdceecd4b91e49887be128fc3d89dddb1f918d83b7ae6e4",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.transpuesta",
+          "passed": true,
+          "response_sha256": "9921b2db982d75890bbc9235f1830932393ac45e28eea8c98837b7c8b688ef0e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.analizar",
+          "passed": true,
+          "response_sha256": "59369e78d7b284f8afcf14c4da8e9d1c6a30052b06ad581c9b93a80d22cb6184",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.ref",
+          "passed": true,
+          "response_sha256": "c266a60291d1a5f48a3ce10d0ad43817003f548a92c4590dcdb8599cec748cd0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.rref",
+          "passed": true,
+          "response_sha256": "89cf07f41cef630fc9905b548315dd9e28557e96223e2a0cea252d23a0041d58",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.traza",
+          "passed": true,
+          "response_sha256": "dcf10db8b23814e23742c5156370933a2f9e0274ba23fc4c7b527d4b0a433a04",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "4d63fa30666b5a3e2b67ca4a1605af2935a6c87f41ea6ceb6036a830a0ddf461",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.elemental",
+          "passed": true,
+          "response_sha256": "f9eb7ba11722651bd2b6ae094e2e2dd36e36781de8685843beef984b01957e6a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.propiedades",
+          "passed": true,
+          "response_sha256": "e2a1770f44dc8502c29a89ace1cb72bfe81676a2d80db64321afc47a486a4a34",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.particionar",
+          "passed": true,
+          "response_sha256": "d795b4f27dc7041c658cec4f2ef4cc24420845e66cc2e81f7eedd5bf5265f832",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.suma_bloques",
+          "passed": true,
+          "response_sha256": "61cd2dbcc26276c71be9171880a19cec9c7f1c6ef751d35b683f0e324977894f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "1be2a0a69c54873716372a41fab5c47180a11d61632cbc4cbb6d413f9e02809e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "a6cefdf6a0838e3a0e4550334b5898cd4e8ed7d4e98c8aa90ce04a6e938dfb06",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "determinantes.cofactores",
+          "passed": true,
+          "response_sha256": "e5ef4c65810536fda2c828cc0bf39a61a1f7b1cebf8fcf28e943e22a7e48c236",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "a86d0e66ae9d81a36d2f4072088fb42178bd2b490c8efa205b9fe17d6cf292e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.suma",
+          "passed": true,
+          "response_sha256": "50d2363e0b2d9916e01f5b3a4bde1be674a7e3e441b0f24fbbdcdfc5cb57cb30",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.resta",
+          "passed": true,
+          "response_sha256": "9866d4485053228ab7bd2d82efd18ff528006ca0b9e2e7d403e5ba85f542cd79",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_punto",
+          "passed": true,
+          "response_sha256": "81a016857c2dba912710f62b5f35859f3331c6e536a92af6b9fa3654de890b75",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.producto_cruz",
+          "passed": true,
+          "response_sha256": "90d8f2ae61cda3a98ac72673c5785d956bbfa02aa05902a7e6fe4af91eef7df3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.escalar",
+          "passed": true,
+          "response_sha256": "131e711d896322c25aa05ecda5fc9113cc940bbcfd01cbd0fe585be839ddc949",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "909bcbe8c7e1117c17ad15ce9c78dbfa15b64607e18c3b79160c5b9062068336",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "6bfb1222e2f4c28016a6f4f5c41b80efb3938a4d87acca6d5ee82ff114e0a30b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "2f1ea7c71c03316e4483ad07131b1b6c214178f9ec742130d47ec9a8b8a58d14",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.fundamentales",
+          "passed": true,
+          "response_sha256": "3324164967fab68fe40ba51b3f31e33f272ccf82ef68fca22d308b6b2953af4c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "4a9603a19d4f64e8ba2de0210b549185c4bc38808456f0b5ed4e30d054dc98ab",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.suma",
+          "passed": true,
+          "response_sha256": "3fe7c29bb8ea3bdab92ecede4d491e9637721e8587a1c745813921b353a4d320",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "990d841b55efca6ac368831348e9239c2f6867794c43f3ef5b8127f6990d5556",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "77e2af933e12299c242c884ac7c6d13ccc0fef8cb0f9d8f9f5591edb3a2160fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "e449cc33de2c42a5d3957d7dcbf247f8d88f92ae1453ab6e59bd14cc383e6ac7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "721a3f0756bc5c0a27ff70a9c0a645c924fd1d3e802f377081cee363af36d361",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "6e1b09d853001d79659088bee0c3f419080865a0ffe5e72de9adadeb808737e6",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.componer",
+          "passed": true,
+          "response_sha256": "fe1cd68b7974a6b0ce0539101e295009157ada93b64b8688106f09e101fefbed",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "fe63f815b0555e3c1b7ef6e04b090ce018bf6f828653573ff4837b6afcaf9b93",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "7095a1daa14d82ac3454873bf14dd50b267043f337ac518cf46fc9d1697708bc",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "c553e470bf97ea42fc28b7d91c8ece7a38a792564c9968643dc5fa66cbd91922",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "a3a67c5025b5ef389ab45f1f246d8e653b7816231a287aabcc6b6be24b8983b3",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "288c2caad9ac30901b101e7675080c8d5dd0cfb36b3ed7c65160d0319b3cd3b0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "12f5e61ba0b9d9e68b1b70f42be8830d4e4af4ac3e13733bf8b29dff98db1e2b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.inversa",
+          "passed": true,
+          "response_sha256": "765c94de89a0fc981bcdf8b712646404e72e56004cc7ab917018af6482bfce5f",
+          "status": "singular",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "47aab162452e43553266431a9e82b0ac8ad9757cbfdb481b82b961241ddab24e",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "determinantes.calcular",
+          "passed": true,
+          "response_sha256": "746f0ba538885812fbb1b98df300b0418f58fb1150166b18666b6e62f2159f63",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.potencia",
+          "passed": true,
+          "response_sha256": "0a04beac3d5bc017c5c6598d35784d76d96ae88c7411f7cd4e656058471f8148",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto_bloques",
+          "passed": true,
+          "response_sha256": "46d7524fc69555f0c790e41c5561b984856e85e0178d06952813aefdd6402905",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.lu",
+          "passed": true,
+          "response_sha256": "b48110855d1944a707d0388ab9a0260cef6f27aac4670d233f611df87c1164fa",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "d308db26462dc5b7ebfd7ae3addeef9c4398e8dfd400f5399e7349d2d6fd7634",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "83768f72a2f5677eebfd7986f8291d9b84b64811b805779892399ae6cad6e0ce",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "factorizacion.plu",
+          "passed": true,
+          "response_sha256": "26937b416201d877a5bdb9d1f07544252c54bbe04469038534726f827584a0a6",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.analizar",
+          "passed": true,
+          "response_sha256": "2c0dd972a5886cbdcb78b7e28c7d015f709ed80d4334a0e52f712969cb2b0ddc",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "259a6410248d26ee13e549dc207b411d39e627b1525e37853dfb4ed0ee9d29e1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.norma",
+          "passed": true,
+          "response_sha256": "06365598da332ebf99185d37fc7cab62e5c9154fe5805b8ebc91399e8bc2e41d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "49e96770911e4c2714671dd075d9ae150883fd7cb0bf010c0f001528afcb5ffd",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.base",
+          "passed": true,
+          "response_sha256": "cfaf64e784b10302808abd0553e0d392ad6a703146a82488f196d83c7fd61c1d",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.interseccion",
+          "passed": true,
+          "response_sha256": "e211f6d953213caf7e5078693a49a0a5a55bc1a7fa80836b5b9547aafc7967f8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "bf53d6bc23f8a4b1cd597abe53030809c5ca612f0f1e961fee76f15f36a6f637",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.coordenadas",
+          "passed": true,
+          "response_sha256": "f551d146f8ea00f925c36fc2c79ffcee8b565ca6c4820c70a42dcb89fad00f0f",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "9f3389f7b876ff6b0aa11bcb32e8afb3579a25cdb7cbd75b2b9fb63f39d05dfe",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "espacios.cambio_base",
+          "passed": true,
+          "response_sha256": "963144fa8409f3ae56afbcad4c80e2b7287fce3fbf9dd24cb847192787150479",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.desde_imagenes",
+          "passed": true,
+          "response_sha256": "c79de2ea28d3934e2350f207e3508e9cc62a6027605a54b3968109c913f7c53f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "transformaciones.representar",
+          "passed": true,
+          "response_sha256": "7d87d8c2e6347df7b99139c631b7ca0c664e7bb235fbca62667d333fe5bce097",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "be959f1d2b0051b3e18cf26384ef6be236561f1e734f4867a4b74a59a221aa09",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1f137b1d69bbe43bde5d396dc689af1a8e141279493557c0ef744b5fb682f8ae",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "70e739a88fa310de3ce000226846dedff20600a0b2164604515a64034eee009f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "57973d02ae228f182b83ed1570b374a8c2e13f6a3829c12e1e2be5b21aef46e8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "a77b9408b7dd64e6708a98e0861e1ef7d82414f1fe157ffdbc53d9ad8ad5b8d1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "0841985c6b715aa2d9265bfc6f34f3978a7c4635e496217d6e71287035acc6a9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "ba04b1bdd461c69940cac68f5313b99a165ad4d9280619fef3df8af12fbd45ba",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "387fdfe5a0fb7852adc877af1a9b7aa4868a24d471262637ba84ccd097252d38",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "a6c6dbcb0bb4cc3310dd553917914004f16fcb54c4aebe46c735356ad1d075db",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "9432f63292563aefd820f5f2ad4c768ea0448ae42e07ac951ab0b5d734114f45",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "c794683600a42d3c2bf3929d102925c28febcd7a6d3937e648b4fd2d52d04d9b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "0c39abc9833138de5baac497bcf7ac13c48f3a7e505043fda6982bd0ee8b29b8",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "fcabc46ac6a9780b12aa39f420d01cd359798800bc7bb770ee3066ce8e52db98",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "1d05e8a1b98ff46d55793222e9cd10f094d188ee0ee6e6ce83275518abf72502",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "5f8f82610235f9d4b55c69d036a75fe1d704e173e9236bbd18a2853ba7cb7e7f",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "00a180855eb3eae6ff9f9168e024e556b30517b771b7aff266a9a82625c75618",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "07217269a3bcf20a002477bc5315f700bfa3de1d12e0a0ecee4c25c93a8dd67e",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "a570fa21e9924428595baa5f3312245169e5b1e2a31b35c3c2fd2ab524b8af4a",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0dab3a03a78e0b291eb8e3d25d03a78846cce2c86d9259f00e90cdbc37e519f2",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "c753bceb81da08507d2c424d0d4266c16a6a9dad0787fb010c17d30c9810bba9",
+          "status": "domain_error",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "af78b80deabe283949d85e09fb59ef4080a25468b455193d3c9a9d97dc55f6d0",
+          "status": "breakdown",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "23cd79d20f544d4f89885dde92f7723fdf3737e3af8079993b165db241bb773a",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "b92f100284e786be93d8c01c5d2f96a5358a118de863e8c3b76fc302f426e51e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "c0e897ecd642baf6197c63bc13fd1601b97464703310c0b771405fed96d54a2d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "54b4f657cbbd2f608d5beae65fd9836e24a075682edcd4f05e2f32cd7193a370",
+          "status": "cycle_detected",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "9bd50595f45a613e34518e0a7688e8b337143c4854adf23e2cc13ca82b445ef7",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "a8d614d9e7dea73761e40a71c2acc71e529d3e2bf1540eba6eef7425540ac4b3",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "5c9aa3938dbb978e5b2b1733b7e20f169bd80a8d0942a7077c09293be737ad71",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "errores.calcular",
+          "passed": true,
+          "response_sha256": "68cffe987175da48b32ea2c3f215db7ed3da403f4ff429d7d86329f1bd7537df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "80ea2a00972194da1d29433fa7ef11936da598429945fb2831c99e13ad97cf4a",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "754e586950e668393ce69d6bf31458808a58f3bc4a9762306648c8f8fe3d7829",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conversiones.bases",
+          "passed": true,
+          "response_sha256": "47aad0acad56cfb2c2512e6fad9b5028f5594bae7b291d1945e08f867aef07ba",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1683c70d0850de54d3ddda7395e3c7daf659d70a691152e4089fc2dcae31c25e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "60f56dc41aac4bea7da0fc4a29893274c6e5750c51e745aaeb6a497536c86d7d",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "conjuntos.operar",
+          "passed": true,
+          "response_sha256": "1a577dfd0c3d35076e079b16845b89ae81db093101b7e09e88658cb9317183df",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.primitiva",
+          "passed": true,
+          "response_sha256": "6bb19a2be84abbe36f25fbf88cea2210c103bb8b9348d67e0f02d3e65627b6fa",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "eaf67c684dca63798f2c5ef8c603b3067b64c09c6f36d1069fe85ccbe3637319",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "calculo.numerica",
+          "passed": true,
+          "response_sha256": "ffd92341d0fcb8c1101d8b754978fbc47ecae847a462e910dfc61285e20710b8",
+          "status": "domain_error",
+          "verification_passed": null
+        },
+        {
+          "name": "funciones.evaluar",
+          "passed": true,
+          "response_sha256": "f315e9a630af2ec4963114dbc235b9ecb8541b1a23cecf67b6ace30d37b867da",
+          "status": "invalid_input",
+          "verification_passed": null
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "20a78051e05030fcacee46ba699b3ffee3655e9f9ff23a685b32b62f54619bf6",
+          "status": "stagnated",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "0adf3d77e5f06d8b863498cf821f52b0e754c2758f02a9a6b05d909a3b99405f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "269390a21439b526d85cfe22f2ee4e325ca43fec11a7d08857615d98581e10af",
+          "status": "inconsistent",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "352c0f0666882e23351f23df471acff7efced366984dfe5b27bb80691029bb94",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "62d12c07f4558a2c87cf7437b6cfb5f605c743da4547ea2631f17f8e5060c52f",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "b200b1f9161f276efdce25b12d335bdb9a7b1371c4d3779f7c49da3efdc86bff",
+          "status": "infinite",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "6b6603e926539885e68e72a36d1e7abe49b03bff59e018f18631bee936c94322",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "114e2e181a3977cf2f84c91ed9dfb23e44712195cd044b04f097ef6ad8f5e16c",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "2b3f99cd9155b2c597f2eca5f371083b4ac801c478d86a1b9be8bae50f3e46f1",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.proyeccion",
+          "passed": true,
+          "response_sha256": "71584f7e3c47b4f224b53e8abbbc275c9fedfa5670610ce54c28a1caf7966b3c",
+          "status": "not_applicable",
+          "verification_passed": null
+        },
+        {
+          "name": "transformaciones.analizar",
+          "passed": true,
+          "response_sha256": "b4ce6a21448b0df62e604277109409fb0cc00321e3f6de4db555e5b8e442a5e5",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.biseccion",
+          "passed": true,
+          "response_sha256": "a2037a2eefc7e3deae964fea3ed7d98741f5d9d1a8556a1ce1aa0e27b620078f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.falsa_posicion",
+          "passed": true,
+          "response_sha256": "fbec238fbec2fe6878f7e708d6e0962750a79ca14d0340ac324d44a3514c89c7",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "1774797b8b8e25e83c3c8d29c38d3e0a44ac8f5e5d3c5a18bada306ac19b684e",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.secante",
+          "passed": true,
+          "response_sha256": "4af2726a374148ae03f1a6240917113afd0298cbf73661300201204bd0ed383b",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.jacobi",
+          "passed": true,
+          "response_sha256": "610eb5a89342c2cc1cc5a40fd3fb91e10055f48f133134982c1de171b368a98f",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "iterativos.gauss_seidel",
+          "passed": true,
+          "response_sha256": "91304e5b7bf0bde63bc2e69f071eefb0e048f9efbda72c526e38a843fdb77ccf",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "raices.newton",
+          "passed": true,
+          "response_sha256": "0a0e03dd2bda7f332aa59805d231ee0aed493835b842b97d48b80b1e16245557",
+          "status": "iteration_limit",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d85a5cdae9804d487c42b00b8a458c2faba30d7e2fd6f26a301535d8478b7463",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "da3235792af4edd5993abfbce67e292373cc448a61a75be40d7c751a3fbdae17",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "dbdae232dea299f3df263371aa5994b9feae3e9d149261597e4974b37d8f4305",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "sistemas.resolver",
+          "passed": true,
+          "response_sha256": "d91eb79b60874d40905f29a62d1731d33c4de804627147141ecb111171ea56e0",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "matrices.producto",
+          "passed": true,
+          "response_sha256": "d9a84f81113ad1995b8b439fb2ada3a5020fdb0fe28da9581c891718497e3d84",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "vectores.generado",
+          "passed": true,
+          "response_sha256": "a941340b29bbea6a609255b1d152d10bd8e3ff95ab65107904fc6a06d7bf86f9",
+          "status": "ok",
+          "verification_passed": true
+        },
+        {
+          "name": "cancelación y recuperación",
+          "passed": true
+        },
+        {
+          "name": "geometría, fila, paso y ampliación sincronizados",
+          "passed": true
+        },
+        {
+          "name": "PDF y CSV producidos por la interfaz y guardados por el puente",
+          "passed": true
+        },
+        {
+          "name": "objetos, favorito, tema y paso tras cerrar y reabrir la aplicación",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "windows_reopen_reports": {
+    "windows-fuente": {
+      "approved": true,
+      "platform": "Windows-2022Server-10.0.20348-SP0",
+      "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+      "cases": [
+        {
+          "name": "reapertura en proceso nuevo conserva entradas, paso, objetos y favoritos",
+          "passed": true
+        }
+      ],
+      "persistence": {
+        "reopened": true,
+        "adapter": "archivo atomico independiente del puerto"
+      }
+    },
+    "windows-ejecutable": {
+      "approved": true,
+      "platform": "Windows-2022Server-10.0.20348-SP0",
+      "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+      "cases": [
+        {
+          "name": "reapertura en proceso nuevo conserva entradas, paso, objetos y favoritos",
+          "passed": true
+        }
+      ],
+      "persistence": {
+        "reopened": true,
+        "adapter": "archivo atomico independiente del puerto"
+      }
+    }
+  },
+  "core_manifest": [
+    {
+      "path": "nexolineal/__init__.py",
+      "sha256": "f24077a679e0e9f9b0386fe0f93be2f2f50be86cc58b9a04eddb28ae45414a2b"
+    },
+    {
+      "path": "nexolineal/algorithms/__init__.py",
+      "sha256": "818e9468130060ae2f5d9226047ddba15fa4ebc5072edaf322a88653c7b624f6"
+    },
+    {
+      "path": "nexolineal/algorithms/calculo.py",
+      "sha256": "caf6ee20ed78e7c4310295e96803181849e2dc0d993b797051dc14226cfdc04d"
+    },
+    {
+      "path": "nexolineal/algorithms/domains.py",
+      "sha256": "ae8e1a4bf43d69a5440e0384b1c77ca345cadff0399edfa7e09e1c84c1323610"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/__init__.py",
+      "sha256": "eb8eb2acd928ecb31f0c37f123681df5995866f893a216a06d99d4d21e89578a"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/analisis_sistema.py",
+      "sha256": "47f5310a1e0b9e2ef54bd655dbef5d805a0edffff888ff7acb91f04cb2f205ff"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/entrada_datos.py",
+      "sha256": "a31fe63e8cf03805a5544811b5cb787e3c63f705946760f18ec4e2fb1fcca575"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/factorizacion.py",
+      "sha256": "2d419c3242f7768e7dde9a041f4eb78acc1a0c6a80ae625aa950312f54a71e43"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/formas_matriciales.py",
+      "sha256": "11b03c8e055dfb42b7c0c536c4c4deafdec7b6988ef5cffb3646bf3584ab50d7"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/formato_latex.py",
+      "sha256": "247bc14c2674fd78dcbbb234ee0ead37cb081004313ff59a5ef239cdfb7cfe60"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/metodos_eliminacion.py",
+      "sha256": "11118c6c2f837b469d505b857452b8dafbde676cfd1a547f3ad5412d015191a4"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/modulo_determinantes.py",
+      "sha256": "d96c9790f986ca45b54df0a092882472b595627aab02f75d40a7cefec256ac52"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/modulo_lu.py",
+      "sha256": "9aa5b72efa8960b070b39115984c355c532c3f78ec19d116f1a866d6336d4ca6"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/modulo_matrices.py",
+      "sha256": "5332ae82ffc8fb1f1ac5266867ce6562598fbcfe895b93801edf48b61af4590a"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/operaciones_fila.py",
+      "sha256": "08018d89eeb26bcb64d335003218b26454398adb5cb28e633fdfd761746ee557"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/operaciones_matrices.py",
+      "sha256": "426f5eb42aa5119f98b3ed82e4a7db0f32b0a2c8b3b6d79d7cfbcf8b3f23e409"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/relaciones_vectoriales.py",
+      "sha256": "d722c0c4203e54db4472dd3feca36fb186c438dd17bbdb6225baa42acab3919d"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/resumen_teoremas.py",
+      "sha256": "a555e08d331f6234237992cd533f39ef35b7ec73d97fceb0435cf81ba3c4fab4"
+    },
+    {
+      "path": "nexolineal/algorithms/legacy/vectores.py",
+      "sha256": "0a5afc5ce987b94157b0b987e854c132de7aa957b9908443eb738561ccc11094"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/__init__.py",
+      "sha256": "d24f37a99cf884c5856655e460ed1adda10f12e4f527ff097d73495f502ad5f9"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/context.py",
+      "sha256": "6b47ae8edb4ea9b6425f4df72d4cbd8261a862cd82080cfed363ae5a29e48694"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/factorization.py",
+      "sha256": "adcefe193587eaf64baf69c381960b17bb6e2e20f3c1e130fc8c57d5a0e0819d"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/matrix.py",
+      "sha256": "f5c4bc941b516f0be678fdc8b835438c9e1fccda23d03108fdc55e56b5910eb5"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/reduction.py",
+      "sha256": "bb4319be8afcc56a8142deab2c118739e8a4db7ad189482213a9434c0777797e"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/spaces.py",
+      "sha256": "1ab171e51d2e4c96e3d673240b15006404efcedea303fa00e7795d17f9869852"
+    },
+    {
+      "path": "nexolineal/algorithms/linear/transformations.py",
+      "sha256": "c85fe712432bbf4a8a526cafb5cf034e7a84e46548be0c9cc3874fc25f42c879"
+    },
+    {
+      "path": "nexolineal/algorithms/matrices.py",
+      "sha256": "22097ad47b12f66450f24b058b6b82a26015bd23e04765dc711bfe06c5c21631"
+    },
+    {
+      "path": "nexolineal/algorithms/numerical/__init__.py",
+      "sha256": "6a0d799339962822b55d06a2cd71a23d471c7db11e43cccb911ca7554698cb9b"
+    },
+    {
+      "path": "nexolineal/algorithms/numerical/functions.py",
+      "sha256": "f297c2b8f7fb1c5d3ce13cf8d3774c3bae8761e1844d1a2db0a5f5c0893c78b1"
+    },
+    {
+      "path": "nexolineal/algorithms/numerical/integration.py",
+      "sha256": "c9fffe6bcf3209c1c6a3a1e0d350f94e65148afd85ab19a690038d60478f6120"
+    },
+    {
+      "path": "nexolineal/algorithms/numerical/iterative.py",
+      "sha256": "68c8802e6b49cd4037af217ba4170e371bc8e2734708b98c0f956906a89c801b"
+    },
+    {
+      "path": "nexolineal/algorithms/numerical/roots.py",
+      "sha256": "baf32227cd1cb9cba16b3d78063a66967871943215ad49bc37f3ff9f6215d73b"
+    },
+    {
+      "path": "nexolineal/algorithms/numerical/tools.py",
+      "sha256": "777bb0751351f3da954530d94310587cbe9250d15c6a45dc3cb8ffc06527dec3"
+    },
+    {
+      "path": "nexolineal/application/__init__.py",
+      "sha256": "6bf1235c26550cb73d80dfcd380239954a679683c810779ddb6f8efcc8e1031f"
+    },
+    {
+      "path": "nexolineal/application/catalog.py",
+      "sha256": "7268df74d64975bedbd1956ddab5e03978506ee3253b77a41ebb8bd44fb96181"
+    },
+    {
+      "path": "nexolineal/application/catalog_data.py",
+      "sha256": "1468f37170ea358acca96c869adbe588c874aa9ff0420a706ea4dfdf4544b309"
+    },
+    {
+      "path": "nexolineal/application/learning.py",
+      "sha256": "b9faf55cc42906b6e2856bde2139e57afdbe30f01ae62d8277f6ea5fe7e162b7"
+    },
+    {
+      "path": "nexolineal/application/linear.py",
+      "sha256": "b70bf0c17435eeb0198b517f5733f3915317aab37c3d407e166bae9582234c85"
+    },
+    {
+      "path": "nexolineal/application/numerical.py",
+      "sha256": "f6504e2ba829d3609118f263da6b93e5c173eea409519c56317ff396be10c8cb"
+    },
+    {
+      "path": "nexolineal/application/numerical_catalog.py",
+      "sha256": "eb2fd0065973db2f09f0d57ea5ee04aef0a012bc16b8bc1c53665f68a1ac5500"
+    },
+    {
+      "path": "nexolineal/application/service.py",
+      "sha256": "51d1b954f88c26dd67ef18a57561e14a68df7960abb8ede640c12b42aa666b59"
+    },
+    {
+      "path": "nexolineal/application/visuals.py",
+      "sha256": "28b8c1ef10e652fc99604274f4d473df50a3fb9a4ab027fd01a359b34b9f4f2c"
+    },
+    {
+      "path": "nexolineal/domain/__init__.py",
+      "sha256": "47265b467930fd5296f1a4bcd458f9764cdc896f7c7f0dd0fa9b6a7ba228282d"
+    },
+    {
+      "path": "nexolineal/domain/models.py",
+      "sha256": "9d0044b1e6060c7079f77b341e029e04bcc7e65bec22354e4a60a6380da6d8e6"
+    },
+    {
+      "path": "nexolineal/parsing/__init__.py",
+      "sha256": "1cda29ffb65b12cfaadc85ac13338f214251ec4722cd68701b26c121d89f3fc0"
+    },
+    {
+      "path": "nexolineal/parsing/numbers.py",
+      "sha256": "d0cc73df620ea1dde3538d71586018ec7e61be96ddaf6f6cacd6d973e52304db"
+    },
+    {
+      "path": "nexolineal/platforms/__init__.py",
+      "sha256": "832a5cf5bac732aa2448116ce9103b09bd302b24547b9f8ffe789d85404b3db0"
+    },
+    {
+      "path": "nexolineal/platforms/jobs.py",
+      "sha256": "ab3acbc264fe29433fac3581797660acbf9062d9c952f1446dbf99065be3f8e8"
+    }
+  ],
+  "preserved_audits": {
+    "fase02": {
+      "systems": 288,
+      "checks": 1572
+    },
+    "fase04": {
+      "calls": 2376,
+      "checks": 12633
+    },
+    "fase05": {
+      "calls": 339,
+      "checks": 6473
+    }
+  },
+  "runs": [
+    {
+      "id": 44084584029,
+      "name": "NexoLineal multiplataforma",
+      "sha": "772c2e9e09551529bd74d8ce60dcd58698ea70a4",
+      "conclusion": "success",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44084584029"
+    },
+    {
+      "id": 44083938368,
+      "name": "Verificación de la línea de partida",
+      "sha": "fc29644bf365c69d60952220c790bb4b250c500a",
+      "conclusion": "success",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44083938368"
+    },
+    {
+      "id": 44083938448,
+      "name": "Núcleo matemático",
+      "sha": "fc29644bf365c69d60952220c790bb4b250c500a",
+      "conclusion": "success",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44083938448"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14328488185,
+      "name": "fase03-paridad",
+      "digest": "sha256:33ef56c6c6e6a3344649adfad948abd57b1ba36e1d6ea3e8ae3e421c35f30c63",
+      "size_in_bytes": 417,
+      "created_at": "2026-11-17T12:39:34Z",
+      "expires_at": "2026-12-17T12:39:34Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44084584029/artifacts/14328488185"
+    },
+    {
+      "id": 14328218914,
+      "name": "fase03-web",
+      "digest": "sha256:a46c12d48c9a4b16c7e6a600917dff64f496b94677f4d55f47b9e796fdc8b329",
+      "size_in_bytes": 12558543,
+      "created_at": "2026-11-17T12:38:09Z",
+      "expires_at": "2026-12-17T12:38:07Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44084584029/artifacts/14328218914"
+    },
+    {
+      "id": 14327904564,
+      "name": "fase03-windows",
+      "digest": "sha256:25d01fc1f692442ca1bdc7fff7205a8b55884c1b78e33617ca0aad9373b3e7ec",
+      "size_in_bytes": 15753189,
+      "created_at": "2026-11-17T12:37:52Z",
+      "expires_at": "2026-12-17T12:37:49Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44084584029/artifacts/14327904564"
+    },
+    {
+      "id": 14327479492,
+      "name": "fase03-android",
+      "digest": "sha256:03d344a8b43d9efa8b06a58e4da26b79b3148c87a57843af20566ca5a57c406a",
+      "size_in_bytes": 26002400,
+      "created_at": "2026-11-17T12:39:07Z",
+      "expires_at": "2026-12-17T12:39:03Z",
+      "url": "https://github.com/Rolando8-03/NexoLineal/actions/runs/44084584029/artifacts/14327479492"
+    }
+  ],
+  "commits_before_documentation": [
+    {
+      "sha": "6247f4c36a7812fbcc32908b6f7964375bcfb005",
+      "message": "geometria: emite escenas desde Python, proyección exacta y modelos contextualizados",
+      "paths": [
+        "packages/core/src/nexolineal/application/visuals.py",
+        "packages/core/src/nexolineal/application/learning.py",
+        "packages/core/src/nexolineal/application/catalog.py",
+        "packages/core/src/nexolineal/application/linear.py",
+        "packages/core/src/nexolineal/application/service.py",
+        "packages/core/pyproject.toml",
+        "packages/core/src/nexolineal/__init__.py",
+        "packages/core/python-files.json",
+        "packages/contracts/problem.schema.json",
+        "tests/fixtures/fase04_defaults.json",
+        "tests/fixtures/fase05_defaults.json",
+        "tests/test_fase04.py",
+        "tests/test_fase05.py",
+        "tests/test_fase07.py"
+      ]
+    },
+    {
+      "sha": "f557d2401c479f4ac130c5fb26e7ac45d0b47841",
+      "message": "documentos: guarda PDF y CSV con selectores nativos y validación de tamaño",
+      "paths": [
+        "apps/windows/main.py",
+        "apps/windows/documents.py",
+        "apps/android/app/src/main/java/org/nexolineal/app/NexoEnginePlugin.kt",
+        "apps/android/app/build.gradle"
+      ]
+    },
+    {
+      "sha": "815739797d05747e2b1cca1672d880850a613fac",
+      "message": "exploracion: sincroniza gráficas, tablas, teoría, aplicaciones y documentos en ambos modos",
+      "paths": [
+        "apps/frontend/package.json",
+        "apps/frontend/package-lock.json",
+        "apps/frontend/src/App.tsx",
+        "apps/frontend/src/ResultView.tsx",
+        "apps/frontend/src/contracts.ts",
+        "apps/frontend/src/styles.css",
+        "apps/frontend/src/workspace/WorkspacePanel.tsx",
+        "apps/frontend/src/workspace/storage.ts",
+        "apps/frontend/src/exploration/types.ts",
+        "apps/frontend/src/exploration/selection.ts",
+        "apps/frontend/src/exploration/GraphPanel.tsx",
+        "apps/frontend/src/exploration/Learning.tsx",
+        "apps/frontend/src/exploration/exports.ts"
+      ]
+    },
+    {
+      "sha": "14ea6d4b125b773f105bc211b6225093952ca581",
+      "message": "verificacion: contrasta geometría, modelos, PDF y CSV con contratos reales",
+      "paths": [
+        "apps/windows/main.py",
+        "apps/windows/smoke.py",
+        "apps/android/app/src/main/java/org/nexolineal/app/NexoEnginePlugin.kt",
+        "apps/android/app/src/androidTest/java/org/nexolineal/app/PlatformTest.kt",
+        "tests/test_fase07.py",
+        "tests/auditoria_fase07.py",
+        "tests/fixtures/platform_contracts.json",
+        ".github/scripts/probar_visualizacion_fase07.cjs",
+        ".github/scripts/probar_web_fase03.cjs",
+        ".github/scripts/probar_experiencia_fase06.cjs",
+        ".gitignore"
+      ]
+    },
+    {
+      "sha": "6506897795e2453a400e311e8fb7e837fbd5115c",
+      "message": "precision: conserva unidades del modelo y evita tangentes ficticias al estancarse",
+      "paths": [
+        "packages/core/src/nexolineal/application/linear.py",
+        "packages/core/src/nexolineal/application/service.py",
+        "packages/core/src/nexolineal/application/visuals.py",
+        "tests/test_fase07.py",
+        "tests/auditoria_fase07.py",
+        "apps/frontend/src/ResultView.tsx",
+        "apps/frontend/src/exploration/exports.ts"
+      ]
+    },
+    {
+      "sha": "76422085e341cef5ba3645e0915d6325e9040d9c",
+      "message": "integracion: exige auditoría geométrica y exportaciones nativas antes de cerrar fase 07",
+      "paths": [
+        ".github/scripts/paridad_fase03.py",
+        ".github/scripts/probar_estado_fase06.cjs",
+        ".github/workflows/fase04.yml",
+        ".github/workflows/plataformas.yml",
+        ".github/workflows/verificacion.yml"
+      ]
+    },
+    {
+      "sha": "9981ca058fe183afdf6f772c08b9470dc05d4210",
+      "message": "geometria: dibuja racionales sin NaN, conserva escala espacial y corrige regiones accesibles",
+      "paths": [
+        "apps/frontend/src/exploration/geometry.ts",
+        "apps/frontend/src/exploration/GraphPanel.tsx",
+        "apps/frontend/src/ResultView.tsx",
+        "apps/frontend/src/App.tsx",
+        ".github/scripts/probar_visualizacion_fase07.cjs",
+        ".github/scripts/probar_datos_fase07.cjs",
+        ".github/scripts/paridad_fase03.py",
+        ".github/workflows/plataformas.yml"
+      ]
+    },
+    {
+      "sha": "fc29644bf365c69d60952220c790bb4b250c500a",
+      "message": "combinaciones: representa los coeficientes calculados y reconstruye el vector objetivo",
+      "paths": [
+        "packages/core/src/nexolineal/application/visuals.py",
+        "packages/core/src/nexolineal/application/learning.py",
+        "tests/test_fase07.py",
+        "tests/auditoria_fase07.py",
+        "tests/fixtures/platform_contracts.json",
+        ".github/scripts/probar_visualizacion_fase07.cjs"
+      ]
+    },
+    {
+      "sha": "772c2e9e09551529bd74d8ce60dcd58698ea70a4",
+      "message": "recursos: distribuye los avisos de licencia de las bibliotecas del frontend",
+      "paths": [
+        "apps/frontend/scripts/prepare-licenses.mjs",
+        "apps/frontend/scripts/prepare-runtime.mjs",
+        ".gitignore"
+      ]
+    }
+  ],
+  "response_hash_definition": "SHA-256 de JSON UTF-8 con claves ordenadas, ensure_ascii=False y separadores coma/dos puntos sin espacios. 136 respuestas completas por destino; archivos completos en artefactos regenerables.",
+  "project_bank": {
+    "projects": 19,
+    "verification": "banco-verificacion.json"
+  },
+  "limits": [
+    "Escenas finitas y dominios admitidos; no prueba universal de continuidad ni convergencia.",
+    "R²/R³; cuadrícula R²→R² canónica; 201 muestras; magnitudes hasta 10^6.",
+    "PDF con LaTeX textual; 2 MiB de texto, 300 páginas y 16 MiB finales.",
+    "Diálogos de archivo nativos implementados; pruebas usan destino de evidencia explícito.",
+    "Windows Server 2022/WebView2 y Android API35/x86_64 emulado; ARM64 incluido, sin validación física.",
+    "Escenas axe y teclado sin certificación universal.",
+    "Ampliaciones matemáticas y conciliación de todos los ejercicios conservan continuaciones explícitas."
+  ]
+}

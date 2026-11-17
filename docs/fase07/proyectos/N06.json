@@ -1,0 +1,31 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "Residual de gauss_seidel",
+  "updatedAt": "2026-11-17T12:30:40.671705+00:00",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "iterativos.gauss_seidel",
+    "inputs": {
+      "iterativos.gauss_seidel": {
+        "A": "4 1;1 3",
+        "b": "1 2",
+        "inicial": "",
+        "norma": "infinito",
+        "tolerancia_absoluta": "1e-8",
+        "tolerancia_relativa": "1e-8",
+        "max_iteraciones": "100",
+        "referencia": ""
+      }
+    },
+    "step": 0,
+    "stepsOpen": true,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": []
+}

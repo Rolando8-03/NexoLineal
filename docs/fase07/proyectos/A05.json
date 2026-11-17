@@ -1,0 +1,25 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "Población en el siguiente período",
+  "updatedAt": "2026-11-17T12:30:40.671705+00:00",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "matrices.producto",
+    "inputs": {
+      "matrices.producto": {
+        "A": "4/5 1/10;1/5 9/10",
+        "B": "200;100"
+      }
+    },
+    "step": 0,
+    "stepsOpen": true,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": []
+}

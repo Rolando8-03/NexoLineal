@@ -1,0 +1,26 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "Dos rectas: solución única",
+  "updatedAt": "2026-11-17T12:30:40.671705+00:00",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "sistemas.resolver",
+    "inputs": {
+      "sistemas.resolver": {
+        "A": "1 1;1 -1",
+        "b": "3 1",
+        "metodo": "gauss_jordan"
+      }
+    },
+    "step": 0,
+    "stepsOpen": true,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": []
+}

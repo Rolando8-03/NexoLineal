@@ -1,0 +1,30 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "falsa_posicion para x²−2",
+  "updatedAt": "2026-11-17T12:30:40.671705+00:00",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "raices.falsa_posicion",
+    "inputs": {
+      "raices.falsa_posicion": {
+        "expresion": "x^2-2",
+        "inferior": "1",
+        "superior": "2",
+        "tolerancia_x": "1e-8",
+        "tolerancia_f": "1e-8",
+        "max_iteraciones": "100",
+        "criterio": "residual_y_paso"
+      }
+    },
+    "step": 0,
+    "stepsOpen": true,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": []
+}

@@ -1,0 +1,251 @@
+[
+  {
+    "id": "S01",
+    "title": "Dos rectas: solución única",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 1;1 -1",
+        "b": "3 1"
+      }
+    },
+    "project": "proyectos/S01.json"
+  },
+  {
+    "id": "S02",
+    "title": "Rectas paralelas: incompatibilidad",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 1;2 2",
+        "b": "1 3"
+      }
+    },
+    "project": "proyectos/S02.json"
+  },
+  {
+    "id": "S03",
+    "title": "Rectas coincidentes: infinitas soluciones",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 2;2 4",
+        "b": "3 6"
+      }
+    },
+    "project": "proyectos/S03.json"
+  },
+  {
+    "id": "S04",
+    "title": "Tres planos: solución única",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 1 1;1 -1 0;0 1 -1",
+        "b": "6 0 0"
+      }
+    },
+    "project": "proyectos/S04.json"
+  },
+  {
+    "id": "S05",
+    "title": "Planos que se cortan en una recta",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 1 0;0 1 1",
+        "b": "2 3"
+      }
+    },
+    "project": "proyectos/S05.json"
+  },
+  {
+    "id": "V01",
+    "title": "Proyección ortogonal con fracciones",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "vectores.proyeccion",
+      "input": {
+        "u": "2 3",
+        "v": "1 2"
+      }
+    },
+    "project": "proyectos/V01.json"
+  },
+  {
+    "id": "V02",
+    "title": "Combinación general: 2v1 + v2",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "vectores.generado",
+      "input": {
+        "vectores": "1 1;1 -1",
+        "v": "3 1"
+      }
+    },
+    "project": "proyectos/V02.json"
+  },
+  {
+    "id": "T01",
+    "title": "Cizalla y reflexión de una cuadrícula",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "transformaciones.analizar",
+      "input": {
+        "A": "1 2;0 -1"
+      }
+    },
+    "project": "proyectos/T01.json"
+  },
+  {
+    "id": "N01",
+    "title": "biseccion para x²−2",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "raices.biseccion",
+      "input": {
+        "expresion": "x^2-2",
+        "inferior": "1",
+        "superior": "2"
+      }
+    },
+    "project": "proyectos/N01.json"
+  },
+  {
+    "id": "N02",
+    "title": "falsa_posicion para x²−2",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "raices.falsa_posicion",
+      "input": {
+        "expresion": "x^2-2",
+        "inferior": "1",
+        "superior": "2"
+      }
+    },
+    "project": "proyectos/N02.json"
+  },
+  {
+    "id": "N03",
+    "title": "newton para x²−2",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "raices.newton",
+      "input": {
+        "expresion": "x^2-2",
+        "inicial": "2"
+      }
+    },
+    "project": "proyectos/N03.json"
+  },
+  {
+    "id": "N04",
+    "title": "secante para x²−2",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "raices.secante",
+      "input": {
+        "expresion": "x^2-2",
+        "anterior": "1",
+        "inicial": "2"
+      }
+    },
+    "project": "proyectos/N04.json"
+  },
+  {
+    "id": "N05",
+    "title": "Residual de jacobi",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "iterativos.jacobi",
+      "input": {
+        "A": "4 1;1 3",
+        "b": "1 2"
+      }
+    },
+    "project": "proyectos/N05.json"
+  },
+  {
+    "id": "N06",
+    "title": "Residual de gauss_seidel",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "iterativos.gauss_seidel",
+      "input": {
+        "A": "4 1;1 3",
+        "b": "1 2"
+      }
+    },
+    "project": "proyectos/N06.json"
+  },
+  {
+    "id": "A01",
+    "title": "Distribución de caudal",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 1;1 -1",
+        "b": "30 10"
+      }
+    },
+    "project": "proyectos/A01.json"
+  },
+  {
+    "id": "A02",
+    "title": "Balance de una reacción",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "1 0;0 2",
+        "b": "4 6"
+      }
+    },
+    "project": "proyectos/A02.json"
+  },
+  {
+    "id": "A03",
+    "title": "Producción y demanda",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "4/5 -1/10;-1/5 7/10",
+        "b": "70 30"
+      }
+    },
+    "project": "proyectos/A03.json"
+  },
+  {
+    "id": "A04",
+    "title": "Uso completo de dos recursos",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "sistemas.resolver",
+      "input": {
+        "A": "2 1;1 2",
+        "b": "40 50"
+      }
+    },
+    "project": "proyectos/A04.json"
+  },
+  {
+    "id": "A05",
+    "title": "Población en el siguiente período",
+    "problem": {
+      "schema_version": "1.0",
+      "operation_id": "matrices.producto",
+      "input": {
+        "A": "4/5 1/10;1/5 9/10",
+        "B": "200;100"
+      }
+    },
+    "project": "proyectos/A05.json"
+  }
+]

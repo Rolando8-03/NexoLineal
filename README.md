@@ -1,10 +1,10 @@
 # NexoLineal
 
-Calculadora educativa con motor matemático en Python e interfaz compartida para web, Windows y Android. La versión 0.6.0 integra menú principal, presentaciones Serio y Explorador, objetos reutilizables, historial y proyectos portables, conectados al mismo núcleo Python y al contrato JSON 1.0.
+Calculadora educativa con motor matemático en Python e interfaz compartida para web, Windows y Android. La versión 0.7.0 conecta gráficas, procedimientos, tablas, teoría y aplicaciones. Conserva menú principal, presentaciones Serio y Explorador, objetos reutilizables, historial y proyectos portables, con el mismo núcleo Python y contrato JSON 1.0.
 
 ## Prototipos de los tres destinos
 
-La interfaz compartida ofrece 56 operaciones: álgebra lineal, métodos de raíces, sistemas iterativos, errores, conversiones, conjuntos y cálculo. Incluye sistemas rectangulares, matrices y bloques, determinantes, inversas, LU/PLU, vectores, subespacios, bases, coordenadas y transformaciones. Incluye menú principal, entrada mínima y presentaciones Serio y Explorador. Los recursos del nuevo frontend se empaquetan localmente.
+La interfaz compartida ofrece 57 operaciones: álgebra lineal, métodos de raíces, sistemas iterativos, errores, conversiones, conjuntos y cálculo. Incluye sistemas rectangulares, matrices y bloques, determinantes, inversas, LU/PLU, vectores, subespacios, bases, coordenadas y transformaciones. Incluye menú principal, entrada mínima y presentaciones Serio y Explorador. Los recursos del nuevo frontend se empaquetan localmente.
 
 | Destino | Ejecución |
 | --- | --- |
@@ -27,11 +27,19 @@ python -m http.server 8000
 
 Abrir http://localhost:8000 en el navegador. La versión actual carga Pyodide, Tailwind, SweetAlert2 y KaTeX desde sus CDN. El motor del navegador recibe los mismos archivos Python del paquete.
 
+## Visualización y aprendizaje de fase 07
+
+Rectas y planos en 2D/3D, vectores y combinaciones, proyección ortogonal exacta, cuadrícula lineal y geometría de bisección, falsa posición, Newton y secante. La selección de fila, paso y gráfica se sincroniza; el residual conserva los valores de la tabla. Las curvas se separan donde el analizador no puede justificar continuidad. Los datos de las escenas provienen de Python; la interfaz controla cámara, ampliación y alternativa textual.
+
+Biblioteca incorpora 12 fichas con hipótesis y fuentes primarias, cinco aplicaciones verificadas con unidades/restricciones y un banco de 19 proyectos importables. El procedimiento se exporta a PDF paginado y las tablas a CSV de todas sus columnas. Las dos presentaciones tienen las mismas capacidades.
+
+[Contrato visual y límites](docs/fase07/visualizacion.md) · [Teoría y aplicaciones](docs/fase07/teoria-aplicaciones.md) · [Banco importable](docs/fase07/banco.md) · [PDF/CSV](docs/fase07/exportaciones.md) · [Pruebas](docs/fase07/verificacion.md) · [Cierre y descargas 0.7.0](docs/fase07/cierre.md)
+
 ## Experiencia de fase 06
 
 Diez destinos del menú, búsqueda matemática y formularios que piden los operandos necesarios. Pegar una matriz infiere sus dimensiones y conserva la diferencia entre una celda vacía y cero. Las matrices, vectores, bases y funciones se guardan para usarlos en otra operación sin transcribirlos.
 
-Serio y Explorador ofrecen las mismas 56 operaciones, procedimientos, comprobaciones y tablas. Claro/Oscuro es una preferencia independiente; cambiar de presentación conserva el ejercicio, el resultado y el paso activo. El modo Explorador incluye ilustraciones y animación decorativa que respeta la preferencia de movimiento reducido.
+Serio y Explorador ofrecen las mismas 57 operaciones, procedimientos, comprobaciones y tablas. Claro/Oscuro es una preferencia independiente; cambiar de presentación conserva el ejercicio, el resultado y el paso activo. El modo Explorador incluye ilustraciones y animación decorativa que respeta la preferencia de movimiento reducido.
 
 Historial con búsqueda, favoritos, editar y repetir; guardado local y proyectos JSON versión 1 con entradas exactas. Se verificó cerrar/reabrir en Chromium, Windows desde Python y EXE, y Android offline. Los archivos importados se validan y los resultados se recalculan con Python.
 
@@ -68,6 +76,7 @@ Los valores racionales se transportan como texto. Una integral polinómica de x�
 | apps/frontend | Interfaz compartida React y adaptadores de ejecución |
 | apps/windows | Ventana nativa y empaquetado gráfico |
 | apps/android | APK con Python incluido y prueba instrumentada |
+| docs/fase07 | Escenas, teoría, aplicaciones, documentos y banco importable |
 | docs/fase06 | Menú, modos, accesibilidad, proyectos y evidencias de continuidad |
 | docs/fase05 | Métodos numéricos, precisión, cobertura y evidencias |
 | docs/fase04 | Cobertura, convenciones, límites y evidencia de álgebra lineal |
@@ -89,12 +98,13 @@ python -B -m unittest discover -s tests -v
 python -m tests.auditoria_matematica
 python -m tests.auditoria_fase04
 python -m tests.auditoria_fase05
+python -m tests.auditoria_fase07
 python .github/scripts/generar_catalogo.py --check
 ```
 
 SymPy se usa como referencia independiente en pruebas. Los algoritmos de producción conservan sus implementaciones explícitas en Python.
 
-El workflow de plataformas compara 113 contratos completos y la integridad de los 46 archivos Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline. Además exige 50 comprobaciones del formato/validación y puentes nativos, 19 recorridos de experiencia, siete análisis axe sin violaciones en las escenas probadas y reapertura de proyectos en los tres destinos. La batería Python suma 131 pruebas unittest; la interfaz anterior conserva 11 recorridos.
+El workflow de plataformas compara 136 contratos completos y la integridad de los 48 archivos Python entre destinos. Ejecuta pruebas de cancelación y recuperación, los 56 formularios en ambos modos, formularios nativos y el APK offline. Además exige 54 comprobaciones del formato/validación y puentes nativos, 19 recorridos de experiencia, siete análisis axe sin violaciones en las escenas probadas y reapertura de proyectos en los tres destinos. La fase 07 añade 23 comprobaciones de conversión/exportación, 11 recorridos nuevos, cinco escenas axe y 8083 comprobaciones geométricas independientes. La batería Python suma 160 pruebas unittest; la interfaz anterior conserva 11 recorridos.
 
 El workflow de verificación ejecuta los casos originales, las regresiones nuevas, 288 sistemas independientes, una auditoría adicional de 2376 solicitudes con 12633 comprobaciones, 339 solicitudes nuevas con 6473 comprobaciones numéricas y recorridos gráficos en Chromium. Los informes y capturas se conservan como nexolineal-evidencias en Actions.
 

@@ -1,0 +1,125 @@
+{
+  "approved": true,
+  "projects": 19,
+  "codec": "decodeProject de producción",
+  "core": {
+    "approved": true,
+    "projects": 19,
+    "examples": [
+      {
+        "id": "S01",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "S02",
+        "status": "inconsistent",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "S03",
+        "status": "infinite",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "S04",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "S05",
+        "status": "infinite",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "V01",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "vectors"
+      },
+      {
+        "id": "V02",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "vectors"
+      },
+      {
+        "id": "T01",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "transformation"
+      },
+      {
+        "id": "N01",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "roots"
+      },
+      {
+        "id": "N02",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "roots"
+      },
+      {
+        "id": "N03",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "roots"
+      },
+      {
+        "id": "N04",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "roots"
+      },
+      {
+        "id": "N05",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "residual"
+      },
+      {
+        "id": "N06",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "residual"
+      },
+      {
+        "id": "A01",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "A02",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "A03",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "A04",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "system"
+      },
+      {
+        "id": "A05",
+        "status": "ok",
+        "verification_passed": true,
+        "scene": "unavailable"
+      }
+    ]
+  }
+}

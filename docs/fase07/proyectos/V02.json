@@ -1,0 +1,26 @@
+{
+  "format": "NexoLineal.Project",
+  "version": 1,
+  "name": "Combinación general: 2v1 + v2",
+  "updatedAt": "2026-11-17T12:30:40.671705+00:00",
+  "preferences": {
+    "mode": "serio",
+    "theme": "claro"
+  },
+  "active": {
+    "operation": "vectores.generado",
+    "inputs": {
+      "vectores.generado": {
+        "vectores": "1 1;1 -1",
+        "v": "3 1",
+        "dimension_ambiente": ""
+      }
+    },
+    "step": 0,
+    "stepsOpen": true,
+    "verificationOpen": false,
+    "resumeResult": true
+  },
+  "objects": [],
+  "history": []
+}
