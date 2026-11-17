@@ -1,7 +1,7 @@
 name: Núcleo matemático
 on:
   push:
-    branches: [main, fase-04-algebra, fase-05-numericos]
+    branches: [main, fase-04-algebra, fase-05-numericos, fase-06-experiencia]
     paths: ['packages/**', 'python/**', 'modulos/**', 'teoremas/**', 'tests/**', '.github/workflows/fase04.yml', '.github/scripts/generar_catalogo.py']
   workflow_dispatch:
 permissions:

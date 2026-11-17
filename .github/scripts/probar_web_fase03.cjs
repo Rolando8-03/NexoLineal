@@ -242,6 +242,32 @@ const report = { approved: false, cases: [], errors: [] };
     );
     assert.equal(await page.locator("#expresion").inputValue(), "x^2-2");
     await page.setViewportSize({ width: 390, height: 844 });
+    if (
+      !(await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ))
+    )
+      console.log(
+        "NEXO_OVERFLOW=" +
+          JSON.stringify(
+            await page.evaluate(() =>
+              [...document.querySelectorAll("*")]
+                .filter(
+                  (e) =>
+                    e.getBoundingClientRect().right > innerWidth + 1 &&
+                    getComputedStyle(e).display !== "none",
+                )
+                .map((e) => ({
+                  tag: e.tagName,
+                  cls: e.className,
+                  id: e.id,
+                  right: e.getBoundingClientRect().right,
+                  width: e.getBoundingClientRect().width,
+                }))
+                .slice(0, 15),
+            ),
+          ),
+      );
     assert.ok(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -316,6 +342,32 @@ const report = { approved: false, cases: [], errors: [] };
     });
 
     await page.setViewportSize({ width: 390, height: 844 });
+    if (
+      !(await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ))
+    )
+      console.log(
+        "NEXO_OVERFLOW=" +
+          JSON.stringify(
+            await page.evaluate(() =>
+              [...document.querySelectorAll("*")]
+                .filter(
+                  (e) =>
+                    e.getBoundingClientRect().right > innerWidth + 1 &&
+                    getComputedStyle(e).display !== "none",
+                )
+                .map((e) => ({
+                  tag: e.tagName,
+                  cls: e.className,
+                  id: e.id,
+                  right: e.getBoundingClientRect().right,
+                  width: e.getBoundingClientRect().width,
+                }))
+                .slice(0, 15),
+            ),
+          ),
+      );
     assert.ok(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
