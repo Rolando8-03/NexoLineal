@@ -38,9 +38,21 @@ async function calculate(status = "ok") {
   );
 }
 async function choose(op, values = {}) {
+  const edit = page.getByRole("button", { name: "Editar matriz" });
+  if (await edit.isVisible()) await edit.click();
   if (!(await page.locator("#operacion").isVisible()))
-    await page.locator(".workspace-return").click();
+    await page.getByRole("button", { name: "Consola", exact: true }).click();
   await page.locator("#operacion").selectOption(op);
+  if (op === "sistemas.resolver") {
+    const b = values["dato-b"].split(" ");
+    const rows = values["matriz-a"].split(";").map((row, i) => row + " " + b[i]);
+    const paste = page.locator(".paste-matrix");
+    if (!await paste.getAttribute("open") && !await paste.locator("textarea").isVisible())
+      await paste.locator("summary").click();
+    await paste.locator("textarea").fill(rows.join("\n"));
+    await paste.getByRole("button", { name: "Usar matriz" }).click();
+    return;
+  }
   for (const [id, value] of Object.entries(values))
     await page.locator("#" + id).fill(value);
 }
@@ -291,6 +303,7 @@ async function download(selector, name) {
       "2",
     );
     pass("Norma residual e iteración seleccionada sincronizadas");
+    await page.locator("#menu-toggle").click();
     await page.locator("nav button[data-route=biblioteca]").click();
     assert.equal(
       await page.locator(".learning-library .theorem-card").count(),
@@ -309,8 +322,10 @@ async function download(selector, name) {
       "recursos",
       "poblaciones",
     ]) {
-      if (!(await page.locator(".learning-library").isVisible()))
+      if (!(await page.locator(".learning-library").isVisible())) {
+        await page.locator("#menu-toggle").click();
         await page.locator("nav button[data-route=biblioteca]").click();
+      }
       await page.locator(`[data-application=${id}] .load-application`).click();
       await page.waitForFunction(
         () => !document.querySelector("#calcular").disabled,

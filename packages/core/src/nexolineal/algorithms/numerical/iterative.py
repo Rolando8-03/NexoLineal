@@ -30,10 +30,22 @@ def iterative(method, data, ctx):
         raise InputError("Tolerancia absoluta 1e-24…1 y relativa 0…1.")
     limit = integer(data.get("max_iteraciones", 100), "Máximo de iteraciones", 1, 200)
     kind = data.get("norma", "infinito")
-    dominant = all(
-        abs(A[i][i]) > sum((abs(A[i][j]) for j in range(n) if j != i), F(0))
-        for i in range(n)
-    )
+    omega = parse_number(data.get("omega", "1"))
+    if not 0 < omega < 2:
+        raise InputError("El factor de relajación debe satisfacer 0 < ω < 2.")
+    criterion = data.get("criterio", "paso_y_residual")
+    if criterion not in ("paso_y_residual", "porcentaje_y_residual"):
+        raise InputError("Elegí un criterio de parada disponible.")
+    percent_limit = None
+    if criterion == "porcentaje_y_residual":
+        percent_limit = parse_number(data.get("porcentaje", "0.1"))
+        if percent_limit <= 0:
+            raise InputError("El porcentaje debe ser positivo.")
+    dominance = [
+        {"diagonal": abs(row[i]), "resto": sum(map(abs, row), F(0)) - abs(row[i])}
+        for i, row in enumerate(A)
+    ]
+    dominant = all(row["diagonal"] > row["resto"] for row in dominance)
 
     def update(old, rhs):
         current = old[:]
@@ -48,7 +60,8 @@ def iterative(method, data, ctx):
                 ),
                 F(0),
             )
-            current[i] = freeze((rhs[i] - terms) / A[i][i])
+            estimate = (rhs[i] - terms) / A[i][i]
+            current[i] = freeze((1 - omega) * old[i] + omega * estimate)
         return current
 
     # Matriz de iteración exacta. Su norma infinito <1 es suficiente, no necesaria.
@@ -71,8 +84,12 @@ def iterative(method, data, ctx):
             "No se obtuvo una cota por contracción en norma infinito; el método puede converger."
         )
     result = {
-        "metodo": method,
+        "metodo": "sor" if omega != 1 else method,
+        "omega": omega,
         "norma": kind,
+        "dominancia_por_fila": dominance,
+        "criterio": criterion,
+        "porcentaje_objetivo": percent_limit,
         "inicial": x[:],
         "dominancia_diagonal_estricta": dominant,
         "norma_infinito_matriz_iteracion": q,
@@ -127,6 +144,11 @@ def iterative(method, data, ctx):
             else None
         )
         result["cota_garantizada"] = bound
+        # Una componente que permanece en cero aporta cambio nulo. Si llega
+        # a cero desde otro valor, el cociente relativo no está definido.
+        changes = [100 * abs((v - u) / v) if v else (None if u else F(0))
+                   for v, u in zip(new, x)]
+        percent = None if None in changes else max(changes)
         row = {
             "iteracion": k,
             "anterior": x[:],
@@ -134,15 +156,20 @@ def iterative(method, data, ctx):
             "residual": r,
             "norma_residual": nr,
             "error_aproximado_absoluto": delta,
+            "cambio_porcentual_maximo": percent,
             "umbral_paso": step_threshold,
             "umbral_residual": threshold,
             "cota_error_infinito": bound,
         }
+        if reference is not None:
+            row["error_verdadero"] = norm([a - b for a, b in zip(new, reference)], kind)
         table.append(row)
         ctx.emit("iteracion_sistema", f"Iteración {k} de {method}.", row)
         ctx.progress(k * 99 // limit)
-        if delta <= step_threshold and nr <= threshold:
-            return finish("ok", "paso_y_residual_suficientes", new, r)
+        small_step = (delta <= step_threshold if percent_limit is None
+                      else percent is not None and percent <= percent_limit)
+        if small_step and nr <= threshold:
+            return finish("ok", criterion + "_suficientes", new, r)
         if new == x:
             return finish(
                 "stagnated", "iterado_repetido_con_residual_no_suficiente", new, r

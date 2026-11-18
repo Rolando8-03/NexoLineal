@@ -95,6 +95,8 @@ async function ready() {
   );
 }
 async function result() {
+  if (!await page.locator("#calcular").isVisible())
+    await page.getByRole("button", { name: "Consola", exact: true }).click();
   await page.locator("#calcular").click();
   await ready();
   assert.equal(

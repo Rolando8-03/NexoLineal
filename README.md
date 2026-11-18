@@ -116,3 +116,9 @@ El workflow de verificación ejecuta los casos originales, las regresiones nueva
 La rama fase-01-base conserva el trabajo recibido. La fase 02 retira los lanzadores BAT y la entrada de terminal, incorpora el núcleo y documenta los cambios de API en docs/fase02.
 
 Autores del material original — Rolando Enrique Mayorga Mena, Alex Josué Fonseca Velásquez, Alondra Sofía Mayen Rodríguez y Mery Nohemy López Aguirre. Las atribuciones originales permanecen en el historial y en los módulos reutilizados.
+
+### Rediseño 01 · Menú y Sistemas
+
+La tarjeta **Resolver** abre una matriz aumentada con análisis completo. Podés pegar filas de una hoja de cálculo, elegir las salidas y consultar las lecturas del curso en **Cómo interpretar un sistema lineal**.
+
+La guía de diseño [Scroll Craft](https://github.com/nateherkai/scroll-craft) de Nate Herk se incluye como submódulo fijado a una revisión, con su licencia MIT. Para usar la skill del proyecto, ejecutá `git submodule update --init tools/scroll-craft`. El vínculo en `.agents/skills/scroll-craft` apunta a la guía original. La aplicación funciona independientemente del submódulo.

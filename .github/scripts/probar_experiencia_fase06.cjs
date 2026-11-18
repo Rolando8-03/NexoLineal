@@ -62,11 +62,12 @@ async function connect() {
   );
 }
 async function navigate(name) {
-  await page.locator("nav button").filter({ hasText: name }).click();
+  if (!(await page.locator(".sidebar").isVisible())) await page.locator("#menu-toggle").click();
+  await page.locator(".sidebar nav button").filter({ hasText: name }).click();
 }
 async function choose(id) {
   if (!(await page.locator("#operacion").isVisible()))
-    await page.locator(".workspace-return").click();
+    await page.getByRole("button", { name: "Consola", exact: true }).click();
   await page.locator("#operacion").selectOption(id);
 }
 async function calculate() {
@@ -140,7 +141,7 @@ async function axe(label) {
 (async () => {
   try {
     await connect();
-    assert.equal(await page.locator("nav button").count(), 10);
+    assert.equal(await page.locator(".sidebar nav button").count(), 10);
     const inventory = await page
       .locator("#operacion option")
       .evaluateAll((els) => els.map((e) => e.value));
@@ -164,26 +165,11 @@ async function axe(label) {
     assert.ok(await page.locator("#buscar-objetos").isVisible());
     pass("10 destinos reales y catálogo de 57 operaciones");
     await page.keyboard.press("Control+k");
-    assert.equal(
-      await page
-        .locator("#buscar-operaciones")
-        .evaluate((e) => e === document.activeElement),
-      true,
-    );
-    await page.locator("#buscar-operaciones").fill("transpuesta");
-    assert.ok(
-      await page
-        .locator(".operation-choice")
-        .filter({ hasText: "Transponer" })
-        .count(),
-    );
-    await page
-      .locator(".operation-choice")
-      .filter({ hasText: "Transponer" })
-      .first()
-      .click();
+    await page.locator(".sidebar.is-open .brand").waitFor();
+    await navigate("Matrices");
+    await page.locator(".operation-choice").filter({ hasText: "Transponer" }).click();
     assert.equal(await page.locator("#matriz-b").count(), 0);
-    pass("Buscador matemático con atajo y formulario mínimo de transpuesta");
+    pass("Menú por teclado y formulario mínimo de transpuesta");
     await page.locator("#matriz-a").fill("");
     await page.locator("#calcular").click();
     assert.equal(
@@ -437,6 +423,7 @@ async function axe(label) {
     await context.close();
     context = null;
     await connect();
+    await page.getByRole("button", { name: "Consola", exact: true }).click();
     assert.equal(await page.locator("#matriz-a").inputValue(), big);
     assert.equal(await page.locator("#paso").inputValue(), "2");
     assert.equal(
@@ -483,7 +470,7 @@ async function axe(label) {
     await page.emulateMedia({ reducedMotion: "reduce" });
     assert.equal(
       await page
-        .locator(".astronaut")
+        .locator(".cosmonaut")
         .evaluate((e) => getComputedStyle(e).animationName),
       "none",
     );
@@ -555,6 +542,7 @@ async function axe(label) {
       null,
       { timeout: 180000 },
     );
+    await q.getByRole("button", { name: "Consola", exact: true }).click();
     await q.locator("#matriz-a").fill("7");
     await q.waitForFunction(() =>
       document
@@ -575,6 +563,7 @@ async function axe(label) {
       null,
       { timeout: 180000 },
     );
+    await c.getByRole("button", { name: "Consola", exact: true }).click();
     await c.locator("#matriz-a").fill("8");
     await c.waitForTimeout(500);
     assert.equal(

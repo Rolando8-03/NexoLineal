@@ -41,7 +41,7 @@ export function matrixRows(text: string) {
     .filter((row) => row.trim())
     .map((row) => row.trim().split(/\s+/));
 }
-function cellError(value: string) {
+export function cellError(value: string) {
   return !number.test(value)
     ? "no es un número admitido"
     : /\/0+$/.test(value)

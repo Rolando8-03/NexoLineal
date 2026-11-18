@@ -1,33 +1,12 @@
 import { useState, type ChangeEvent } from "react";
 import type { OperationSpec } from "../contracts";
-import type { Project, SavedObject, HistoryEntry } from "./project";
+import type { Project, SavedObject } from "./project";
 import { searchable } from "./project";
 import { isWeb, storageName } from "./storage";
-const STATUS: Record<string, string> = {
-  ok: "Finalizado",
-  infinite: "Infinitas soluciones",
-  inconsistent: "Sin solución",
-  invalid_input: "Datos por revisar",
-  domain_error: "Dominio no admitido",
-  singular: "Matriz singular",
-  not_applicable: "Método no aplicable",
-  iteration_limit: "Límite de iteraciones",
-  limit_reached: "Límite de cálculo",
-  stagnated: "Estancamiento",
-  cycle_detected: "Ciclo detectado",
-  breakdown: "Método detenido",
-  cancelled: "Cancelado",
-  non_convergent: "No convergió",
-  internal_error: "Revisar cálculo",
-};
-interface HistoryProps {
+interface ProjectProps {
   project: Project;
-  operations: OperationSpec[];
   busy: boolean;
   name: (s: string) => void;
-  favorite: (id: string) => void;
-  edit: (h: HistoryEntry, repeat: boolean) => void;
-  remove: (id: string) => void;
   exportProject: () => void;
   importFile: (event: ChangeEvent<HTMLInputElement>) => void;
   importNative: () => void;
@@ -35,31 +14,10 @@ interface HistoryProps {
   newProject: () => void;
   save: () => void;
 }
-export function HistoryPanel(p: HistoryProps) {
-  const [query, setQuery] = useState(""),
-    [onlyFavorites, setOnlyFavorites] = useState(false);
-  const history = p.project.history.filter(
-    (h) =>
-      (!onlyFavorites || h.favorite) &&
-      searchable(
-        h.label + " " + h.operation + " " + Object.values(h.values).join(" "),
-      ).includes(searchable(query)),
-  );
+export function ProjectPanel(p: ProjectProps) {
   return (
-    <section className="panel page-panel" aria-labelledby="history-title">
-      <div className="panel-heading">
-        <div>
-          <span className="eyebrow">TU CUADERNO</span>
-          <h1 id="history-title" tabIndex={-1}>
-            Historial y proyectos
-          </h1>
-          <p className="help">
-            Volvé a tus cálculos, guardá favoritos y llevá el trabajo a otro
-            dispositivo.
-          </p>
-        </div>
-        <span className="count-badge">{p.project.history.length} cálculos</span>
-      </div>
+    <section className="panel page-panel">
+      <h1 tabIndex={-1}>Archivo del proyecto</h1>
       <div className="project-settings">
         <label htmlFor="project-name">Nombre del proyecto</label>
         <input
@@ -123,100 +81,10 @@ export function HistoryPanel(p: HistoryProps) {
         </div>
         <p className="help">
           Guardado local en {storageName}. El proyecto exportado incluye
-          entradas, objetos, favoritos y el paso activo. Los resultados se
-          vuelven a calcular al abrirlos.
+          entradas, objetos y el paso activo. Los resultados se vuelven a
+          calcular al abrirlos.
         </p>
       </div>
-      <div className="history-filters">
-        <div>
-          <label htmlFor="buscar-historial">Buscar en tu historial</label>
-          <input
-            id="buscar-historial"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Operación, dato o nombre…"
-          />
-        </div>
-        <label className="check-label">
-          <input
-            id="solo-favoritos"
-            type="checkbox"
-            checked={onlyFavorites}
-            onChange={(e) => setOnlyFavorites(e.target.checked)}
-          />
-          Solo favoritos
-        </label>
-      </div>
-      {!history.length ? (
-        <div className="empty">
-          <strong>
-            {p.project.history.length
-              ? "No hay coincidencias."
-              : "Tu primer cálculo empieza aquí."}
-          </strong>
-          <p>
-            {p.project.history.length
-              ? "Probá con otro término o desactivá el filtro."
-              : "Cada cálculo ejecutado aparecerá en este cuaderno."}
-          </p>
-        </div>
-      ) : (
-        <ol className="history-list">
-          {history.map((h) => (
-            <li className="history-entry" key={h.id} data-entry-id={h.id}>
-              <button
-                className="favorite-button"
-                type="button"
-                aria-label={
-                  (h.favorite ? "Quitar favorito: " : "Marcar favorito: ") +
-                  h.label
-                }
-                aria-pressed={h.favorite}
-                onClick={() => p.favorite(h.id)}
-              >
-                {h.favorite ? "★" : "☆"}
-              </button>
-              <div className="history-entry-body">
-                <strong>{h.label}</strong>
-                <p>
-                  {p.operations.find((o) => o.id === h.operation)?.category}{" "}
-                  <span aria-hidden="true">·</span>{" "}
-                  <time dateTime={h.date}>
-                    {new Date(h.date).toLocaleString("es")}
-                  </time>
-                </p>
-                <span className="status-tag">
-                  {STATUS[h.status] || h.status}
-                </span>
-              </div>
-              <div className="history-entry-actions">
-                <button
-                  className="secondary edit-history"
-                  disabled={p.busy}
-                  onClick={() => p.edit(h, false)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="secondary repeat-history"
-                  disabled={p.busy}
-                  onClick={() => p.edit(h, true)}
-                >
-                  Repetir
-                </button>
-                <button
-                  className="text-button delete-history"
-                  aria-label={"Eliminar cálculo: " + h.label}
-                  onClick={() => p.remove(h.id)}
-                >
-                  Eliminar
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
-      )}
     </section>
   );
 }
@@ -348,7 +216,7 @@ export function LibraryPanel({
           <dl className="shortcut-list">
             <div>
               <dt>Ctrl / ⌘ + K</dt>
-              <dd>Buscar operaciones</dd>
+              <dd>Abrir el menú de áreas</dd>
             </div>
             <div>
               <dt>Ctrl / ⌘ + Enter</dt>

@@ -1,4 +1,9 @@
-import { useState } from "react";
+import { SystemInput, ALL_RESULTS } from "./SystemInput";
+import { IterativeAnswer } from "./IterativeAnswer";
+import { familyOf, isSystemMethod, systemMethods } from "./navigation";
+import { SystemNotes } from "./SystemNotes";
+import { SystemAnswer } from "./SystemAnswer";
+import { useEffect, useRef, useState } from "react";
 import { TheoryCards, ModelResult } from "../exploration/Learning";
 import { exportPdf, exportCsv } from "../exploration/exports";
 import type { Theorem } from "../exploration/types";
@@ -61,27 +66,89 @@ export function WorkspacePanel(p: Props) {
       setExporting(false);
     }
   }
+  const isSystem = p.operation === "sistemas.resolver";
+  const iterative = p.operation.startsWith("iterativos.");
+  const systemFamily = isSystemMethod(p.operation);
+  const grid = systemFamily && !p.operation.startsWith("factorizacion.");
+  const family = p.spec ? familyOf(p.spec) : "Sistemas";
+  const [editingResult, setEditingResult] = useState<CalculationResult | null>(
+    null,
+  );
+  const editTitle = useRef<HTMLHeadingElement>(null);
+  const answerTitle = useRef<HTMLHeadingElement>(null);
+  const showInput =
+    !systemFamily || !p.result?.result || editingResult === p.result;
+  useEffect(() => {
+    if (systemFamily && !showInput) answerTitle.current?.focus();
+  }, [systemFamily, showInput, p.result]);
   const scene = p.result?.metadata.visualization as Scene | undefined;
   const frame = scene?.frames?.find((f) => f.step === p.active.step);
-  const categories = [...new Set(p.operations.map((o) => o.category))];
+  const matrixStudy = p.operation === "matrices.analizar";
+  const determinant = p.operation === "determinantes.calcular";
+  const selected = (p.values.consultas || "").split(" ").filter(Boolean);
+  const categories = [
+    "Sistemas",
+    "Vectores y espacios",
+    "Matrices",
+    "Determinantes e inversas",
+    "Transformaciones",
+    "Métodos numéricos",
+    "Cálculo",
+    "Calculadora",
+    "Herramientas",
+  ].filter((c) => p.operations.some((o) => familyOf(o) === c));
   return (
-    <div className="workspace">
-      <section className="panel input-panel" aria-labelledby="operacion-titulo">
+    <div className={"workspace" + (systemFamily ? " system-workspace" : "")}>
+      <nav aria-label="Áreas de la calculadora" className="family-switch">
+        {categories.map((c) => (
+          <button
+            key={c}
+            disabled={p.busy}
+            aria-pressed={family === c}
+            onClick={() =>
+              c !== family &&
+              p.choose(
+                c === "Sistemas"
+                  ? "sistemas.resolver"
+                  : c === "Matrices"
+                    ? "matrices.analizar"
+                    : c === "Métodos numéricos"
+                      ? "raices.biseccion"
+                      : p.operations.find((o) => familyOf(o) === c)!.id,
+              )
+            }
+          >
+            {c === "Vectores y espacios"
+              ? "Vectores"
+              : c === "Determinantes e inversas"
+                ? "Determinantes"
+                : c}
+          </button>
+        ))}
+      </nav>
+      <section
+        hidden={!showInput}
+        className="panel input-panel"
+        aria-labelledby="operacion-titulo"
+      >
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">TU PROBLEMA</span>
-            <h2 id="operacion-titulo" tabIndex={-1}>
-              {p.spec?.title || "Preparando operaciones"}
+            <h2 ref={editTitle} id="operacion-titulo" tabIndex={-1}>
+              {systemFamily
+                ? "Resolver sistema"
+                : p.spec?.title || "Preparando operaciones"}
             </h2>
           </div>
-          <span className="engine-status" role="status">
-            <i className={p.ready ? "ready" : ""} />
-            {p.busy
-              ? "Calculando"
-              : p.ready
-                ? "Motor listo"
-                : "Preparando el motor"}
-          </span>
+          {(!p.ready || p.busy) && (
+            <span className="engine-status" role="status">
+              <i className={p.ready ? "ready" : ""} />
+              {p.busy
+                ? "Calculando"
+                : p.ready
+                  ? "Motor listo"
+                  : "Preparando el motor"}
+            </span>
+          )}
         </div>
         <form
           noValidate
@@ -93,49 +160,129 @@ export function WorkspacePanel(p: Props) {
             }
           }}
         >
-          <label htmlFor="operacion">¿Qué querés calcular?</label>
+          <label htmlFor="operacion">
+            {systemFamily ? "Método" : "Operación"}
+          </label>
           <select
             id="operacion"
             value={p.operation}
             disabled={p.busy || !p.ready}
             onChange={(e) => p.choose(e.target.value)}
           >
-            {!p.operations.length && (
-              <option value="matrices.producto">Cargando operaciones…</option>
-            )}
-            {categories.map((c) => (
-              <optgroup label={c} key={c}>
-                {p.operations
-                  .filter((o) => o.category === c)
+            {systemFamily
+              ? systemMethods.map(([id, title]) => (
+                  <option key={id} value={id}>
+                    {title}
+                  </option>
+                ))
+              : p.operations
+                  .filter((o) => familyOf(o) === family)
                   .map((o) => (
                     <option key={o.id} value={o.id}>
                       {o.title}
                     </option>
                   ))}
-              </optgroup>
-            ))}
           </select>
-          {p.spec?.description && <p className="help">{p.spec.description}</p>}
-          {p.spec && (
+          {grid && (
+            <SystemInput
+              method={p.operation}
+              values={p.values}
+              busy={p.busy}
+              change={p.change}
+              errors={p.errors}
+            />
+          )}
+          {p.spec && !grid && (
             <FormFields
-              spec={p.spec}
+              spec={{
+                ...p.spec,
+                fields: p.spec.fields.filter((f) => f.name !== "consultas"),
+              }}
               values={p.values}
               busy={p.busy}
               change={p.change}
               errors={p.errors}
               objects={p.objects}
-              onSave={p.saveObject}
               onReuse={p.reuse}
             />
+          )}
+          {matrixStudy && (
+            <fieldset className="study-outputs">
+              <legend>Resultados</legend>
+              {[
+                ["rango", "Rango"],
+                ["transpuesta", "Transpuesta"],
+                ["traza", "Traza"],
+                ["determinante", "Determinante"],
+                ["inversa", "Inversa"],
+              ].map(([id, label]) => (
+                <label className="check-line" key={id}>
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(id)}
+                    onChange={(e) =>
+                      p.change(
+                        "consultas",
+                        (e.target.checked
+                          ? [...selected, id]
+                          : selected.filter((k) => k !== id)
+                        ).join(" "),
+                      )
+                    }
+                  />
+                  {label}
+                </label>
+              ))}
+              {!selected.length && (
+                <small>Sin selección se calcula el análisis general.</small>
+              )}
+            </fieldset>
+          )}
+          {determinant && (
+            <label className="check-line">
+              <input
+                type="checkbox"
+                checked={selected.includes("inversa")}
+                onChange={(e) =>
+                  p.change("consultas", e.target.checked ? "inversa" : "")
+                }
+              />
+              Calcular también la inversa
+            </label>
+          )}
+          {iterative && p.spec && (
+            <details className="solver-settings" key={p.operation}>
+              <summary>
+                Opciones de iteración · tolerancia{" "}
+                {p.values.tolerancia_absoluta || "1e-8"} · máximo{" "}
+                {p.values.max_iteraciones || "100"}
+              </summary>
+              <FormFields
+                spec={{
+                  ...p.spec,
+                  fields: p.spec.fields.filter(
+                    (f) => !["A", "b"].includes(f.name),
+                  ),
+                }}
+                values={p.values}
+                busy={p.busy}
+                change={p.change}
+                errors={p.errors}
+              />
+            </details>
           )}
           <div className="actions">
             <button
               id="calcular"
               className="primary"
-              disabled={!p.ready || p.busy}
+              disabled={
+                !p.ready ||
+                p.busy ||
+                (isSystem && !(p.values.resultados ?? ALL_RESULTS).trim())
+              }
               type="submit"
             >
-              {p.busy ? "Calculando…" : "Calcular"}
+              {p.busy ? "Calculando…" : systemFamily ? "Resolver" : "Calcular"}
               <span aria-hidden="true"> ↗</span>
             </button>
             {p.busy && (
@@ -149,7 +296,7 @@ export function WorkspacePanel(p: Props) {
               </button>
             )}
           </div>
-          <p className="keyboard-hint">Ctrl / ⌘ + Enter para calcular</p>
+
           {p.busy && (
             <progress
               max={100}
@@ -158,8 +305,13 @@ export function WorkspacePanel(p: Props) {
             />
           )}
         </form>
+        {isSystem && <SystemNotes />}
       </section>
       <section
+        hidden={
+          !p.error &&
+          (!p.result || (systemFamily && editingResult === p.result))
+        }
         id="resultado"
         className="panel result-panel"
         aria-live="polite"
@@ -168,22 +320,23 @@ export function WorkspacePanel(p: Props) {
       >
         <div className="panel-heading">
           <div>
-            <span className="eyebrow">EL RESULTADO</span>
-            <h2 id="resultado-titulo" tabIndex={-1}>
-              Resultado
+            <h2 ref={answerTitle} id="resultado-titulo" tabIndex={-1}>
+              {iterative ? p.spec?.title : "Resultado"}
             </h2>
           </div>
-          {p.result && (
-            <button
-              id="exportar"
-              type="button"
-              className="secondary"
-              onClick={p.exportResult}
-            >
-              Exportar JSON
-            </button>
-          )}
         </div>
+        {systemFamily && p.result && (
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => {
+              setEditingResult(p.result);
+              requestAnimationFrame(() => editTitle.current?.focus());
+            }}
+          >
+            Editar matriz
+          </button>
+        )}
         {p.error && (
           <>
             <p role="alert" className="error">
@@ -209,19 +362,6 @@ export function WorkspacePanel(p: Props) {
             {p.result.error.message}
           </p>
         )}
-        {!p.result && !p.error && (
-          <div className="empty">
-            <div className="empty-orbit" aria-hidden="true">
-              ∑
-            </div>
-            <strong>Un espacio para entender.</strong>
-            <p>
-              {p.busy
-                ? "Podés seguir navegando mientras calculamos."
-                : "Ingresá tus datos. Aquí vas a ver el resultado, el procedimiento y su comprobación."}
-            </p>
-          </div>
-        )}
         {p.result?.warnings.map((w, i) => (
           <p key={i} className="outcome-message">
             {w}
@@ -239,16 +379,32 @@ export function WorkspacePanel(p: Props) {
                 },
               }}
             >
-              <ResultView value={p.result.result} compact />
+              {iterative ? (
+                <IterativeAnswer
+                  key={p.result.operation_id + JSON.stringify(p.result.input)}
+                  response={p.result}
+                />
+              ) : isSystem ? (
+                <SystemAnswer response={p.result} />
+              ) : (
+                <ResultView value={p.result.result} compact />
+              )}
             </IterationSelection.Provider>
-            {scene && (
-              <GraphPanel
-                key={p.result.operation_id + JSON.stringify(p.result.input)}
-                scene={scene}
-                step={p.active.step}
-                select={(step) => p.setActive({ step, stepsOpen: true })}
-              />
-            )}
+            {scene &&
+              scene.kind !== "unavailable" &&
+              (!isSystem || scene.kind === "system") && (
+                <details className="related-theory">
+                  <summary>
+                    {iterative ? "Gráfica del residual" : "Ver gráfica"}
+                  </summary>
+                  <GraphPanel
+                    key={p.result.operation_id + JSON.stringify(p.result.input)}
+                    scene={scene}
+                    step={p.active.step}
+                    select={(step) => p.setActive({ step, stepsOpen: true })}
+                  />
+                </details>
+              )}
             {p.result.metadata.exact === true && (
               <p className="accuracy">Resultado exacto</p>
             )}
@@ -257,7 +413,7 @@ export function WorkspacePanel(p: Props) {
             )}
           </>
         )}
-        {p.result?.verification.passed === true && (
+        {!systemFamily && p.result?.verification.passed === true && (
           <p className="verified">
             ✓{" "}
             {String(
@@ -266,7 +422,16 @@ export function WorkspacePanel(p: Props) {
           </p>
         )}
         {p.result && (
-          <div className="document-actions">
+          <details className="document-actions">
+            <summary>Exportar resultado</summary>
+            <button
+              id="exportar"
+              type="button"
+              className="secondary"
+              onClick={p.exportResult}
+            >
+              JSON
+            </button>
             <button
               type="button"
               id="exportar-pdf"
@@ -291,7 +456,7 @@ export function WorkspacePanel(p: Props) {
                 </button>
               )}
             <p role="status">{exportNotice}</p>
-          </div>
+          </details>
         )}
         {p.result?.metadata.application != null && (
           <ModelResult
@@ -307,7 +472,7 @@ export function WorkspacePanel(p: Props) {
             />
           </details>
         )}
-        {!!p.result?.steps.length && (
+        {!iterative && !!p.result?.steps.length && (
           <details
             className="steps"
             open={p.active.stepsOpen}
@@ -336,19 +501,21 @@ export function WorkspacePanel(p: Props) {
             )}
           </details>
         )}
-        {p.result && Object.keys(p.result.verification).length > 0 && (
-          <details
-            className="verification-details"
-            open={p.active.verificationOpen}
-            onToggle={(e) => {
-              if (e.currentTarget.open !== p.active.verificationOpen)
-                p.setActive({ verificationOpen: e.currentTarget.open });
-            }}
-          >
-            <summary>Ver comprobación</summary>
-            <DataView value={p.result.verification} />
-          </details>
-        )}
+        {!systemFamily &&
+          p.result &&
+          Object.keys(p.result.verification).length > 0 && (
+            <details
+              className="verification-details"
+              open={p.active.verificationOpen}
+              onToggle={(e) => {
+                if (e.currentTarget.open !== p.active.verificationOpen)
+                  p.setActive({ verificationOpen: e.currentTarget.open });
+              }}
+            >
+              <summary>Ver comprobación</summary>
+              <DataView value={p.result.verification} />
+            </details>
+          )}
         {!!p.candidates.length && (
           <details className="reuse-results">
             <summary>Guardar un resultado como objeto reutilizable</summary>

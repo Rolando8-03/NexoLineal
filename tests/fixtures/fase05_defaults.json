@@ -11,6 +11,7 @@
     "schema_version": "1.0",
     "operation_id": "sistemas.resolver",
     "input": {
+      "resultados": "clasificacion rangos gauss jordan solucion comprobacion",
       "A": "2 1\n1 -1",
       "b": "5 1",
       "metodo": "gauss_jordan"
@@ -411,6 +412,8 @@
     "input": {
       "A": "4 1\n2 3",
       "b": "1 2",
+      "criterio": "paso_y_residual",
+      "porcentaje": "0.1",
       "norma": "infinito",
       "tolerancia_absoluta": "1e-8",
       "tolerancia_relativa": "1e-8",
@@ -423,6 +426,9 @@
     "input": {
       "A": "4 1\n2 3",
       "b": "1 2",
+      "criterio": "paso_y_residual",
+      "porcentaje": "0.1",
+      "omega": "1",
       "norma": "infinito",
       "tolerancia_absoluta": "1e-8",
       "tolerancia_relativa": "1e-8",

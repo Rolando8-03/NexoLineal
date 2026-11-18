@@ -5,7 +5,7 @@ No se declaran implementadas al cerrar B27–B34. Requieren especificación y bl
 | Ampliación | Especificación y pruebas requeridas | Bloques adicionales |
 | --- | --- | --- |
 | Punto fijo | g(x), intervalo invariante, contracción y criterio explícitos; ejemplos convergentes y divergentes | 1 |
-| SOR | ω editable, intervalo e hipótesis admitidas, residuales y reducción a Gauss-Seidel con ω=1 | 1 |
+| SOR | Incorporado en la revisión del Explorador. En Sistemas → Gauss-Seidel → Opciones de iteración se admite 0 < ω < 2. Con ω = 1 se recupera Gauss-Seidel. La cota utiliza la norma de la matriz de iteración efectiva. | Implementado |
 | Falsa posición modificada | Elegir Illinois/Pegasus, registrar reescalados y contrastar estancamiento con la versión clásica | 1 |
 | Raíces múltiples | Multiplicidad proporcionada o inferida con límites; Newton modificado, casos cercanos y condicionamiento | 1 |
 | Bairstow | Coeficientes, factores cuadráticos, raíces complejas, deflación y residuales reconstruidos | 2 |

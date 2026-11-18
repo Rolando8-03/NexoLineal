@@ -50,9 +50,9 @@ export function emptyProject(): Project {
     version: 1,
     name: "Mi cuaderno de álgebra",
     updatedAt: new Date().toISOString(),
-    preferences: { mode: "serio", theme: "claro" },
+    preferences: { mode: "explorador", theme: "oscuro" },
     active: {
-      operation: "matrices.producto",
+      operation: "sistemas.resolver",
       inputs: {},
       step: 0,
       stepsOpen: false,
@@ -126,9 +126,13 @@ export function decodeProject(
     const data = record(x, "entradas");
     const names = specs.get(op)!.fields.map((f) => f.name);
     allowed(data, names);
-    return Object.fromEntries(
+    const entries = Object.fromEntries(
       Object.entries(data).map(([k, v]) => [k, text(v, "entrada " + k)]),
     );
+    if (op === "sistemas.resolver" && entries.resultados === undefined) {
+      entries.resultados = specs.get(op)!.fields.find((f) => f.name === "resultados")!.default;
+    }
+    return entries;
   }
   const prefs = record(p.preferences, "preferencias");
   allowed(prefs, ["mode", "theme"]);
