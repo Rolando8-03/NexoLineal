@@ -108,7 +108,11 @@ def execute(data, *, is_cancelled=None, on_progress=None):
 
     def finish(result):
         response = result.to_dict()
-        if problem.options.get("include_visualization", False):
+        selected = problem.input.get("resultados")
+        show_scene = operation != "sistemas.resolver" or selected is None or (
+            isinstance(selected, str) and "solucion" in selected.split()
+        )
+        if show_scene and problem.options.get("include_visualization", False):
             response["metadata"]["visualization"] = build_visualization(
                 response, checkpoint
             )

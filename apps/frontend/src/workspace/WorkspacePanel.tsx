@@ -255,7 +255,7 @@ export function WorkspacePanel(p: Props) {
             >
               {isSystem ? <SystemAnswer response={p.result} /> : <ResultView value={p.result.result} compact />}
             </IterationSelection.Provider>
-            {scene && !isSystem && (
+            {scene && (!isSystem || scene.kind === "system") && (
               <GraphPanel
                 key={p.result.operation_id + JSON.stringify(p.result.input)}
                 scene={scene}

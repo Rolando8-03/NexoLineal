@@ -52,6 +52,7 @@ const report = { approved: false, cases: [], errors: [] };
       }
     }
     assert.ok(served);
+    await page.getByRole("button", { name: "Consola", exact: true }).click();
     await page.locator("#calcular").waitFor({ state: "visible" });
     await page
       .locator("#reintentar-motor")
@@ -217,6 +218,8 @@ const report = { approved: false, cases: [], errors: [] };
           ),
         );
         assert.deepEqual(result, expected);
+        if (request.operation_id === "sistemas.resolver")
+          await page.getByRole("button", { name: "Editar matriz" }).click();
       }
     }
     report.cases.push({
