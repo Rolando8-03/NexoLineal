@@ -86,16 +86,17 @@ def rank(A, ctx=None):
     return len(reduce(A, ctx, trace=False)["pivots"])
 
 
-def solve(A, b, ctx=None, method="gauss_jordan", trace=True):
+def solve(A, b, ctx=None, method="gauss_jordan", trace=True, pivot_rhs=False):
     ctx = ctx or Context()
     m, n = len(A), len(A[0])
     if len(b) != m:
         raise InputError("Debe existir un término independiente por ecuación.")
     augmented = [row[:] + [value] for row, value in zip(A, b)]
     reduction = reduce(
-        augmented, ctx, reduced=method == "gauss_jordan", pivot_limit=n, trace=trace
+        augmented, ctx, reduced=method == "gauss_jordan", pivot_limit=None if pivot_rhs else n, trace=trace
     )
-    R, pivots = reduction["matrix"], reduction["pivots"]
+    R = reduction["matrix"]
+    pivots = [j for j in reduction["pivots"] if j < n]
     free = [j for j in range(n) if j not in pivots]
     contradiction = next((i for i, r in enumerate(R) if not any(r[:n]) and r[n]), None)
     base = {

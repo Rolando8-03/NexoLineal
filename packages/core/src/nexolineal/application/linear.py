@@ -92,7 +92,7 @@ def execute_linear(problem, ctx):
                 raise InputError("Elegí al menos un resultado válido.")
             method = "gauss" if "gauss" in selected else "gauss_jordan"
             ctx.collect_steps = ctx.collect_steps and bool({"gauss", "jordan"} & set(selected))
-            full = r.solve(A, vector(data["b"], len(A)), ctx, method)
+            full = r.solve(A, vector(data["b"], len(A)), ctx, method, pivot_rhs=True)
             checks = full.pop("verification")
             status = status_for(full["clasificacion"])
             result = {}
@@ -104,18 +104,27 @@ def execute_linear(problem, ctx):
             for group, keys in groups.items():
                 if group in selected:
                     result.update({k: full[k] for k in keys if k in full})
+            if "clasificacion" in selected:
+                rank, augmented_rank, variables = full["rango_A"], full["rango_aumentada"], len(A[0])
+                if rank != augmented_rank:
+                    reason = f"El rango de A es {rank} y el de [A | b] es {augmented_rank}. Hay una ecuación contradictoria."
+                elif rank == variables:
+                    reason = f"Ambos rangos valen {rank}. Cada incógnita tiene un pivote."
+                else:
+                    reason = f"Ambos rangos valen {rank}, con {variables} incógnitas. Quedan {variables - rank} variables libres."
+                result["motivo"] = reason
             if "gauss" in selected:
                 result["gauss"] = {"matrix": full["matrix"]}
             if "jordan" in selected:
                 # La forma escalonada ya obtenida es la entrada de la segunda etapa.
-                reduced = (r.reduce(full["matrix"], ctx, pivot_limit=len(A[0]))["matrix"]
+                reduced = (r.reduce(full["matrix"], ctx)["matrix"]
                            if "gauss" in selected else full["matrix"])
                 result["gauss_jordan"] = {"matrix": reduced}
             if "comprobacion" in selected:
                 result["comprobacion"] = {**checks}
                 if "certificado" in full:
                     result["comprobacion"]["certificado"] = full["certificado"]
-            if "solucion" not in selected:
+            if "gauss" not in selected:
                 ctx.steps[:] = [step for step in ctx.steps if step.kind != "sustitucion"]
             if not ctx.collect_steps:
                 ctx.steps.clear()
@@ -493,7 +502,7 @@ def execute_linear(problem, ctx):
         },
         error=(
             {"code": status, "message": messages[status]}
-            if status in messages and (not selective_system or "clasificacion" in selected)
+            if status in messages and not selective_system
             else None
         ),
     )
