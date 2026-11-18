@@ -1,0 +1,3 @@
+[submodule "tools/scroll-craft"]
+	path = tools/scroll-craft
+	url = https://github.com/nateherkai/scroll-craft.git
