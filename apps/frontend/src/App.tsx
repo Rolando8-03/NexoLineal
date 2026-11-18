@@ -13,15 +13,14 @@ import { createEngine } from "./adapters";
 import type { CalculationResult, OperationSpec } from "./contracts";
 import { initialValues, payload, fieldId } from "./FormFields";
 import { WorkspacePanel, type ResultObject } from "./workspace/WorkspacePanel";
-import { HistoryPanel, LibraryPanel } from "./workspace/Panels";
+import { ProjectPanel, LibraryPanel } from "./workspace/Panels";
 import { Dialog } from "./workspace/Dialog";
 import { Observatory } from "./workspace/Observatory";
-import { AREAS, areaFor } from "./workspace/navigation";
+import { AREAS, areaFor, isSystemMethod } from "./workspace/navigation";
 import {
   emptyProject,
   encodeProject,
   decodeProject,
-  addHistory,
   id,
   supports,
   MAX_BYTES,
@@ -39,7 +38,7 @@ import {
   storageName,
 } from "./workspace/storage";
 
-type Route = "inicio" | "trabajo" | "historial" | "biblioteca" | string;
+type Route = "inicio" | "trabajo" | "proyecto" | "biblioteca" | string;
 type Modal =
   | { kind: "object"; object: ResultObject }
   | { kind: "reuse"; object: SavedObject }
@@ -83,7 +82,9 @@ export function App() {
     saved = useRef("");
   current.current = project;
   const spec = operations.find((o) => o.id === project.active.operation),
-    values = spec ? project.active.inputs[spec.id] || initialValues(spec) : {};
+    values = spec
+      ? { ...initialValues(spec), ...project.active.inputs[spec.id] }
+      : {};
   const mode = project.preferences.mode,
     theme = project.preferences.theme;
   const update = (next: Project | ((p: Project) => Project)) =>
@@ -143,7 +144,38 @@ export function App() {
         operation,
         inputs: {
           ...p.active.inputs,
-          [operation]: p.active.inputs[operation] || initialValues(chosen),
+          [operation]: {
+            ...initialValues(chosen),
+            ...p.active.inputs[operation],
+            ...Object.fromEntries(
+              chosen.fields
+                .filter(
+                  (f) =>
+                    (isSystemMethod(operation) &&
+                      isSystemMethod(p.active.operation) &&
+                      [
+                        "A",
+                        "b",
+                        "inicial",
+                        "referencia",
+                        "norma",
+                        "max_iteraciones",
+                        "criterio",
+                        "porcentaje",
+                        "tolerancia_absoluta",
+                        "tolerancia_relativa",
+                      ].includes(f.name)) ||
+                    (f.name === "A" && spec &&
+                      ["Matrices", "Determinantes e inversas"].includes(spec.category) &&
+                      ["Matrices", "Determinantes e inversas"].includes(chosen.category)) ||
+                    (spec &&
+                      spec.category === chosen.category &&
+                      ["A", "B", "vectores", "expresion"].includes(f.name)),
+                )
+                .filter((f) => values[f.name] !== undefined)
+                .map((f) => [f.name, values[f.name]]),
+            ),
+          },
         },
         step: 0,
         stepsOpen: false,
@@ -190,11 +222,7 @@ export function App() {
         setSaveStatus("No se pudo guardar. " + String((e as Error).message));
     }
   }
-  async function calculateProblem(
-    p: Project,
-    append: boolean,
-    preserveStep = false,
-  ) {
+  async function calculateProblem(p: Project, preserveStep = false) {
     const s = operations.find((o) => o.id === p.active.operation);
     if (!s) return;
     running.current = true;
@@ -203,7 +231,7 @@ export function App() {
     setResult(null);
     setError("");
     try {
-      const vals = p.active.inputs[s.id] || initialValues(s);
+      const vals = { ...initialValues(s), ...p.active.inputs[s.id] };
       const response = await engine.execute(
         {
           schema_version: "1.0",
@@ -217,7 +245,7 @@ export function App() {
       );
       if (!alive.current) return;
       setResult(response);
-      let next = {
+      const next = {
         ...current.current,
         active: {
           ...current.current.active,
@@ -230,21 +258,6 @@ export function App() {
           resumeResult: response.status !== "cancelled",
         },
       };
-      if (append) {
-        try {
-          next = addHistory(next, {
-            id: id(),
-            date: new Date().toISOString(),
-            operation: s.id,
-            values: { ...vals },
-            label: s.title,
-            status: response.status,
-            favorite: false,
-          });
-        } catch (e) {
-          setNotice((e as Error).message);
-        }
-      }
       update(next);
       return response;
     } catch (e) {
@@ -372,7 +385,6 @@ export function App() {
       if (e.key === "Escape" && !document.querySelector("dialog[open]")) {
         setMenu(false);
         if (menu) document.getElementById("menu-toggle")?.focus();
-
       }
     }
     document.addEventListener("keydown", key);
@@ -433,13 +445,17 @@ export function App() {
     setErrors(found);
     if (Object.keys(found).length) {
       requestAnimationFrame(() => {
-        const field = document.querySelector<HTMLElement>(".augmented-grid input[aria-invalid=true]")
-          || document.getElementById(fieldId(Object.keys(found)[0]));
+        const field =
+          document.querySelector<HTMLElement>(
+            ".augmented-grid input[aria-invalid=true]",
+          ) || document.getElementById(fieldId(Object.keys(found)[0]));
+        const options = field?.closest("details");
+        if (options) options.open = true;
         field?.focus();
       });
       return;
     }
-    await calculateProblem(current.current, true);
+    await calculateProblem(current.current);
   }
   async function cancel() {
     try {
@@ -581,7 +597,7 @@ export function App() {
     setErrors({});
     setError("");
     navigate("trabajo");
-    if (again) await calculateProblem(next, true);
+    if (again) await calculateProblem(next);
   }
   async function applyImport(raw: string) {
     try {
@@ -596,7 +612,7 @@ export function App() {
       setModal(null);
       navigate("trabajo");
       const checked = next.active.resumeResult
-        ? await calculateProblem(next, false, true)
+        ? await calculateProblem(next, true)
         : null;
       setNotice(
         !next.active.resumeResult
@@ -679,11 +695,12 @@ export function App() {
       choose(operation);
     }
   }, [ready]);
-  const workspaceVisible = route === "trabajo";
+  const workspaceVisible =
+    route === "trabajo" || (route === "inicio" && mode === "serio");
   const routes = [
     { id: "inicio", name: "Inicio", icon: "⌂" },
     ...AREAS.map((a) => ({ id: a.name, name: a.name, icon: a.icon })),
-    { id: "historial", name: "Historial y proyectos", icon: "◷" },
+    { id: "proyecto", name: "Archivo del proyecto", icon: "▤" },
     { id: "biblioteca", name: "Biblioteca y ayuda", icon: "▧" },
   ];
   return (
@@ -752,9 +769,6 @@ export function App() {
             >
               <span aria-hidden="true">{r.icon}</span>
               <span>{r.name}</span>
-              {r.id === "historial" && !!project.history.length && (
-                <small>{project.history.length}</small>
-              )}
             </button>
           ))}
         </nav>
@@ -783,12 +797,34 @@ export function App() {
           >
             ☰
           </button>
-          <a className="orbit-brand" href="#inicio" onClick={e => {e.preventDefault(); navigate("inicio");}}>
-            <span className="planet-logo" aria-hidden="true">🪐</span> NexoLineal
+          <a
+            className="orbit-brand"
+            href="#inicio"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("inicio");
+            }}
+          >
+            <span className="planet-logo" aria-hidden="true">
+              🪐
+            </span>{" "}
+            NexoLineal
           </a>
           <nav className="quick-nav" aria-label="Accesos directos">
-            {([["inicio","Inicio"], ["trabajo","Consola"], ["Herramientas","Herramientas"], ["biblioteca","Biblioteca"], ["historial","Historial"]]).map(([to,label]) =>
-              <button key={to} aria-current={route === to ? "page" : undefined} onClick={() => navigate(to)}>{label}</button>)}
+            {mode === "explorador" &&
+              [
+                ["inicio", "Explorador"],
+                ["trabajo", "Calculadora"],
+                ["biblioteca", "Biblioteca"],
+              ].map(([to, label]) => (
+                <button
+                  key={to}
+                  aria-current={route === to ? "page" : undefined}
+                  onClick={() => navigate(to)}
+                >
+                  {label}
+                </button>
+              ))}
           </nav>
           <div className="preferences">
             <div className="mode" role="group" aria-label="Presentación">
@@ -846,7 +882,7 @@ export function App() {
           </div>
         </header>
         <div
-          hidden={route === "inicio" && !blocked}
+          hidden={!blocked && !saveStatus.startsWith("No se pudo")}
           className="save-strip"
           role="region"
           aria-label="Estado del cuaderno"
@@ -880,7 +916,7 @@ export function App() {
                   setProject(previous);
                   setResult(null);
                   if (previous.active.resumeResult)
-                    void calculateProblem(previous, false, true);
+                    void calculateProblem(previous, true);
                 }}
               >
                 Deshacer importación
@@ -895,47 +931,33 @@ export function App() {
             </button>
           </div>
         )}
-        {!workspaceVisible && route !== "inicio" && (
-          <div
-            className="active-problem"
-            role="region"
-            aria-label="Ejercicio activo"
-          >
-            <div>
-              <span className="eyebrow">EJERCICIO ACTIVO</span>
-              <strong>{spec?.title || "Cargando…"}</strong>
-              <span className="active-expression">
-                {values.expresion ||
-                  values.A ||
-                  values.v ||
-                  "Tus datos permanecen en el área de trabajo."}
-              </span>
-            </div>
-            <button className="secondary" onClick={() => navigate("trabajo")}>
-              Volver al cálculo
-            </button>
-            <details>
-              <summary>Ver datos activos</summary>
-              {Object.entries(values)
-                .filter(([, v]) => v.trim())
-                .map(([name, value]) => (
-                  <div key={name}>
-                    <strong>
-                      {spec?.fields.find((f) => f.name === name)?.label || name}
-                    </strong>
-                    <pre>{value}</pre>
-                  </div>
-                ))}
-            </details>
-          </div>
-        )}
         <main id="main-content" tabIndex={-1}>
-          {route === "inicio" && <>
-            <Observatory explorer={mode === "explorador"}
-              resume={project.active.inputs[project.active.operation] || project.active.resumeResult ? spec?.title : undefined}
-              navigate={navigate} choose={choose} />
-            {error && !ready && <p role="alert">{error} <button className="secondary" onClick={() => void initialize()}>Reintentar</button></p>}
-          </>}
+          {route === "inicio" && mode === "explorador" && (
+            <>
+              <Observatory
+                explorer={mode === "explorador"}
+                resume={
+                  project.active.inputs[project.active.operation] ||
+                  project.active.resumeResult
+                    ? spec?.title
+                    : undefined
+                }
+                navigate={navigate}
+                choose={choose}
+              />
+              {error && !ready && (
+                <p role="alert">
+                  {error}{" "}
+                  <button
+                    className="secondary"
+                    onClick={() => void initialize()}
+                  >
+                    Reintentar
+                  </button>
+                </p>
+              )}
+            </>
+          )}
           {AREAS.some((a) => a.name === route) && (
             <section className="panel page-panel">
               <span className="eyebrow">
@@ -944,13 +966,14 @@ export function App() {
                   : "ELEGÍ UNA OPERACIÓN"}
               </span>
               <h1 tabIndex={-1}>{route}</h1>
-              <p className="help">
-                {areaFor(route)?.copy} Todas las operaciones listadas están
-                disponibles.
-              </p>
+              <p className="help">{areaFor(route)?.copy}</p>
               <div className="operation-list">
                 {operations
-                  .filter((o) => o.category === route)
+                  .filter(
+                    (o) =>
+                      o.category === route ||
+                      (route === "Sistemas" && isSystemMethod(o.id)),
+                  )
                   .map((o) => (
                     <button
                       key={o.id}
@@ -960,7 +983,6 @@ export function App() {
                     >
                       <strong>{o.title}</strong>
                       <span>{o.description}</span>
-                      <small>Disponible →</small>
                     </button>
                   ))}
               </div>
@@ -998,27 +1020,11 @@ export function App() {
               reuse={reuse}
             />
           </div>
-          {route === "historial" && (
-            <HistoryPanel
+          {route === "proyecto" && (
+            <ProjectPanel
               project={project}
-              operations={operations}
               busy={busy}
               name={(name) => update((p) => ({ ...p, name }))}
-              favorite={(entry) =>
-                update((p) => ({
-                  ...p,
-                  history: p.history.map((h) =>
-                    h.id === entry ? { ...h, favorite: !h.favorite } : h,
-                  ),
-                }))
-              }
-              edit={(h, again) => void repeat(h, again)}
-              remove={(entry) =>
-                update((p) => ({
-                  ...p,
-                  history: p.history.filter((h) => h.id !== entry),
-                }))
-              }
               exportProject={() => void exportProject()}
               importFile={(e) => void readFile(e)}
               importNative={() => void importNative()}
@@ -1093,7 +1099,7 @@ export function App() {
             </>
           )}
         </main>
-        <PwaPanel busy={busy} />
+        {route === "proyecto" && <PwaPanel busy={busy} />}
         <footer className="app-footer">
           <span>NexoLineal · Álgebra lineal</span>
           <span>Grupo 4</span>

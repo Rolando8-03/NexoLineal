@@ -176,29 +176,30 @@ export function FormFields({
                   {errors[f.name]}
                 </p>
               )}
-              {["matrix", "vector", "vectors", "expression"].includes(
-                f.kind,
-              ) && (
-                <button
-                  className="text-button save-input"
-                  type="button"
-                  disabled={busy || !text.trim()}
-                  onClick={() =>
-                    onSave?.({
-                      name: f.label,
-                      kind:
-                        f.kind === "expression"
-                          ? "function"
-                          : f.kind === "vectors"
-                            ? "base"
-                            : (f.kind as "matrix" | "vector"),
-                      text,
-                    })
-                  }
-                >
-                  ＋ Guardar como objeto
-                </button>
-              )}
+              {onSave &&
+                ["matrix", "vector", "vectors", "expression"].includes(
+                  f.kind,
+                ) && (
+                  <button
+                    className="text-button save-input"
+                    type="button"
+                    disabled={busy || !text.trim()}
+                    onClick={() =>
+                      onSave?.({
+                        name: f.label,
+                        kind:
+                          f.kind === "expression"
+                            ? "function"
+                            : f.kind === "vectors"
+                              ? "base"
+                              : (f.kind as "matrix" | "vector"),
+                        text,
+                      })
+                    }
+                  >
+                    ＋ Guardar como objeto
+                  </button>
+                )}
               <p className="help" id={id + "-ayuda"}>
                 {f.kind === "set"
                   ? "Una etiqueta de texto por línea, sin duplicados. [] representa el conjunto vacío."

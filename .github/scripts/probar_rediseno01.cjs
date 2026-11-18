@@ -25,6 +25,7 @@ async function run() {
     await page.locator('[data-startup="ready"]').waitFor();
     await page.locator(".cosmonaut").evaluate(img => img.decode());
     await page.screenshot({path:path.join(out,"inicio.png")});
+    await page.setViewportSize({width:1440,height:640});
     const travel = await page.evaluate(() => Math.min(420, document.documentElement.scrollHeight-innerHeight));
     for (const [name,fraction] of [["mitad",0.5],["tarjetas",1]]) {
       await page.evaluate(y => scrollTo(0,y), Math.floor(travel*fraction));

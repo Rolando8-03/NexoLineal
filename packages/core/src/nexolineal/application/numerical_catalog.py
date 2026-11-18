@@ -110,7 +110,12 @@ for method, title in [("jacobi", "Jacobi"), ("gauss_seidel", "Gauss-Seidel")]:
             [
                 field("A", "Matriz de coeficientes A", "matrix", "4 1\n2 3", True),
                 field("b", "Vector b", "vector", "1 2", True),
-                field("inicial", "Vector inicial, vacío usa ceros", "vector"),
+                field("inicial", "Vector inicial (por defecto, ceros)", "vector"),
+                field("criterio", "Criterio de parada", "select", "paso_y_residual",
+                      choices=["paso_y_residual", "porcentaje_y_residual"]),
+                field("porcentaje", "Cambio máximo por componente (%)", when={"criterio": ["porcentaje_y_residual"]}, default="0.1"),
+                *([field("omega", "Relajación SOR · ω (1 usa Gauss-Seidel)", default="1")]
+                  if method == "gauss_seidel" else []),
                 field(
                     "norma",
                     "Norma para el criterio",

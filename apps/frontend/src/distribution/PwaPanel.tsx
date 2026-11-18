@@ -128,7 +128,7 @@ export function PwaPanel({ busy }: { busy: boolean }) {
       </button>
       <p className="help">
         La primera descarga incluye el motor Python. Después podés volver a
-        abrir y calcular sin red. El historial se guarda en este navegador.
+        abrir y calcular sin red.
       </p>
     </section>
   );

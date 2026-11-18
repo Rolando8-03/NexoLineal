@@ -206,7 +206,39 @@ def execute_linear(problem, ctx):
         result = {"matrix": value}
         checks = basic_check("(Aᵀ)ᵀ=A.", transpose(value) == A)
     elif op == "matrices.analizar":
-        result, checks = m.analyze(A, ctx)
+        if data.get("consultas"):
+            selected = data["consultas"].split()
+            if set(selected) - {"rango", "transpuesta", "traza", "determinante", "inversa"}:
+                raise InputError("Seleccioná resultados de matriz disponibles.")
+            verified = True
+            if "rango" in selected:
+                reduced = r.reduce(A, ctx)
+                result["rango"] = len(reduced["pivots"])
+                verified = multiply(reduced["E"], A, ctx) == reduced["matrix"]
+            if "transpuesta" in selected:
+                result["transpuesta"] = transpose(A)
+                verified &= transpose(result["transpuesta"]) == A
+            square = len(A) == len(A[0])
+            for key in ("traza", "determinante", "inversa"):
+                if key not in selected:
+                    continue
+                if not square:
+                    result[key] = "Requiere una matriz cuadrada."
+                elif key == "traza":
+                    result[key] = sum(A[i][i] for i in range(len(A)))
+                elif key == "determinante":
+                    result[key] = m.determinant(A, ctx)
+                else:
+                    try:
+                        result[key], inverse_check = m.invert(A, ctx)
+                        verified &= inverse_check["passed"]
+                    except LinearFailure as exc:
+                        if exc.status != "singular":
+                            raise
+                        result[key] = "Sin inversa: la matriz es singular."
+            checks = basic_check("Comprobación de las salidas seleccionadas.", verified)
+        else:
+            result, checks = m.analyze(A, ctx)
     elif op in ("matrices.ref", "matrices.rref"):
         reduction = r.reduce(A, ctx, reduced=op.endswith("rref"))
         result = {
@@ -311,6 +343,15 @@ def execute_linear(problem, ctx):
             "El resultado coincide con la reducción docente conservada.",
             value == determinant_reference(A),
         )
+        if data.get("consultas"):
+            if data["consultas"] != "inversa":
+                raise InputError("La consulta adicional disponible es la inversa.")
+            if value:
+                result["inversa"], inverse_check = m.invert(A, ctx)
+                checks["inversa"] = inverse_check
+                checks["passed"] &= inverse_check["passed"]
+            else:
+                result["inversa"] = "Sin inversa porque el determinante es cero."
     elif op == "determinantes.cofactores":
         cof = m.cofactor_matrix(A, ctx)
         adj = transpose(cof)

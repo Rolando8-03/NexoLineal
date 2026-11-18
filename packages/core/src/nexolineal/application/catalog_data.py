@@ -228,6 +228,7 @@ OPERATION_DATA = [
         "title": "Analizar una matriz",
         "category": "Matrices",
         "fields": [
+            {"name": "consultas", "label": "Resultados", "kind": "text", "default": "", "required": False},
             {
                 "name": "A",
                 "label": "Matriz A",
@@ -515,6 +516,7 @@ OPERATION_DATA = [
         "title": "Calcular un determinante",
         "category": "Determinantes e inversas",
         "fields": [
+            {"name": "consultas", "label": "Resultados", "kind": "text", "default": "", "required": False},
             {
                 "name": "A",
                 "label": "Matriz A",

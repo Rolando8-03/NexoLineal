@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AcademicArt } from "./AstroArt";
 import { AREAS } from "./navigation";
 
@@ -58,6 +58,7 @@ export function Observatory({
   choose: (operation: string) => void;
   navigate: (route: string) => void;
 }) {
+  const [paused, setPaused] = useState(false);
   const scene = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!explorer) return;
@@ -65,9 +66,10 @@ export function Observatory({
     let frame = 0;
     function paint() {
       frame = 0;
-      const progress = motion.matches
-        ? 0
-        : Math.min(1, Math.max(0, window.scrollY / 420));
+      const progress =
+        motion.matches || paused
+          ? 0
+          : Math.min(1, Math.max(0, window.scrollY / 420));
       scene.current?.style.setProperty("--travel", String(progress));
     }
     function scroll() {
@@ -81,9 +83,14 @@ export function Observatory({
       window.removeEventListener("scroll", scroll);
       motion.removeEventListener("change", scroll);
     };
-  }, [explorer]);
+  }, [explorer, paused]);
   return (
-    <section className="observatory" aria-labelledby="objetivo" ref={scene}>
+    <section
+      className="observatory"
+      data-paused={paused}
+      aria-labelledby="objetivo"
+      ref={scene}
+    >
       <div className="cosmic-hero">
         <div className="mission-copy">
           <p className="greeting">
@@ -105,6 +112,14 @@ export function Observatory({
             >
               Resolver un sistema <span aria-hidden="true">↗</span>
             </button>
+            {!resume && (
+              <button
+                className="text-button"
+                onClick={() => choose("iterativos.jacobi")}
+              >
+                Jacobi y Gauss-Seidel
+              </button>
+            )}
             {resume && (
               <button
                 className="text-button"
@@ -118,6 +133,8 @@ export function Observatory({
         {explorer ? (
           <div className="cosmic-scene" aria-hidden="true">
             <div className="star-plane" />
+            <i className="meteor" />
+            <i className="orbit-tracer" />
             <div className="orbit-plane">
               <i />
               <i />
@@ -133,6 +150,17 @@ export function Observatory({
           </div>
         ) : (
           <AcademicArt />
+        )}
+        {explorer && (
+          <button
+            className="motion-control"
+            type="button"
+            aria-label={paused ? "Reanudar animación" : "Pausar animación"}
+            title={paused ? "Reanudar animación" : "Pausar animación"}
+            onClick={() => setPaused((p) => !p)}
+          >
+            {paused ? "▶" : "Ⅱ"}
+          </button>
         )}
       </div>
       <section aria-labelledby="areas-titulo">

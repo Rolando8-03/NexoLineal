@@ -52,7 +52,7 @@ export function emptyProject(): Project {
     updatedAt: new Date().toISOString(),
     preferences: { mode: "explorador", theme: "oscuro" },
     active: {
-      operation: "matrices.producto",
+      operation: "sistemas.resolver",
       inputs: {},
       step: 0,
       stepsOpen: false,

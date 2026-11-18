@@ -585,3 +585,348 @@
   border-top: 1.6px solid;
   transform: rotate(-45deg);
 }
+
+/* Calc screen */
+.app.serio.theme-oscuro {
+  --paper: #081321;
+  --surface: #101e30;
+  --line: #304154;
+  --soft: #193244;
+  --accent: #79e9da;
+  --button: #78e4d5;
+  --button-ink: #082a2c;
+}
+.app.serio.theme-claro {
+  --accent: #006e68;
+  --button: #086e68;
+  --soft: #e4f1f0;
+}
+.app.serio .orbit-brand {
+  letter-spacing: -0.05em;
+}
+.serio .planet-logo {
+  display: none;
+}
+.serio .orbit-brand::before {
+  content: "∑";
+  font:
+    700 22px Georgia,
+    serif;
+  padding: 2px 9px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: var(--accent);
+}
+.serio[data-route="inicio"] main {
+  padding-top: 24px;
+}
+.workspace {
+  display: block;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.workspace .panel + .panel:not([hidden]) {
+  margin-top: 18px;
+}
+.family-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+.family-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.89rem;
+  font-weight: 650;
+  padding: 8px 13px;
+  border-radius: 7px;
+}
+.family-switch button[aria-pressed="true"],
+.family-switch button:hover {
+  color: var(--accent);
+  background: var(--soft);
+}
+.workspace .input-panel > .panel-heading {
+  margin-bottom: 12px;
+}
+.workspace #operacion {
+  max-width: 32rem;
+  display: block;
+}
+.system-input {
+  position: relative;
+  margin: 14px 0 9px;
+  padding: 12px 16px;
+}
+.system-input .matrix-tools {
+  float: right;
+  margin: 0;
+}
+.system-input .matrix-dimensions {
+  margin: 3px 0 12px;
+}
+.system-input .augmented-scroll {
+  clear: both;
+}
+.solver-settings,
+.iteration-answer details,
+.workspace .document-actions {
+  margin: 14px 0;
+  border-top: 1px solid var(--line);
+  padding: 12px 0 0;
+}
+.solver-settings summary,
+.iteration-answer summary,
+.workspace .document-actions summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.solver-settings .input-field {
+  max-width: 32rem;
+}
+.workspace .document-actions {
+  display: block;
+}
+.workspace .document-actions button {
+  margin: 10px 8px 0 0;
+}
+.iteration-vector {
+  font:
+    650 clamp(1.15rem, 3vw, 1.65rem) ui-monospace,
+    monospace;
+  color: var(--accent);
+  margin: 8px 0 18px;
+}
+.iteration-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.iteration-metrics div {
+  background: var(--soft);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.iteration-metrics small,
+.iteration-metrics strong {
+  display: block;
+}
+.iteration-metrics small {
+  color: var(--muted);
+}
+.iteration-detail label {
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.iteration-detail select {
+  width: auto;
+}
+.iteration-detail .formula {
+  text-align: left;
+  margin: 6px 0;
+  padding: 7px;
+}
+.iteration-detail .katex-display {
+  margin: 0.25em 0;
+}
+.numeric-scroll {
+  overflow-x: auto;
+}
+.numeric-scroll table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.numeric-scroll td,
+.numeric-scroll th {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.numeric-scroll tbody tr:nth-child(2n) {
+  background: var(--soft);
+}
+@media (max-width: 640px) {
+  .family-switch {
+    flex-wrap: nowrap;
+    overflow: auto;
+    padding: 4px;
+  }
+  .family-switch button {
+    flex: none;
+  }
+  .system-input .matrix-tools {
+    float: none;
+    margin-bottom: 10px;
+  }
+  .system-input {
+    padding: 9px;
+  }
+  .app .workspace .panel {
+    padding: 16px;
+  }
+}
+
+/* Movimiento orbital del Explorador */
+.motion-control {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  background: var(--surface);
+  color: var(--muted);
+}
+.meteor,
+.orbit-tracer {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cosmonaut {
+    animation: free-float 5.8s ease-in-out infinite;
+  }
+  .satellite {
+    animation: satellite-drift 12s ease-in-out infinite;
+  }
+  .star-plane {
+    animation: starlight 4.5s ease-in-out infinite alternate;
+  }
+  .meteor {
+    top: 8%;
+    left: 76%;
+    width: 66px;
+    height: 2px;
+    border-radius: 90%;
+    background: linear-gradient(90deg, #b7ecff, transparent);
+    rotate: -34deg;
+    animation: shooting-star 10s ease-in infinite;
+  }
+  .orbit-tracer {
+    inset: 0 auto auto 0;
+    width: 7px;
+    height: 7px;
+    background: #a3faff;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #73f3ff;
+    offset-path: ellipse(43% 19% at 50% 57%);
+    opacity: 0.9;
+    animation: orbital-period 8s linear infinite;
+  }
+  .atlas-card img {
+    transition:
+      scale 0.38s ease,
+      rotate 0.38s ease;
+  }
+  .atlas-card:is(:hover, :focus-within) img {
+    scale: 1.07;
+    rotate: -2deg;
+  }
+  .atlas-card {
+    animation: card-arrival 0.45s ease-out backwards;
+  }
+  .atlas-card:nth-child(3n + 2) {
+    animation-delay: 0.07s;
+  }
+  .atlas-card:nth-child(3n) {
+    animation-delay: 0.14s;
+  }
+  .observatory[data-paused="true"] *,
+  .observatory[data-paused="true"] *::after {
+    animation-play-state: paused;
+  }
+}
+@keyframes free-float {
+  0%,
+  100% {
+    translate: 0 3px;
+    rotate: -1deg;
+  }
+  50% {
+    translate: 5px -10px;
+    rotate: 2deg;
+  }
+}
+@keyframes satellite-drift {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  50% {
+    translate: -20px 12px;
+    rotate: 10deg;
+  }
+}
+@keyframes starlight {
+  from {
+    opacity: 0.42;
+  }
+  to {
+    opacity: 0.88;
+  }
+}
+@keyframes shooting-star {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+    translate: 0 0;
+  }
+  74% {
+    opacity: 0.9;
+  }
+  84%,
+  99% {
+    opacity: 0;
+    translate: -170px 110px;
+  }
+}
+@keyframes orbital-period {
+  to {
+    offset-distance: 100%;
+  }
+}
+@keyframes card-arrival {
+  from {
+    opacity: 0.15;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-control {
+    display: none;
+  }
+}
+.study-outputs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 14px 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.study-outputs legend {
+  padding: 0 6px;
+  font-weight: 650;
+}
+.study-outputs small {
+  width: 100%;
+  color: var(--muted);
+}

@@ -998,6 +998,9 @@
               "A"
             ],
             "properties": {
+              "consultas": {
+                "type": "string"
+              },
               "A": {
                 "anyOf": [
                   {
@@ -1829,6 +1832,9 @@
               "A"
             ],
             "properties": {
+              "consultas": {
+                "type": "string"
+              },
               "A": {
                 "anyOf": [
                   {
@@ -4032,6 +4038,26 @@
                   }
                 ]
               },
+              "criterio": {
+                "enum": [
+                  "paso_y_residual",
+                  "porcentaje_y_residual"
+                ]
+              },
+              "porcentaje": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  }
+                ]
+              },
               "norma": {
                 "enum": [
                   "infinito",
@@ -4209,6 +4235,40 @@
                         }
                       ]
                     }
+                  }
+                ]
+              },
+              "criterio": {
+                "enum": [
+                  "paso_y_residual",
+                  "porcentaje_y_residual"
+                ]
+              },
+              "porcentaje": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  }
+                ]
+              },
+              "omega": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
                   }
                 ]
               },

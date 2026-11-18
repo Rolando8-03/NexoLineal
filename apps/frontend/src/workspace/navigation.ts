@@ -81,3 +81,21 @@ export function matches(op: OperationSpec, query: string) {
     )
   );
 }
+
+export const systemMethods = [
+  ["sistemas.resolver", "Gauss / Gauss-Jordan"],
+  ["iterativos.jacobi", "Jacobi"],
+  ["iterativos.gauss_seidel", "Gauss-Seidel"],
+  ["sistemas.cramer", "Cramer"],
+  ["sistemas.inversa", "Inversa"],
+  ["factorizacion.lu", "LU"],
+  ["factorizacion.plu", "PLU"],
+] as const;
+export const isSystemMethod = (id: string) =>
+  systemMethods.some(([key]) => key === id);
+export function familyOf(op: OperationSpec) {
+  if (isSystemMethod(op.id)) return "Sistemas";
+  if (op.id.startsWith("calculo.")) return "Cálculo";
+  if (op.id.startsWith("calculadora.")) return "Calculadora";
+  return op.category;
+}
