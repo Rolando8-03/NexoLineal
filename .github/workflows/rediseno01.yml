@@ -1,0 +1,37 @@
+name: Verificar menú y sistemas
+on:
+  pull_request:
+    paths:
+      - 'apps/frontend/**'
+      - 'packages/core/**'
+      - '.github/scripts/probar_rediseno01.cjs'
+      - '.github/workflows/rediseno01.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  web:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: npm ci && npm run build
+        working-directory: apps/frontend
+      - run: |
+          npm install --prefix "$RUNNER_TEMP/nexo-browser" playwright
+          node "$RUNNER_TEMP/nexo-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - run: |
+          python -m http.server 4173 --bind 127.0.0.1 --directory apps/frontend/dist > "$RUNNER_TEMP/nexo-web.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          curl --retry 10 --retry-connrefused --retry-delay 1 --fail --silent http://127.0.0.1:4173/ > /dev/null
+          NODE_PATH="$RUNNER_TEMP/nexo-browser/node_modules" node .github/scripts/probar_rediseno01.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-menu-y-sistemas
+          path: evidencia-rediseno01/
