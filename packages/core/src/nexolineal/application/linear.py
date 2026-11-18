@@ -122,6 +122,8 @@ def execute_linear(problem, ctx):
                 result["gauss_jordan"] = {"matrix": reduced}
             if "comprobacion" in selected:
                 result["comprobacion"] = {**checks}
+                if full["particular"] is not None:
+                    result["comprobacion"].update(particular=full["particular"], direcciones=full["direcciones"])
                 if "certificado" in full:
                     result["comprobacion"]["certificado"] = full["certificado"]
             if "gauss" not in selected:

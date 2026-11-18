@@ -348,7 +348,7 @@ export function LibraryPanel({
           <dl className="shortcut-list">
             <div>
               <dt>Ctrl / ⌘ + K</dt>
-              <dd>Buscar operaciones</dd>
+              <dd>Abrir el menú de áreas</dd>
             </div>
             <div>
               <dt>Ctrl / ⌘ + Enter</dt>

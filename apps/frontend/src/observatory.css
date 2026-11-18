@@ -1,114 +1,587 @@
-.app-body { margin-left:0 }
-.app .sidebar:not(.is-open) {visibility:hidden;transform:translateX(-100%)}
-.app .sidebar.is-open {visibility:visible;transform:none;width:min(300px,90vw)}
-.app .drawer-close,.app .mobile-menu {display:block}
-.app .drawer-close {position:absolute;right:8px;top:15px}
-.app .menu-scrim {display:block;position:fixed;inset:0;z-index:25;background:#081020a8;border:0}
-.topbar {position:relative;padding:12px max(3vw,18px);gap:14px;flex-wrap:nowrap}
-.topbar .mobile-menu {width:36px;font-size:20px}
-.orbit-brand {display:inline-flex;gap:8px;align-items:center;color:var(--ink);font-size:clamp(20px,2.1vw,31px);font-weight:800;letter-spacing:-1.3px;white-space:nowrap;text-decoration:none}
-.planet-logo {font-size:1.2em}
-.quick-nav {display:flex;justify-content:center;gap:4px;flex:1}
-.quick-nav button {min-height:40px;border:0;border-radius:22px;background:transparent;color:var(--muted);font-size:14px;padding:0 13px;font-weight:600}
-.quick-nav button[aria-current],.quick-nav button:hover {background:var(--soft);color:var(--ink)}
-.preferences {width:auto;margin-left:auto;flex-wrap:nowrap}
-.app[data-route="inicio"] main {max-width:1480px;padding:0 clamp(18px,4.2vw,72px) 34px}
-.explorador.theme-oscuro {background:radial-gradient(ellipse at 80% 16%,#292557 0,transparent 40%),radial-gradient(ellipse at 7% 50%,#112e4f,transparent 55%),#0c142e}
-.explorador.theme-oscuro .topbar {background:#0d162de8;border-color:#999bc52b}
-.observatory {--travel:0}
-.cosmic-hero {position:relative;isolation:isolate;display:grid;grid-template-columns:1.13fr 1fr;align-items:center;min-height:clamp(315px,27vw,410px);padding:24px 0}
-.mission-copy {z-index:2}
-.greeting {margin:0 0 10px;font-weight:650;color:var(--accent);font-size:clamp(15px,1.4vw,21px);letter-spacing:.01em}
-.mission-copy h1 {font-size:clamp(38px,4.4vw,68px);line-height:1.035;letter-spacing:-.055em;max-width:17ch;margin:0;text-wrap:balance;font-weight:750}
-.mission-copy h1 em {font-style:normal;color:var(--accent)}
-.explorador.theme-oscuro .mission-copy em {background:linear-gradient(95deg,#b9f4ff,#bfb4ff 85%);background-clip:text;color:transparent}
-.mission-actions {display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:22px}
-.launch,.atlas-copy button {border-radius:24px;font-weight:700;display:inline-flex;align-items:center;gap:13px}
-.launch {padding:11px 20px;border:1px solid #9ce7fc;background:#b9efff;color:#101f37;box-shadow:0 4px 24px #4fbce61b}
-.launch:hover {background:#e4f9ff}
-.cosmic-scene {position:absolute;z-index:-1;inset:0 0 0 47%;overflow:hidden;pointer-events:none}
-.star-plane {position:absolute;inset:-20px;background-image:radial-gradient(circle at 13% 17%,#ccdeff 0 1px,transparent 1.5px),radial-gradient(circle at 59% 74%,#b9bbfb 0 1.3px,transparent 2px),radial-gradient(circle at 32% 48%,#82c5df 0 .9px,transparent 1.6px);background-size:142px 123px,189px 161px,97px 103px;opacity:.64;transform:translateY(calc(var(--travel) * 12px))}
-.orbit-plane {position:absolute;inset:20% 0 14%;transform:translateY(calc(var(--travel) * 22px)) rotate(-17deg)}
-.orbit-plane i {position:absolute;inset:5% 0;border:1px solid #a6b8f657;border-radius:50%}
-.orbit-plane i:nth-child(2) {inset:17% 6%}
-.orbit-plane i:nth-child(3) {inset:28% 12%}
-.orbit-plane i:first-child::after {content:"";position:absolute;right:13%;top:9%;width:6px;height:6px;background:#b9ecff;border-radius:50%;box-shadow:0 0 10px #a9e7ff}
-.cosmonaut {position:absolute;inset:4% auto auto 16%;width:65%;height:92%;object-fit:contain;filter:drop-shadow(0 18px 18px #040b2050);transform:translate(calc(var(--travel) * 14px),calc(var(--travel) * -37px)) rotate(calc(-6deg + var(--travel) * 5deg))}
-.satellite {position:absolute;width:14%;right:7%;top:15%;transform:translate(calc(var(--travel) * -26px),calc(var(--travel) * 9px)) rotate(-8deg)}
-.atlas-heading {display:flex;align-items:center;gap:18px;margin:8px 0 14px}
-.atlas-heading h2 {font-size:18px;letter-spacing:-.03em}
-.atlas-heading span {height:1px;flex:1;background:var(--line);opacity:.55}
-.atlas-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.atlas-card {--tone:#6de4f1;--shade:#13384e;position:relative;isolation:isolate;overflow:hidden;border-radius:20px;color:#f5f7ff;border:1px solid color-mix(in srgb,var(--tone) 65%,#35405c);background:radial-gradient(ellipse at 90% 65%,var(--shade),transparent 70%),linear-gradient(130deg,#1b2c49,#121a34);box-shadow:inset 0 2px 10px color-mix(in srgb,var(--tone) 13%,transparent),0 8px 24px #02051922}
-.atlas-card.matrices {--tone:#ffc17c;--shade:#423342}
-.atlas-card.inverse {--tone:#d99bff;--shade:#3d2a57}
-.atlas-card.vectors {--tone:#98b6ff;--shade:#263664}
-.atlas-card.transforms {--tone:#ffa4cd;--shade:#49314e}
-.atlas-card.roots {--tone:#80f4e6;--shade:#153c50}
-.atlas-card img {position:absolute;z-index:-1;width:48%;height:98%;object-fit:contain;right:-1%;bottom:-2%;transition:transform .3s}
-.atlas-card:hover img {transform:translateY(-3px) rotate(1deg)}
-.atlas-copy {min-height:clamp(176px,14vw,216px);display:flex;flex-direction:column;align-items:start;padding:clamp(15px,1.65vw,26px);background:linear-gradient(90deg,#152138 18%,#152138cc 44%,transparent 78%)}
-.atlas-copy h3 {font-size:clamp(18px,1.7vw,27px);letter-spacing:-.045em;line-height:1.09;margin:0;max-width:68%;text-wrap:balance}
-.atlas-copy p {color:#dee8ff;max-width:61%;margin:8px 0 15px;font-size:clamp(12px,1.04vw,16px);line-height:1.35}
-.atlas-copy button {margin-top:auto;min-height:40px;line-height:1.1;padding:9px 14px;background:var(--tone);border:1px solid transparent;color:#101b30;font-size:14px}
-.atlas-copy button:hover {background:white}
-.serio .atlas-card {background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:none}
-.serio .atlas-copy {background:none}
-.serio .atlas-copy p {color:var(--muted)}
-.serio .atlas-card img {opacity:.2;width:36%}
-.serio .atlas-copy button,.serio .launch {color:var(--button-ink);background:var(--button)}
-.system-workspace {display:block;max-width:920px;margin:auto}
-.system-input {margin:20px 0;border:1px solid var(--line);border-radius:15px;min-width:0;padding:clamp(12px,2vw,25px)}
-.system-input legend {font-weight:700;padding:0 7px}
-.matrix-tools,.matrix-dimensions,.check-grid {display:flex;gap:9px;flex-wrap:wrap;margin:6px 0 18px}
-.matrix-dimensions label {display:flex;align-items:center;gap:8px;font-size:14px}
-.matrix-dimensions input {width:64px}
-.augmented-scroll {max-width:100%;overflow:auto;padding:4px 3px 10px}
-.augmented-grid {width:auto;border-spacing:4px;border-collapse:separate}
-.augmented-grid th {font-weight:600;color:var(--muted);font-size:13px;text-align:center}
-.augmented-grid td {padding:0}
-.augmented-grid input {width:clamp(53px,7vw,86px);text-align:center;font-variant-numeric:tabular-nums;min-height:44px}
-.augmented-grid .b-cell {border-left:2px solid var(--accent);padding-left:9px}
-.augmented-grid .b-cell input {background:var(--soft)}
-.augmented-grid input[aria-invalid=true] {border:2px solid #e55d68}
-.system-input summary,.system-notes summary {padding:9px 0;font-weight:600;color:var(--accent)}
-.system-input .paste-matrix label {display:block;margin:8px 0}
-.system-selection {border-top:1px solid var(--line);margin-top:15px;padding-top:4px}
-.check-line {display:inline-flex;align-items:center;gap:9px;min-height:44px;font-size:15px}
-.check-line input {width:18px;height:18px;accent-color:var(--button)}
-.check-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:4px 14px}
-.system-answer section {padding:14px 0;border-bottom:1px solid var(--line)}
-.system-answer p,.system-notes {line-height:1.6}
-.system-answer h3 {margin:0;font-size:19px}
-.system-notes {margin:15px 0 0}
-.system-notes li {margin-bottom:6px}
-@media(max-width:1080px) {
-  .quick-nav button {padding:0 7px;font-size:13px}
-  .topbar {gap:8px}
+.app-body {
+  margin-left: 0;
 }
-@media(max-width:900px) {
-  .quick-nav {display:none}
-  .atlas-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
-  .atlas-copy h3 {font-size:22px}
+.app .sidebar:not(.is-open) {
+  visibility: hidden;
+  transform: translateX(-100%);
 }
-@media(max-width:580px) {
-  .topbar {flex-wrap:wrap;gap:5px 10px;padding:8px 16px}
-  .preferences {width:100%;margin:0;justify-content:space-between}
-  .preferences .mode button,.preferences .theme button {min-height:33px}
-  .cosmic-hero {grid-template-columns:1fr;align-items:start;padding:26px 0 0;min-height:0}
-  .cosmic-scene {position:relative;inset:auto;height:185px;width:100%;margin-top:-4px}
-  .cosmonaut {height:108%;top:-3%;left:21%}
-  .satellite {width:12%;right:10%}
-  .mission-copy h1 {font-size:clamp(33px,9vw,49px);max-width:17ch}
-  .mission-actions {margin-top:16px}
-  .atlas-grid {grid-template-columns:1fr;gap:12px}
-  .atlas-copy {min-height:155px;padding:18px}
-  .atlas-copy h3 {font-size:23px}
-  .atlas-copy p {font-size:14px}
-  .atlas-card img {width:44%}
-  .cosmic-hero > .academic-art {max-height:140px}
+.app .sidebar.is-open {
+  visibility: visible;
+  transform: none;
+  width: min(300px, 90vw);
 }
-@media(prefers-reduced-motion:reduce) {
-  .observatory {--travel:0!important}
-  .atlas-card:hover img {transform:none}
+.app .drawer-close,
+.app .mobile-menu {
+  display: block;
+}
+.app .drawer-close {
+  position: absolute;
+  right: 8px;
+  top: 15px;
+}
+.app .menu-scrim {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  background: #081020a8;
+  border: 0;
+}
+.topbar {
+  position: relative;
+  padding: 12px max(3vw, 18px);
+  gap: 14px;
+  flex-wrap: nowrap;
+}
+.topbar .mobile-menu {
+  width: 36px;
+  font-size: 20px;
+}
+.orbit-brand {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--ink);
+  font-size: clamp(20px, 2.1vw, 31px);
+  font-weight: 800;
+  letter-spacing: -1.3px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.planet-logo {
+  font-size: 1.2em;
+}
+.quick-nav {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+}
+.quick-nav button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  padding: 0 13px;
+  font-weight: 600;
+}
+.quick-nav button[aria-current],
+.quick-nav button:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+.preferences {
+  width: auto;
+  margin-left: auto;
+  flex-wrap: nowrap;
+}
+.app[data-route="inicio"] main {
+  max-width: 1480px;
+  padding: 0 clamp(18px, 4.2vw, 72px) 34px;
+}
+.explorador.theme-oscuro {
+  background:
+    radial-gradient(ellipse at 80% 16%, #292557 0, transparent 40%),
+    radial-gradient(ellipse at 7% 50%, #112e4f, transparent 55%), #0c142e;
+}
+.explorador.theme-oscuro .topbar {
+  background: #0d162de8;
+  border-color: #999bc52b;
+}
+.observatory {
+  --travel: 0;
+}
+.cosmic-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1.13fr 1fr;
+  align-items: center;
+  min-height: clamp(315px, 27vw, 410px);
+  padding: 24px 0;
+}
+.mission-copy {
+  z-index: 2;
+}
+.greeting {
+  margin: 0 0 10px;
+  font-weight: 650;
+  color: var(--accent);
+  font-size: clamp(15px, 1.4vw, 21px);
+  letter-spacing: 0.01em;
+}
+.mission-copy h1 {
+  font-size: clamp(38px, 4.4vw, 68px);
+  line-height: 1.035;
+  letter-spacing: -0.055em;
+  max-width: 17ch;
+  margin: 0;
+  text-wrap: balance;
+  font-weight: 750;
+}
+.mission-copy h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.explorador.theme-oscuro .mission-copy em {
+  background: linear-gradient(95deg, #b9f4ff, #bfb4ff 85%);
+  background-clip: text;
+  color: transparent;
+}
+.mission-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
+.launch,
+.atlas-copy button {
+  border-radius: 24px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+}
+.launch {
+  padding: 11px 20px;
+  border: 1px solid #9ce7fc;
+  background: #b9efff;
+  color: #101f37;
+  box-shadow: 0 4px 24px #4fbce61b;
+}
+.launch:hover {
+  background: #e4f9ff;
+}
+.cosmic-scene {
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 0 47%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.star-plane {
+  position: absolute;
+  inset: -20px;
+  background-image:
+    radial-gradient(circle at 13% 17%, #ccdeff 0 1px, transparent 1.5px),
+    radial-gradient(circle at 59% 74%, #b9bbfb 0 1.3px, transparent 2px),
+    radial-gradient(circle at 32% 48%, #82c5df 0 0.9px, transparent 1.6px);
+  background-size:
+    142px 123px,
+    189px 161px,
+    97px 103px;
+  opacity: 0.64;
+  transform: translateY(calc(var(--travel) * 12px));
+}
+.orbit-plane {
+  position: absolute;
+  inset: 20% 0 14%;
+  transform: translateY(calc(var(--travel) * 22px)) rotate(-17deg);
+}
+.orbit-plane i {
+  position: absolute;
+  inset: 5% 0;
+  border: 1px solid #a6b8f657;
+  border-radius: 50%;
+}
+.orbit-plane i:nth-child(2) {
+  inset: 17% 6%;
+}
+.orbit-plane i:nth-child(3) {
+  inset: 28% 12%;
+}
+.orbit-plane i:first-child::after {
+  content: "";
+  position: absolute;
+  right: 13%;
+  top: 9%;
+  width: 6px;
+  height: 6px;
+  background: #b9ecff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #a9e7ff;
+}
+.cosmonaut {
+  position: absolute;
+  inset: 4% auto auto 16%;
+  width: 65%;
+  height: 92%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 18px #040b2050);
+  transform: translate(calc(var(--travel) * 14px), calc(var(--travel) * -37px))
+    rotate(calc(-6deg + var(--travel) * 5deg));
+}
+.satellite {
+  position: absolute;
+  width: 14%;
+  right: 7%;
+  top: 15%;
+  transform: translate(calc(var(--travel) * -26px), calc(var(--travel) * 9px))
+    rotate(-8deg);
+}
+.atlas-heading {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 8px 0 14px;
+}
+.atlas-heading h2 {
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+.atlas-heading span {
+  height: 1px;
+  flex: 1;
+  background: var(--line);
+  opacity: 0.55;
+}
+.atlas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.atlas-card {
+  --tone: #6de4f1;
+  --shade: #13384e;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 20px;
+  color: #f5f7ff;
+  border: 1px solid color-mix(in srgb, var(--tone) 65%, #35405c);
+  background:
+    radial-gradient(ellipse at 90% 65%, var(--shade), transparent 70%),
+    linear-gradient(130deg, #1b2c49, #121a34);
+  box-shadow:
+    inset 0 2px 10px color-mix(in srgb, var(--tone) 13%, transparent),
+    0 8px 24px #02051922;
+}
+.atlas-card.matrices {
+  --tone: #ffc17c;
+  --shade: #423342;
+}
+.atlas-card.inverse {
+  --tone: #d99bff;
+  --shade: #3d2a57;
+}
+.atlas-card.vectors {
+  --tone: #98b6ff;
+  --shade: #263664;
+}
+.atlas-card.transforms {
+  --tone: #ffa4cd;
+  --shade: #49314e;
+}
+.atlas-card.roots {
+  --tone: #80f4e6;
+  --shade: #153c50;
+}
+.atlas-card img {
+  position: absolute;
+  z-index: -1;
+  width: 48%;
+  height: 98%;
+  object-fit: contain;
+  right: -1%;
+  bottom: -2%;
+  transition: transform 0.3s;
+}
+.atlas-card:hover img {
+  transform: translateY(-3px) rotate(1deg);
+}
+.atlas-copy {
+  min-height: clamp(176px, 14vw, 216px);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: clamp(15px, 1.65vw, 26px);
+  background: linear-gradient(
+    90deg,
+    #152138 18%,
+    #152138cc 44%,
+    transparent 78%
+  );
+}
+.atlas-copy h3 {
+  font-size: clamp(18px, 1.7vw, 27px);
+  letter-spacing: -0.045em;
+  line-height: 1.09;
+  margin: 0;
+  max-width: 68%;
+  text-wrap: balance;
+}
+.atlas-copy p {
+  color: #dee8ff;
+  max-width: 61%;
+  margin: 8px 0 15px;
+  font-size: clamp(12px, 1.04vw, 16px);
+  line-height: 1.35;
+}
+.atlas-copy button {
+  margin-top: auto;
+  min-height: 40px;
+  line-height: 1.1;
+  padding: 9px 14px;
+  background: var(--tone);
+  border: 1px solid transparent;
+  color: #101b30;
+  font-size: 14px;
+}
+.atlas-copy button:hover {
+  background: white;
+}
+.serio .atlas-card {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: none;
+}
+.serio .atlas-copy {
+  background: none;
+}
+.serio .atlas-copy p {
+  color: var(--muted);
+}
+.serio .atlas-card img {
+  opacity: 0.2;
+  width: 36%;
+}
+.serio .atlas-copy button,
+.serio .launch {
+  color: var(--button-ink);
+  background: var(--button);
+}
+.system-workspace {
+  display: block;
+  max-width: 920px;
+  margin: auto;
+}
+.system-input {
+  margin: 20px 0;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  min-width: 0;
+  padding: clamp(12px, 2vw, 25px);
+}
+.system-input legend {
+  font-weight: 700;
+  padding: 0 7px;
+}
+.matrix-tools,
+.matrix-dimensions,
+.check-grid {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 6px 0 18px;
+}
+.matrix-dimensions label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.matrix-dimensions input {
+  width: 64px;
+}
+.augmented-scroll {
+  max-width: 100%;
+  overflow: auto;
+  padding: 4px 3px 10px;
+}
+.augmented-grid {
+  width: auto;
+  border-spacing: 4px;
+  border-collapse: separate;
+}
+.augmented-grid th {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+.augmented-grid td {
+  padding: 0;
+}
+.augmented-grid input {
+  width: clamp(53px, 7vw, 86px);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  min-height: 44px;
+}
+.augmented-grid .b-cell {
+  border-left: 2px solid var(--accent);
+  padding-left: 9px;
+}
+.augmented-grid .b-cell input {
+  background: var(--soft);
+}
+.augmented-grid input[aria-invalid="true"] {
+  border: 2px solid #e55d68;
+}
+.system-input summary,
+.system-notes summary {
+  padding: 9px 0;
+  font-weight: 600;
+  color: var(--accent);
+}
+.system-input .paste-matrix label {
+  display: block;
+  margin: 8px 0;
+}
+.system-selection {
+  border-top: 1px solid var(--line);
+  margin-top: 15px;
+  padding-top: 4px;
+}
+.check-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  font-size: 15px;
+}
+.check-line input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--button);
+}
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 4px 14px;
+}
+.system-answer section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.system-answer p,
+.system-notes {
+  line-height: 1.6;
+}
+.system-answer h3 {
+  margin: 0;
+  font-size: 19px;
+}
+.system-notes {
+  margin: 15px 0 0;
+}
+.system-notes li {
+  margin-bottom: 6px;
+}
+@media (max-width: 1080px) {
+  .quick-nav button {
+    padding: 0 7px;
+    font-size: 13px;
+  }
+  .topbar {
+    gap: 8px;
+  }
+}
+@media (max-width: 900px) {
+  .quick-nav {
+    display: none;
+  }
+  .atlas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .atlas-copy h3 {
+    font-size: 22px;
+  }
+}
+@media (max-width: 580px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    padding: 8px 16px;
+  }
+  .preferences {
+    width: 100%;
+    margin: 0;
+    justify-content: space-between;
+  }
+  .preferences .mode button,
+  .preferences .theme button {
+    min-height: 33px;
+  }
+  .cosmic-hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 26px 0 0;
+    min-height: 0;
+  }
+  .cosmic-scene {
+    position: relative;
+    inset: auto;
+    height: 185px;
+    width: 100%;
+    margin-top: -4px;
+  }
+  .cosmonaut {
+    height: 108%;
+    top: -3%;
+    left: 21%;
+  }
+  .satellite {
+    width: 12%;
+    right: 10%;
+  }
+  .mission-copy h1 {
+    font-size: clamp(33px, 9vw, 49px);
+    max-width: 17ch;
+  }
+  .mission-actions {
+    margin-top: 16px;
+  }
+  .atlas-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .atlas-copy {
+    min-height: 155px;
+    padding: 18px;
+  }
+  .atlas-copy h3 {
+    font-size: 23px;
+  }
+  .atlas-copy p {
+    font-size: 14px;
+  }
+  .atlas-card img {
+    width: 44%;
+  }
+  .cosmic-hero > .academic-art {
+    max-height: 140px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .observatory {
+    --travel: 0 !important;
+  }
+  .atlas-card:hover img {
+    transform: none;
+  }
+}
+.launch span,
+.atlas-copy button span {
+  width: 10px;
+  height: 10px;
+  position: relative;
+  display: inline-block;
+  font-size: 0;
+  border-right: 1.6px solid;
+  border-top: 1.6px solid;
+}
+.launch span::before,
+.atlas-copy button span::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 3.4px;
+  width: 13px;
+  border-top: 1.6px solid;
+  transform: rotate(-45deg);
 }

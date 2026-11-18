@@ -31,6 +31,17 @@ class SystemSelectionTests(unittest.TestCase):
     def test_original_request_remains_compatible(self):
         self.assertEqual(self.solve()["result"]["clasificacion"], "incompatible")
 
+    def test_inconsistent_augmented_column_is_also_reduced(self):
+        for selected in ("jordan", "gauss jordan"):
+            answer = self.solve(selected, "1;0;0", "2 0 4")
+            self.assertEqual(answer["result"]["gauss_jordan"]["matrix"],
+                             [["1", "0"], ["0", "1"], ["0", "0"]])
+
+    def test_gauss_only_keeps_back_substitution(self):
+        answer = self.solve("gauss", "2", "1")
+        self.assertIn("sustitucion", [step["kind"] for step in answer["steps"]])
+        self.assertNotIn("particular", answer["result"])
+
     def test_exact_fraction(self):
         self.assertEqual(self.solve("solucion", "2", "1")["result"]["particular"], ["1/2"])
 

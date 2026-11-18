@@ -225,6 +225,8 @@ export function App() {
           step: preserveStep
             ? Math.min(p.active.step, Math.max(0, response.steps.length - 1))
             : 0,
+          stepsOpen: preserveStep && p.active.stepsOpen,
+          verificationOpen: preserveStep && p.active.verificationOpen,
           resumeResult: response.status !== "cancelled",
         },
       };
@@ -359,6 +361,10 @@ export function App() {
   }, [project, hydrated, blocked]);
   useEffect(() => {
     function key(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setMenu(true);
+      }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
         e.preventDefault();
         if (!blocked) void persist();
