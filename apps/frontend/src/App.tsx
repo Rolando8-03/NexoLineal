@@ -15,8 +15,8 @@ import { initialValues, payload, fieldId } from "./FormFields";
 import { WorkspacePanel, type ResultObject } from "./workspace/WorkspacePanel";
 import { HistoryPanel, LibraryPanel } from "./workspace/Panels";
 import { Dialog } from "./workspace/Dialog";
-import { AstroArt, AcademicArt } from "./workspace/AstroArt";
-import { AREAS, matches, areaFor } from "./workspace/navigation";
+import { Observatory } from "./workspace/Observatory";
+import { AREAS, areaFor } from "./workspace/navigation";
 import {
   emptyProject,
   encodeProject,
@@ -59,8 +59,8 @@ export function App() {
   const [navToken, setNavToken] = useState(0);
   const navFocusRequested = useRef(false);
   const [route, setRoute] = useState<Route>("inicio"),
-    [menu, setMenu] = useState(false),
-    [query, setQuery] = useState("");
+    [menu, setMenu] = useState(false);
+  const pendingOperation = useRef<string | null>(null);
   const [busy, setBusy] = useState(false),
     [progress, setProgress] = useState(0),
     [result, setResult] = useState<CalculationResult | null>(null),
@@ -98,7 +98,7 @@ export function App() {
     navFocusRequested.current = true;
     setRoute(next);
     setMenu(false);
-    setQuery("");
+    window.scrollTo(0, 0);
     setNavToken((n) => n + 1);
   }
   function change(name: string, value: string) {
@@ -128,7 +128,12 @@ export function App() {
     setUndo(null);
   }
   function choose(operation: string) {
-    if (running.current || !ready) return;
+    if (!ready) {
+      pendingOperation.current = operation;
+      navigate("trabajo");
+      return;
+    }
+    if (running.current) return;
     const chosen = operations.find((o) => o.id === operation);
     if (!chosen) return;
     update((p) => ({
@@ -287,19 +292,6 @@ export function App() {
         );
         setNotice((e as Error).message);
       }
-      const activeSpec = ops.find((s) => s.id === restored.active.operation)!;
-      restored = {
-        ...restored,
-        active: {
-          ...restored.active,
-          inputs: {
-            ...restored.active.inputs,
-            [activeSpec.id]:
-              restored.active.inputs[activeSpec.id] ||
-              initialValues(activeSpec),
-          },
-        },
-      };
       current.current = restored;
       setProject(restored);
       setHydrated(true);
@@ -367,11 +359,6 @@ export function App() {
   }, [project, hydrated, blocked]);
   useEffect(() => {
     function key(e: KeyboardEvent) {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        navFocusRequested.current = false;
-        document.getElementById("buscar-operaciones")?.focus();
-      }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
         e.preventDefault();
         if (!blocked) void persist();
@@ -379,12 +366,12 @@ export function App() {
       if (e.key === "Escape" && !document.querySelector("dialog[open]")) {
         setMenu(false);
         if (menu) document.getElementById("menu-toggle")?.focus();
-        if (query) setQuery("");
+
       }
     }
     document.addEventListener("keydown", key);
     return () => document.removeEventListener("keydown", key);
-  }, [menu, query, blocked]);
+  }, [menu, blocked]);
   useEffect(() => {
     if (!hydrated || blocked) return;
     const flush = () => {
@@ -439,7 +426,11 @@ export function App() {
     const found = validateFields(spec, values);
     setErrors(found);
     if (Object.keys(found).length) {
-      document.getElementById(fieldId(Object.keys(found)[0]))?.focus();
+      requestAnimationFrame(() => {
+        const field = document.querySelector<HTMLElement>(".augmented-grid input[aria-invalid=true]")
+          || document.getElementById(fieldId(Object.keys(found)[0]));
+        field?.focus();
+      });
       return;
     }
     await calculateProblem(current.current, true);
@@ -675,8 +666,14 @@ export function App() {
       );
     }
   }
-  const allMatches = operations.filter((o) => matches(o, query));
-  const workspaceVisible = route === "trabajo" || route === "inicio";
+  useEffect(() => {
+    if (ready && pendingOperation.current) {
+      const operation = pendingOperation.current;
+      pendingOperation.current = null;
+      choose(operation);
+    }
+  }, [ready]);
+  const workspaceVisible = route === "trabajo";
   const routes = [
     { id: "inicio", name: "Inicio", icon: "⌂" },
     ...AREAS.map((a) => ({ id: a.name, name: a.name, icon: a.icon })),
@@ -689,6 +686,7 @@ export function App() {
       data-mode={mode}
       data-theme={theme}
       data-startup={startup}
+      data-route={route}
     >
       <a className="skip-link" href="#main-content">
         Saltar al contenido
@@ -779,29 +777,13 @@ export function App() {
           >
             ☰
           </button>
-          <div className="global-search">
-            <span aria-hidden="true">⌕</span>
-            <label htmlFor="buscar-operaciones" className="sr-only">
-              Buscar operaciones
-            </label>
-            <input
-              id="buscar-operaciones"
-              type="search"
-              placeholder="Buscá una operación…"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setRoute("inicio");
-              }}
-            />
-            <kbd>⌘ K</kbd>
-          </div>
-          <button
-            className="workspace-return text-button"
-            onClick={() => navigate("trabajo")}
-          >
-            Área de trabajo
-          </button>
+          <a className="orbit-brand" href="#inicio" onClick={e => {e.preventDefault(); navigate("inicio");}}>
+            <span className="planet-logo" aria-hidden="true">🪐</span> NexoLineal
+          </a>
+          <nav className="quick-nav" aria-label="Accesos directos">
+            {([["inicio","Inicio"], ["trabajo","Consola"], ["Herramientas","Herramientas"], ["biblioteca","Biblioteca"], ["historial","Historial"]]).map(([to,label]) =>
+              <button key={to} aria-current={route === to ? "page" : undefined} onClick={() => navigate(to)}>{label}</button>)}
+          </nav>
           <div className="preferences">
             <div className="mode" role="group" aria-label="Presentación">
               <button
@@ -858,6 +840,7 @@ export function App() {
           </div>
         </header>
         <div
+          hidden={route === "inicio" && !blocked}
           className="save-strip"
           role="region"
           aria-label="Estado del cuaderno"
@@ -906,7 +889,7 @@ export function App() {
             </button>
           </div>
         )}
-        {!workspaceVisible && (
+        {!workspaceVisible && route !== "inicio" && (
           <div
             className="active-problem"
             role="region"
@@ -941,125 +924,12 @@ export function App() {
           </div>
         )}
         <main id="main-content" tabIndex={-1}>
-          {route === "inicio" && (
-            <section
-              className="welcome"
-              aria-labelledby={query ? "search-title" : "objetivo"}
-            >
-              {!query && (
-                <div className="hero">
-                  <div className="hero-copy">
-                    <span className="eyebrow">
-                      {mode === "explorador"
-                        ? "TU PRÓXIMA MISIÓN"
-                        : "ÁLGEBRA LINEAL, PASO A PASO"}
-                    </span>
-                    <h1 id="objetivo" tabIndex={-1}>
-                      {mode === "explorador" ? (
-                        <>
-                          ¿Qué rincón del cosmos
-                          <br />
-                          resolvemos hoy?
-                        </>
-                      ) : (
-                        <>
-                          ¿Qué querés
-                          <br />
-                          calcular hoy?
-                        </>
-                      )}
-                    </h1>
-                    <p>
-                      Elegí una operación. Ingresá solo lo necesario.
-                      <br className="desktop-break" /> Entendé el resultado,
-                      paso a paso.
-                    </p>
-                    <button
-                      className="hero-resume secondary"
-                      onClick={() => navigate("trabajo")}
-                    >
-                      {mode === "explorador"
-                        ? "↗ Retomar misión"
-                        : "↗ Continuar con"}{" "}
-                      · {spec?.title || "tu ejercicio"}
-                    </button>
-                  </div>
-                  {mode === "explorador" ? <AstroArt /> : <AcademicArt />}
-                </div>
-              )}
-              {query ? (
-                <div className="search-results panel">
-                  <h1 id="search-title" tabIndex={-1}>
-                    Resultados de búsqueda
-                  </h1>
-                  <p>
-                    {allMatches.length} operaciones disponibles para «{query}»
-                  </p>
-                  <div className="operation-list">
-                    {allMatches.map((o) => (
-                      <button
-                        className="operation-choice"
-                        key={o.id}
-                        disabled={busy}
-                        onClick={() => choose(o.id)}
-                      >
-                        <strong>{o.title}</strong>
-                        <span>{o.category} · Disponible</span>
-                      </button>
-                    ))}
-                  </div>
-                  {!allMatches.length && (
-                    <p className="empty">
-                      Probá con «Gauss», «base», «norma» o «integral».
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <div className="section-heading">
-                    <h2>Elegí tu punto de partida</h2>
-                    <span>{operations.length} operaciones disponibles</span>
-                  </div>
-                  <div className="operation-grid">
-                    {AREAS.map((a, i) => {
-                      const ops = operations.filter(
-                        (o) => o.category === a.name,
-                      );
-                      return (
-                        <button
-                          className={"operation-card card-" + i}
-                          type="button"
-                          key={a.name}
-                          onClick={() => navigate(a.name)}
-                        >
-                          <span className="card-symbol" aria-hidden="true">
-                            {a.icon}
-                          </span>
-                          <div>
-                            <strong>
-                              {mode === "explorador" ? a.alias : a.name}
-                            </strong>
-                            {mode === "explorador" && (
-                              <span className="academic-subtitle">
-                                {a.name}
-                              </span>
-                            )}
-                            <p>{a.copy}</p>
-                            <span className="card-status">
-                              {ops.length
-                                ? ops.length + " operaciones · Disponible"
-                                : "Cargando catálogo…"}{" "}
-                              <b aria-hidden="true">↗</b>
-                            </span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-            </section>
-          )}
+          {route === "inicio" && <>
+            <Observatory explorer={mode === "explorador"}
+              resume={project.active.inputs[project.active.operation] || project.active.resumeResult ? spec?.title : undefined}
+              navigate={navigate} choose={choose} />
+            {error && !ready && <p role="alert">{error} <button className="secondary" onClick={() => void initialize()}>Reintentar</button></p>}
+          </>}
           {AREAS.some((a) => a.name === route) && (
             <section className="panel page-panel">
               <span className="eyebrow">
@@ -1219,8 +1089,8 @@ export function App() {
         </main>
         <PwaPanel busy={busy} />
         <footer className="app-footer">
-          <span>Hecho para explorar, entender y comprobar.</span>
-          <span>Un motor Python · Dos formas de aprender</span>
+          <span>NexoLineal · Álgebra lineal</span>
+          <span>Grupo 4</span>
         </footer>
       </div>
       {modal && (
