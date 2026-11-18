@@ -1,5 +1,7 @@
 import { SystemInput, ALL_RESULTS } from "./SystemInput";
-import { useState } from "react";
+import { SystemNotes } from "./SystemNotes";
+import { SystemAnswer } from "./SystemAnswer";
+import { useEffect, useRef, useState } from "react";
 import { TheoryCards, ModelResult } from "../exploration/Learning";
 import { exportPdf, exportCsv } from "../exploration/exports";
 import type { Theorem } from "../exploration/types";
@@ -63,8 +65,13 @@ export function WorkspacePanel(p: Props) {
     }
   }
   const isSystem = p.operation === "sistemas.resolver";
-  const [editing, setEditing] = useState(true);
-  const showInput = !isSystem || editing || !p.result;
+  const [editingResult, setEditingResult] = useState<CalculationResult | null>(null);
+  const editTitle = useRef<HTMLHeadingElement>(null);
+  const answerTitle = useRef<HTMLHeadingElement>(null);
+  const showInput = !isSystem || !p.result?.result || editingResult === p.result;
+  useEffect(() => {
+    if (isSystem && !showInput) answerTitle.current?.focus();
+  }, [isSystem, showInput, p.result]);
   const scene = p.result?.metadata.visualization as Scene | undefined;
   const frame = scene?.frames?.find((f) => f.step === p.active.step);
   const categories = [...new Set(p.operations.map((o) => o.category))];
@@ -74,7 +81,7 @@ export function WorkspacePanel(p: Props) {
         <div className="panel-heading">
           <div>
             <span className="eyebrow">TU PROBLEMA</span>
-            <h2 id="operacion-titulo" tabIndex={-1}>
+            <h2 ref={editTitle} id="operacion-titulo" tabIndex={-1}>
               {p.spec?.title || "Preparando operaciones"}
             </h2>
           </div>
@@ -89,7 +96,7 @@ export function WorkspacePanel(p: Props) {
         </div>
         <form
           noValidate
-          onSubmit={(e) => { if (isSystem && !(p.values.resultados ?? ALL_RESULTS).trim()) {e.preventDefault(); return;} p.calculate(e); if (isSystem && !Object.keys(p.errors).length) setEditing(false); }}
+          onSubmit={p.calculate}
           onKeyDown={(e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
               e.preventDefault();
@@ -97,7 +104,7 @@ export function WorkspacePanel(p: Props) {
             }
           }}
         >
-          <label htmlFor="operacion">¿Qué querés calcular?</label>
+          <label htmlFor="operacion">Operación</label>
           <select
             id="operacion"
             value={p.operation}
@@ -162,8 +169,10 @@ export function WorkspacePanel(p: Props) {
             />
           )}
         </form>
+        {isSystem && <SystemNotes />}
       </section>
       <section
+        hidden={isSystem && !p.error && (!p.result || editingResult === p.result)}
         id="resultado"
         className="panel result-panel"
         aria-live="polite"
@@ -173,7 +182,7 @@ export function WorkspacePanel(p: Props) {
         <div className="panel-heading">
           <div>
             <span className="eyebrow">EL RESULTADO</span>
-            <h2 id="resultado-titulo" tabIndex={-1}>
+            <h2 ref={answerTitle} id="resultado-titulo" tabIndex={-1}>
               Resultado
             </h2>
           </div>
@@ -188,7 +197,7 @@ export function WorkspacePanel(p: Props) {
             </button>
           )}
         </div>
-        {isSystem && p.result && <button type="button" className="secondary" onClick={() => {setEditing(true); window.document.getElementById("operacion-titulo")?.focus();}}>Editar matriz</button>}
+        {isSystem && p.result && <button type="button" className="secondary" onClick={() => {setEditingResult(p.result); requestAnimationFrame(() => editTitle.current?.focus());}}>Editar matriz</button>}
         {p.error && (
           <>
             <p role="alert" className="error">
@@ -244,7 +253,7 @@ export function WorkspacePanel(p: Props) {
                 },
               }}
             >
-              <ResultView value={p.result.result} compact={!isSystem} />
+              {isSystem ? <SystemAnswer response={p.result} /> : <ResultView value={p.result.result} compact />}
             </IterationSelection.Provider>
             {scene && !isSystem && (
               <GraphPanel
@@ -262,7 +271,7 @@ export function WorkspacePanel(p: Props) {
             )}
           </>
         )}
-        {p.result?.verification.passed === true && (
+        {!isSystem && p.result?.verification.passed === true && (
           <p className="verified">
             ✓{" "}
             {String(
@@ -341,7 +350,7 @@ export function WorkspacePanel(p: Props) {
             )}
           </details>
         )}
-        {p.result && Object.keys(p.result.verification).length > 0 && (
+        {!isSystem && p.result && Object.keys(p.result.verification).length > 0 && (
           <details
             className="verification-details"
             open={p.active.verificationOpen}

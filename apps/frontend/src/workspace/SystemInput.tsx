@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { matrixRows, normalizePaste } from "./validation";
+import { cellError, matrixRows, normalizePaste } from "./validation";
 
 export const SYSTEM_RESULTS = [
   ["clasificacion", "Clasificación"], ["rangos", "Rangos y pivotes"],
@@ -17,19 +17,33 @@ export function SystemInput({ values, busy, change, errors }: {
   const [pasteError, setPasteError] = useState("");
   const A = matrixRows(values.A || "□ □\n□ □");
   const b = (values.b || "").trim().split(/\s+/);
-  const width = A[0]?.length || 2;
+  const width = Math.max(1, ...A.map(row => row.length));
+  const encode = (cell: string) => cell.replace(/[%\s;]/g, char => encodeURIComponent(char));
+  const decode = (cell: string) => cell.replace(/%(?:25|20|3B|09|0A|0D)/gi, decodeURIComponent);
   const selected = (values.resultados ?? ALL_RESULTS).split(" ").filter(Boolean);
   function store(rows: string[][]) {
-    change("A", rows.map(row => row.slice(0, -1).map(x => x || "□").join(" ")).join("\n"));
-    change("b", rows.map(row => row.at(-1) || "□").join(" "));
+    change("A", rows.map(row => row.slice(0, -1).map(x => encode(x) || "□").join(" ")).join("\n"));
+    change("b", rows.map(row => encode(row.at(-1) || "") || "□").join(" "));
   }
-  const rows = A.map((row, i) => [...row, b[i] || ""]);
+  const rows = A.map((row, i) => [...Array.from({length: width}, (_, j) => decode(row[j] || "□")), decode(b[i] || "")]);
   function resize(m: number, n: number) {
     store(Array.from({ length: m }, (_, i) =>
       Array.from({ length: n + 1 }, (_, j) =>
-        j === n ? rows[i]?.at(-1) || "" : A[i]?.[j] === "□" ? "" : A[i]?.[j] || "")));
+        j === n ? rows[i]?.at(-1) || "" : j < width ? rows[i]?.[j] || "" : "")));
   }
-  const numeric = /^[+-]?(?:\d+\/\d+|(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:[eE][+-]?\d+)?)$/;
+  function applyPaste(raw: string) {
+    const parsed = matrixRows(normalizePaste(raw.replace(/[│|]/g, " ")));
+    const count = parsed[0]?.length || 0;
+    const incomplete = parsed.findIndex(row => row.length !== count);
+    if (incomplete >= 0 || !parsed.length || parsed.length > 20 || count < 2 || count > 21) {
+      setPasteError(incomplete >= 0
+        ? `Revisá la fila ${incomplete + 1}. Se esperaban ${count} columnas, incluida b.`
+        : "Usá de 1 a 20 ecuaciones e incógnitas e incluí la columna b.");
+      return;
+    }
+    store(parsed);
+    setPasteError("");
+  }
   return <fieldset className="system-input" disabled={busy}>
     <legend>Matriz aumentada [A | b]</legend>
     <div className="matrix-tools">
@@ -47,14 +61,20 @@ export function SystemInput({ values, busy, change, errors }: {
     </div>
     <div className="augmented-scroll" role="group" aria-label="Matriz aumentada editable" tabIndex={0}>
       <table className="augmented-grid">
-        <thead><tr>{Array.from({length: width}, (_, j) => <th key={j} scope="col">x{j+1}</th>)}<th className="b-cell" scope="col">b</th></tr></thead>
+        <thead><tr>{Array.from({length: width}, (_, j) => <th key={j} scope="col">{width <= 3 ? ["x", "y", "z"][j] : "x" + (j+1)}</th>)}<th className="b-cell" scope="col">b</th></tr></thead>
         <tbody>{rows.map((row, i) => <tr key={i}>{row.map((cell, j) => {
           const value = cell === "□" ? "" : cell;
-          const invalid = !value.trim() || !numeric.test(value.trim()) || /\/0+$/.test(value.trim());
+          const invalid = !value.trim() || !!cellError(value.trim());
           return <td key={j} className={j === width ? "b-cell" : ""}><input
             aria-label={j === width ? `Término b, fila ${i+1}` : `Fila ${i+1}, columna ${j+1}`}
             aria-invalid={invalid && !!(errors.A || errors.b)} value={value}
-            inputMode="decimal" autoComplete="off" placeholder="—"
+            onPaste={e => {
+              const raw = e.clipboardData.getData("text");
+              if (/[\t\n;│|]|\S\s+\S/.test(raw.trim())) {
+                e.preventDefault(); setPaste(raw); applyPaste(raw);
+              }
+            }}
+            inputMode="text" autoComplete="off" placeholder="—"
             onChange={e => {const next = rows.map(r => [...r]); next[i][j] = e.target.value; store(next);}}
           /></td>;
         })}</tr>)}</tbody>
@@ -64,17 +84,9 @@ export function SystemInput({ values, busy, change, errors }: {
     <details className="paste-matrix"><summary>Pegar matriz desde texto o Excel</summary>
       <label htmlFor="matriz-aumentada">Una fila por ecuación. La última columna es b.</label>
       <textarea id="matriz-aumentada" rows={4} value={paste} placeholder={"1 1 3\n1 -1 1"} onChange={e => setPaste(e.target.value)} />
-      <button type="button" className="secondary" onClick={() => {
-        const parsed = matrixRows(normalizePaste(paste.replace(/[│|]/g, " ")));
-        const n = parsed[0]?.length || 0;
-        if (!parsed.length || parsed.length > 20 || n < 2 || n > 21 || parsed.some(r => r.length !== n)) {
-          setPasteError("Revisá las filas. Cada fila necesita la misma cantidad de columnas, incluida b. Máximo 20 ecuaciones e incógnitas.");
-          return;
-        }
-        store(parsed); setPasteError("");
-      }}>Usar matriz</button>
-      {pasteError && <p role="alert" className="error">{pasteError}</p>}
+      <button type="button" className="secondary" onClick={() => applyPaste(paste)}>Usar matriz</button>
     </details>
+    {pasteError && <p role="alert" className="error">{pasteError}</p>}
     <div className="system-selection">
       <h3>¿Qué querés calcular?</h3>
       <label className="check-line"><input type="checkbox" checked={selected.length === SYSTEM_RESULTS.length}
